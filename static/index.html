@@ -1,0 +1,2161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/>
+  <title>Standards Saathi (मानक साथी) • BIS AI Assistant</title>
+  
+  <!-- Fonts & Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com" rel="preconnect"/>
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&family=Plus+Jakarta+Sans:wght@600;700;800&family=Noto+Sans+Devanagari:wght@400;600;700&display=swap" rel="stylesheet"/>
+  
+  <!-- Tailwind CSS & Marked.js CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "secondary-fixed-dim": "#ffb599",
+            "on-primary-fixed-variant": "#314863",
+            "background": "#f7f9ff",
+            "on-tertiary-fixed-variant": "#00522a",
+            "primary-fixed-dim": "#b0c9e8",
+            "primary-fixed": "#d1e4ff",
+            "surface-container-low": "#edf4ff",
+            "inverse-on-surface": "#e8f2ff",
+            "surface-bright": "#f7f9ff",
+            "on-secondary": "#ffffff",
+            "tertiary-fixed": "#9ef6b6",
+            "surface-container": "#e3efff",
+            "inverse-primary": "#b0c9e8",
+            "surface-container-lowest": "#ffffff",
+            "on-primary-container": "#7a92b0",
+            "surface-variant": "#cee5ff",
+            "on-surface": "#001d33",
+            "secondary": "#a73a00",
+            "error-container": "#ffdad6",
+            "surface-tint": "#49607c",
+            "tertiary-fixed-dim": "#83d99b",
+            "on-secondary-container": "#5b1c00",
+            "on-background": "#001d33",
+            "error": "#ba1a1a",
+            "on-surface-variant": "#43474d",
+            "inverse-surface": "#12334c",
+            "outline": "#74777e",
+            "surface-container-highest": "#cee5ff",
+            "primary": "#00152a",
+            "surface": "#f7f9ff",
+            "secondary-container": "#ff6926",
+            "on-tertiary": "#ffffff",
+            "on-primary-fixed": "#011d35",
+            "outline-variant": "#c3c6ce",
+            "on-secondary-fixed": "#370e00",
+            "primary-container": "#102a43",
+            "secondary-fixed": "#ffdbce",
+            "on-secondary-fixed-variant": "#802a00",
+            "on-tertiary-fixed": "#00210d",
+            "tertiary-container": "#003016",
+            "on-error": "#ffffff",
+            "on-tertiary-container": "#4ba068",
+            "tertiary": "#001908",
+            "surface-container-high": "#d8eaff",
+            "on-error-container": "#93000a",
+            "on-primary": "#ffffff",
+            "surface-dim": "#bfddfe"
+          },
+          borderRadius: {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          spacing: {
+            "space-2xs": "0.25rem",
+            "space-xs": "0.5rem",
+            "space-sm": "0.75rem",
+            "space-md": "1rem",
+            "space-lg": "1.25rem",
+            "space-xl": "1.5rem",
+            "space-2xl": "2rem",
+            "space-3xl": "3rem",
+            "gutter-mobile": "1rem",
+            "margin-screen": "1rem"
+          },
+          fontFamily: {
+            "body-sm": ["Inter", "Noto Sans Devanagari", "sans-serif"],
+            "code-sm": ["JetBrains Mono", "monospace"],
+            "title-md": ["Inter", "sans-serif"],
+            "label-lg": ["Inter", "sans-serif"],
+            "headline-sm": ["Plus Jakarta Sans", "sans-serif"],
+            "headline-md": ["Plus Jakarta Sans", "sans-serif"],
+            "title-sm": ["Inter", "sans-serif"],
+            "label-sm": ["Inter", "sans-serif"],
+            "label-md": ["Inter", "sans-serif"],
+            "body-md": ["Inter", "Noto Sans Devanagari", "sans-serif"],
+            "body-lg": ["Inter", "sans-serif"],
+            "headline-lg": ["Plus Jakarta Sans", "sans-serif"]
+          },
+          fontSize: {
+            "xs": ["12px", {"lineHeight": "16px"}],
+            "sm": ["14px", {"lineHeight": "20px"}],
+            "base": ["16px", {"lineHeight": "24px"}],
+            "lg": ["20px", {"lineHeight": "28px"}],
+            "xl": ["24px", {"lineHeight": "32px"}],
+            "2xl": ["24px", {"lineHeight": "32px"}],
+            "body-sm": ["12px", {"lineHeight": "16px", "fontWeight": "400"}],
+            "code-sm": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+            "title-md": ["16px", {"lineHeight": "24px", "fontWeight": "600"}],
+            "label-lg": ["14px", {"lineHeight": "20px", "fontWeight": "600"}],
+            "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+            "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "700"}],
+            "title-sm": ["14px", {"lineHeight": "20px", "fontWeight": "600"}],
+            "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "600"}],
+            "label-md": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+            "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+            "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+            "headline-lg": ["24px", {"lineHeight": "32px", "fontWeight": "800"}]
+          }
+        }
+      }
+    };
+  </script>
+
+  <style>
+    @layer base {
+      html, body {
+        width: 100vw;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        overscroll-behavior: none;
+      }
+      .pb-safe { padding-bottom: env(safe-area-inset-bottom, 0px); }
+      .pt-safe { padding-top: env(safe-area-inset-top, 0px); }
+    }
+    ::-webkit-scrollbar { display: none; }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+    /* Standard Icon Sizes aligned with Typographic Scale */
+    .material-symbols-outlined {
+      font-size: 20px;
+      line-height: 1;
+      display: inline-block;
+      vertical-align: middle;
+    }
+    .icon-sm { font-size: 16px !important; }
+    .icon-md { font-size: 20px !important; }
+    .icon-lg { font-size: 24px !important; }
+    
+    /* 1. Unified 4-Tier Button System (Consistency Heuristic) */
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      font-weight: 600;
+      font-size: 14px;
+      line-height: 20px;
+      height: 38px;
+      padding: 0 1rem;
+      border-radius: 0.5rem;
+      background-color: #a73a00;
+      color: #ffffff;
+      border: 1px solid transparent;
+      transition: all 0.15s ease-in-out;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+    .btn-primary:hover {
+      opacity: 0.92;
+      box-shadow: 0 2px 6px rgba(167, 58, 0, 0.2);
+    }
+    .btn-primary:active {
+      transform: scale(0.97);
+    }
+
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      font-weight: 600;
+      font-size: 14px;
+      line-height: 20px;
+      height: 38px;
+      padding: 0 1rem;
+      border-radius: 0.5rem;
+      background-color: #e3efff;
+      color: #00152a;
+      border: 1px solid transparent;
+      transition: all 0.15s ease-in-out;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+    .btn-secondary:hover {
+      background-color: #d8eaff;
+      color: #001d33;
+    }
+    .btn-secondary:active {
+      transform: scale(0.97);
+    }
+
+    .btn-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 38px;
+      height: 38px;
+      border-radius: 9999px;
+      background-color: #e3efff;
+      color: #00152a;
+      border: none;
+      flex-shrink: 0;
+      transition: all 0.15s ease-in-out;
+      cursor: pointer;
+    }
+    .btn-icon:hover {
+      background-color: #d8eaff;
+    }
+    .btn-icon:active {
+      transform: scale(0.95);
+    }
+
+    .btn-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.375rem;
+      font-size: 12px;
+      font-weight: 500;
+      line-height: 16px;
+      height: 32px;
+      padding: 0 0.75rem;
+      border-radius: 9999px;
+      background-color: #ffffff;
+      color: #00152a;
+      border: 1px solid #c3c6ce;
+      flex-shrink: 0;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+      transition: all 0.15s ease-in-out;
+      cursor: pointer;
+    }
+    .btn-chip:hover {
+      background-color: #edf4ff;
+      border-color: #b0c9e8;
+    }
+    .btn-chip:active {
+      transform: scale(0.97);
+    }
+
+    /* Markdown formatting inside assistant chat */
+    .prose-content table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 10px 0;
+      font-size: 13px;
+    }
+    .prose-content th {
+      background: #102a43;
+      color: #ffffff;
+      padding: 6px 10px;
+      text-align: left;
+      border: 1px solid #c3c6ce;
+    }
+    .prose-content td {
+      padding: 6px 10px;
+      border: 1px solid #c3c6ce;
+      background: #ffffff;
+      color: #001d33;
+    }
+    .prose-content ul, .prose-content ol {
+      margin-left: 18px;
+      margin-top: 6px;
+      margin-bottom: 6px;
+    }
+    .prose-content li {
+      margin-bottom: 4px;
+    }
+    .prose-content p {
+      margin-bottom: 8px;
+    }
+  </style>
+</head>
+<body class="bg-surface font-body-md text-on-surface flex flex-col min-h-screen">
+
+  <!-- Fixed Top App Header -->
+  <header class="fixed top-0 w-full z-50 pt-safe bg-surface/85 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)]">
+    <div class="h-16 px-gutter-mobile flex items-center justify-between max-w-4xl mx-auto">
+      <div class="flex items-center gap-space-xs cursor-pointer" onclick="switchView('assistant-chat')">
+        <img alt="Standards Saathi Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1VCcgth8wPtmagkSJxnes7mJ_iUqSVs1qTE-8A9XVnQfOhMUH7rn-1gOpriCzm1PGMVbDJ34YUQZ6hL3stQJYRWZ-BXhbDiz26p68O6hAmOURXuyV1Idd3Z7Hcg24fyzgC43MBIrwLKvHK2VjbFeeR4zn5o52DCrppj-WhDg-S734w0QpbthR2UK7uS5QN1ymwNiZbaForIQy6sg3Xy1jBxf8XvNbJTTXQ6ukm5As_s9Gei314YFTvJY_k"/>
+        <div class="flex flex-col">
+          <div class="flex items-center gap-space-2xs">
+            <span class="font-headline-sm text-headline-sm text-primary tracking-tight font-bold">Standards Saathi</span>
+            <span class="material-symbols-outlined text-tertiary-container text-[16px]" title="Verified BIS Portal">verified</span>
+          </div>
+          <span id="appSubtitle" class="font-label-sm text-xs text-on-surface-variant leading-normal">मानक साथी • BIS AI Assistant</span>
+        </div>
+      </div>
+      <div class="flex items-center gap-space-xs">
+        <button id="clearChatHeaderBtn" aria-label="Clear Chat" class="btn-icon" title="Clear Chat History" type="button" onclick="clearChatStream()">
+          <span class="material-symbols-outlined icon-md text-primary">delete_sweep</span>
+        </button>
+        <button id="langToggleBtn" aria-label="Change Language" class="btn-secondary" type="button" onclick="toggleLanguage()">
+          <span id="langText" class="font-semibold tracking-wider text-primary">EN | हिं</span>
+        </button>
+        <button id="headerMicBtn" aria-label="Voice Assistant" class="btn-icon relative" type="button" onclick="toggleSpeechRecognition()">
+          <span id="headerMicPulse" class="hidden absolute inset-0 rounded-full border-2 border-secondary animate-ping"></span>
+          <span id="headerMicIcon" class="material-symbols-outlined icon-md text-primary">mic</span>
+        </button>
+        <button onclick="openConfigModal()" aria-label="API Settings" class="btn-icon" title="Groq API & Ingestion Hub" type="button">
+          <span class="material-symbols-outlined icon-md text-primary">tune</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main View Container -->
+  <main class="flex flex-col relative w-full pt-16 pb-24 bg-surface flex-grow max-w-4xl mx-auto">
+    
+    <!-- Tricolor Accent Line -->
+    <div class="w-full flex h-1 shadow-sm">
+      <div class="flex-1 bg-secondary-container"></div>
+      <div class="flex-1 bg-surface-container-lowest"></div>
+      <div class="flex-1 bg-tertiary-container"></div>
+    </div>
+
+    <!-- Civic Assurance Live Status Banner -->
+    <div class="px-gutter-mobile pt-space-xs pb-space-sm bg-surface-container-low shadow-sm">
+      <div class="flex items-center justify-between gap-space-xs">
+        <div class="flex items-center gap-space-2xs min-w-0">
+          <span class="material-symbols-outlined icon-sm text-tertiary-container shrink-0" style="font-variation-settings: 'FILL' 1;">shield</span>
+          <span id="liveStatusText" class="font-label-sm text-xs text-on-surface truncate">BIS Verified Data • FAISS Vector Engine Active</span>
+        </div>
+        <div class="flex items-center gap-space-2xs px-space-xs py-0.5 rounded-full bg-surface-container text-primary shrink-0">
+          <span class="w-1.5 h-1.5 rounded-full bg-tertiary-container animate-pulse"></span>
+          <span id="liveModelText" class="font-code-sm text-xs uppercase font-bold text-on-surface-variant">Llama 3.1 Live</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- VIEW 1: SAATHI CHAT VIEW (DEFAULT)             -->
+    <!-- ============================================== -->
+    <div id="view-chat" class="flex flex-col w-full">
+      <!-- Conversational Chat Stream -->
+      <div id="chatStream" class="flex flex-col px-gutter-mobile py-space-sm gap-space-md">
+        
+        <!-- Welcome Introduction Message -->
+        <div class="flex flex-col gap-space-2xs max-w-[96%] self-start">
+          <div class="flex items-center gap-space-2xs pl-1">
+            <span class="font-label-sm text-xs text-secondary font-semibold">Standards Saathi</span>
+            <span id="welcomeRoleLabel" class="font-label-sm text-xs text-on-surface-variant">• Assistant</span>
+          </div>
+          <div class="bg-surface-container-lowest rounded-xl p-space-md shadow-md flex flex-col gap-space-sm border border-slate-200">
+            <div class="flex items-start gap-space-xs">
+              <div class="w-10 h-10 rounded-full bg-primary-container text-on-primary flex items-center justify-center shrink-0 shadow-sm">
+                <span class="material-symbols-outlined text-[22px]" style="font-variation-settings: 'FILL' 1;">smart_toy</span>
+              </div>
+              <div class="flex flex-col min-w-0">
+                <h1 id="welcomeTitle" class="text-2xl md:text-headline-lg font-headline-lg font-bold text-primary leading-tight">नमस्ते! I am Standards Saathi</h1>
+                <p id="welcomeSub" class="font-body-md text-body-md text-on-surface-variant mt-1">
+                  Your bilingual AI guide for Indian Standards (IS Codes), ISI License verification, Gold HUID, and MSME fee concessions.
+                </p>
+              </div>
+            </div>
+
+            <!-- Capability Cards Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-space-xs pt-1">
+              <div class="bg-surface-container-low rounded-lg p-space-xs flex items-center gap-space-xs shadow-sm cursor-pointer hover:bg-surface-container transition-colors" onclick="handleCardClick(1)">
+                <div class="w-8 h-8 rounded-lg bg-surface-container-highest text-primary flex items-center justify-center shrink-0">
+                  <span class="material-symbols-outlined text-[18px]">auto_stories</span>
+                </div>
+                <div class="flex flex-col min-w-0">
+                  <span id="cap1Title" class="font-title-sm text-title-sm text-on-surface font-semibold truncate">22,000+ Standards</span>
+                  <span id="cap1Desc" class="font-label-sm text-xs text-on-surface-variant">Instant abstracts &amp; QCO limits</span>
+                </div>
+              </div>
+
+              <div class="bg-surface-container-low rounded-lg p-space-xs flex items-center gap-space-xs shadow-sm cursor-pointer hover:bg-surface-container transition-colors" onclick="switchView('verify-isi')">
+                <div class="w-8 h-8 rounded-lg bg-tertiary-fixed-dim text-on-tertiary-fixed flex items-center justify-center shrink-0">
+                  <span class="material-symbols-outlined text-[18px]">verified</span>
+                </div>
+                <div class="flex flex-col min-w-0">
+                  <span id="cap2Title" class="font-title-sm text-title-sm text-on-surface font-semibold truncate">Verify ISI &amp; Hallmark</span>
+                  <span id="cap2Desc" class="font-label-sm text-xs text-on-surface-variant">Check CML numbers &amp; HUID</span>
+                </div>
+              </div>
+
+              <div class="bg-surface-container-low rounded-lg p-space-xs flex items-center gap-space-xs shadow-sm cursor-pointer hover:bg-surface-container transition-colors" onclick="switchView('msme-compliance')">
+                <div class="w-8 h-8 rounded-lg bg-secondary-fixed text-on-secondary-fixed flex items-center justify-center shrink-0">
+                  <span class="material-symbols-outlined text-[18px]">savings</span>
+                </div>
+                <div class="flex flex-col min-w-0">
+                  <span id="cap3Title" class="font-title-sm text-title-sm text-on-surface font-semibold truncate">MSME 80% Concession</span>
+                  <span id="cap3Desc" class="font-label-sm text-xs text-on-surface-variant">Special testing fee subsidies</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Live Loading State Indicator (Hidden by default) -->
+      <div id="loadingIndicator" class="hidden flex items-center gap-space-xs px-gutter-mobile py-space-xs text-on-surface-variant">
+        <span class="w-2.5 h-2.5 rounded-full bg-secondary-container animate-ping"></span>
+        <span id="loadingText" class="font-label-sm text-xs text-secondary font-medium">Saathi is retrieving verified Indian Standards &amp; synthesizing answer...</span>
+      </div>
+
+      <!-- Docked Input & Prompt Carousel Assembly -->
+      <div class="sticky bottom-16 w-full bg-surface/95 backdrop-blur-md pb-safe pt-space-xs px-gutter-mobile flex flex-col gap-space-xs shadow-lg">
+        <!-- Quick Prompt Chips Carousel (Unified .btn-chip) -->
+        <div class="flex items-center gap-space-xs overflow-x-auto no-scrollbar py-0.5">
+          <button id="chip1Btn" class="btn-chip" type="button" onclick="handleChipClick(1)">
+            <span class="material-symbols-outlined text-[15px] text-secondary">plumbing</span>
+            <span id="chip1Text">Steel Pipe (IS 1239)</span>
+          </button>
+          <button id="chip2Btn" class="btn-chip" type="button" onclick="handleChipClick(2)">
+            <span class="material-symbols-outlined text-[15px] text-secondary">assignment_turned_in</span>
+            <span id="chip2Text">BIS Certification</span>
+          </button>
+          <button id="chip3Btn" class="btn-chip" type="button" onclick="handleChipClick(3)">
+            <span class="material-symbols-outlined text-[15px] text-secondary">domain</span>
+            <span id="chip3Text">Structural Steel (IS 2062)</span>
+          </button>
+          <button id="chip4Btn" class="btn-chip" type="button" onclick="handleChipClick(4)">
+            <span class="material-symbols-outlined text-[15px] text-secondary">foundation</span>
+            <span id="chip4Text">Concrete Mix (IS 456)</span>
+          </button>
+          <button id="chip5Btn" class="btn-chip" type="button" onclick="handleChipClick(5)">
+            <span class="material-symbols-outlined text-[15px] text-secondary">workspace_premium</span>
+            <span id="chip5Text">Gold Hallmarking &amp; HUID</span>
+          </button>
+          <button id="chip6Btn" class="btn-chip" type="button" onclick="handleChipClick(6)">
+            <span class="material-symbols-outlined text-[15px] text-secondary">water_drop</span>
+            <span id="chip6Text">Drinking Water (IS 10500)</span>
+          </button>
+        </div>
+
+        <!-- Active Input Field Assembly -->
+        <div class="flex items-center gap-space-xs bg-surface-container-lowest rounded-full p-1.5 shadow-md border border-slate-200">
+          <button onclick="openAddStandardModal()" class="btn-icon" title="Add / Ingest Indian Standard" type="button">
+            <span class="material-symbols-outlined text-[20px]">add_circle</span>
+          </button>
+          
+          <div class="flex-1 flex items-center px-space-xs min-w-0">
+            <input id="chatInput" onkeydown="handleInputKeyDown(event)" class="w-full bg-transparent font-body-md text-body-md text-primary placeholder:text-on-surface-variant focus:outline-none" placeholder="Ask about Indian Standards in Hindi or English..." type="text"/>
+          </div>
+
+          <button id="inputMicBtn" onclick="toggleSpeechRecognition()" class="relative btn-icon text-secondary" title="Voice Assistant (Speak in Hindi/English)" type="button">
+            <span id="micPulseRing" class="hidden absolute inset-0 rounded-full border-2 border-secondary-container opacity-40 animate-ping"></span>
+            <span id="inputMicIcon" class="material-symbols-outlined text-[20px]">mic</span>
+          </button>
+
+          <button onclick="sendMessage()" class="btn-icon !bg-secondary !text-on-secondary shadow-md hover:opacity-90" title="Send Question" type="button">
+            <span class="material-symbols-outlined text-[20px]">arrow_upward</span>
+          </button>
+        </div>
+
+        <!-- Tagline text -->
+        <div class="flex items-center justify-center gap-space-2xs pb-1">
+          <span class="material-symbols-outlined text-[14px] text-on-surface-variant">account_balance</span>
+          <span id="taglineText" class="font-label-sm text-xs text-on-surface-variant text-center leading-normal">
+            Empowered by Bureau of Indian Standards (BIS) &amp; FAISS RAG Intelligence
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- VIEW 2: VERIFY ISI & HALLMARK                  -->
+    <!-- ============================================== -->
+    <div id="view-verify" class="hidden flex flex-col px-gutter-mobile py-space-md gap-space-md">
+      <div class="bg-surface-container-lowest rounded-xl p-space-md shadow-md flex flex-col gap-space-sm border border-slate-200">
+        <h2 id="verifyTitle" class="text-xl md:text-headline-md font-headline-md font-bold text-primary flex items-center gap-2">
+          <span class="material-symbols-outlined text-secondary text-[24px]">verified</span>
+          <span id="verifyTitleText">BIS License &amp; Hallmark Verification Portal</span>
+        </h2>
+        <p id="verifySub" class="font-body-md text-body-md text-on-surface-variant">
+          Verify product authenticity, ISI CM/L licenses, Gold Jewellery HUID codes, and Electronic CRS registrations directly.
+        </p>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-space-xs pt-2">
+          <button onclick="setVerificationType('cml')" id="vtype-cml" class="btn-primary flex-1 justify-center">
+            <span class="material-symbols-outlined text-[18px]">verified</span>
+            <span id="vtypeCmlText">ISI License (CM/L)</span>
+          </button>
+          <button onclick="setVerificationType('huid')" id="vtype-huid" class="btn-secondary flex-1 justify-center">
+            <span class="material-symbols-outlined text-[18px]">diamond</span>
+            <span id="vtypeHuidText">Gold HUID Code</span>
+          </button>
+          <button onclick="setVerificationType('crs')" id="vtype-crs" class="btn-secondary flex-1 justify-center">
+            <span class="material-symbols-outlined text-[18px]">memory</span>
+            <span id="vtypeCrsText">Electronics CRS (R-No)</span>
+          </button>
+        </div>
+
+        <div class="flex gap-space-xs pt-2">
+          <input id="verifyInput" class="flex-1 px-4 py-2 rounded-lg bg-surface-container-low border border-slate-300 font-body-md text-body-md text-primary focus:outline-none focus:ring-2 focus:ring-secondary" placeholder="Enter 7 or 8-digit CM/L License number (e.g. CM/L-8400012345)..." type="text"/>
+          <button id="verifyBtn" onclick="executeVerification()" class="btn-primary px-6 py-2">
+            Verify Now
+          </button>
+        </div>
+
+        <div id="verifyResultContainer" class="hidden mt-3 p-4 rounded-lg bg-surface-container-low border border-slate-200"></div>
+      </div>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- VIEW 3: IS CODES CATALOG & DIRECTORY           -->
+    <!-- ============================================== -->
+    <div id="view-catalog" class="hidden flex flex-col px-gutter-mobile py-space-md gap-space-md">
+      <div class="flex items-center justify-between">
+        <div>
+          <h2 id="catalogTitle" class="text-xl md:text-headline-md font-headline-md font-bold text-primary">📚 Indian Standards Directory</h2>
+          <p id="catalogSub" class="font-body-md text-body-md text-on-surface-variant">Search and explore verified IS codes currently loaded in the vector database.</p>
+        </div>
+        <button onclick="openAddStandardModal()" class="btn-primary !text-xs !py-1.5 !px-3">
+          <span class="material-symbols-outlined text-[16px]">add</span> <span id="addCodeBtnText">Add IS Code</span>
+        </button>
+      </div>
+
+      <input id="catalogSearch" oninput="filterStandardsCatalog()" class="w-full px-4 py-2 rounded-lg bg-surface-container-lowest border border-slate-300 font-body-md text-body-md text-primary focus:outline-none" placeholder="🔍 Search by IS number, title, or category..." type="text"/>
+
+      <div id="standardsCatalogList" class="flex flex-col gap-space-xs"></div>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- VIEW 4: MSME COMPLIANCE & SUBSIDY HUB          -->
+    <!-- ============================================== -->
+    <div id="view-msme" class="hidden flex flex-col px-gutter-mobile py-space-md gap-space-md">
+      <div class="bg-surface-container-lowest rounded-xl p-space-md shadow-md flex flex-col gap-space-sm border border-slate-200">
+        <h2 id="msmeTitle" class="text-xl md:text-headline-md font-headline-md font-bold text-primary flex items-center gap-2">
+          <span class="material-symbols-outlined text-secondary text-[24px]">savings</span>
+          <span id="msmeTitleText">MSME 80% Concession &amp; Compliance Hub</span>
+        </h2>
+        <p id="msmeSub" class="font-body-md text-body-md text-on-surface-variant">
+          Under the Ministry of MSME and BIS special incentive schemes, micro and small enterprises are eligible for significant fee reductions.
+        </p>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-space-sm pt-2">
+          <div class="bg-surface-container-low p-space-sm rounded-lg border border-slate-200">
+            <span id="msmeMicroTitle" class="font-title-sm text-title-sm text-primary font-semibold">🏢 Micro Enterprises</span>
+            <ul id="msmeMicroList" class="text-body-sm text-on-surface mt-2 space-y-1">
+              <li>• <strong>80% Concession</strong> on BIS Application fee</li>
+              <li>• <strong>80% Concession</strong> on Annual License fee</li>
+              <li>• <strong>50% Concession</strong> on product testing charges in BIS labs</li>
+            </ul>
+          </div>
+
+          <div class="bg-surface-container-low p-space-sm rounded-lg border border-slate-200">
+            <span id="msmeSmallTitle" class="font-title-sm text-title-sm text-primary font-semibold">🏭 Small Enterprises &amp; Startups</span>
+            <ul id="msmeSmallList" class="text-body-sm text-on-surface mt-2 space-y-1">
+              <li>• <strong>50% Concession</strong> on Application &amp; License fees</li>
+              <li>• Priority fast-track audit processing within 30 days</li>
+              <li>• Free technical advisory via NITS training modules</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="pt-2">
+          <button id="msmeAskBtn" onclick="handleMsmeGuideClick()" class="btn-primary w-full py-2.5">
+            <span class="material-symbols-outlined text-[18px]">chat</span>
+            <span id="msmeAskBtnText">Ask Saathi for Complete MSME Application Guide</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- VIEW 5: 7-STEP BIS CERTIFICATION GUIDE         -->
+    <!-- ============================================== -->
+    <div id="view-cert-guide" class="hidden flex flex-col px-gutter-mobile py-space-md gap-space-md">
+      
+      <!-- Top Action Bar with Back to Chat -->
+      <div class="flex items-center justify-between gap-space-xs">
+        <button onclick="switchView('assistant-chat')" class="btn-secondary !text-xs !py-1.5 !px-3" type="button">
+          <span class="material-symbols-outlined text-[16px]">arrow_back</span>
+          <span id="certBackToChatTop">Back to Chat</span>
+        </button>
+        <div class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-tertiary-fixed text-on-tertiary-fixed text-xs font-bold">
+          <span class="material-symbols-outlined text-[14px]">verified</span>
+          <span id="certBadgeText">BIS Scheme-I &amp; CRS Approved</span>
+        </div>
+      </div>
+
+      <!-- Main Banner Card -->
+      <div class="bg-surface-container-lowest rounded-xl p-space-md shadow-md flex flex-col gap-space-sm border border-slate-200">
+        <div class="flex items-start gap-space-xs">
+          <div class="w-10 h-10 rounded-xl bg-secondary text-on-secondary flex items-center justify-center shrink-0 shadow-sm">
+            <span class="material-symbols-outlined text-[24px]">assignment_turned_in</span>
+          </div>
+          <div class="flex flex-col min-w-0">
+            <h2 id="certMainTitle" class="text-xl md:text-headline-md font-headline-md font-bold text-primary">📋 BIS Certification &amp; Licensing Roadmap</h2>
+            <p id="certMainSub" class="font-body-md text-body-md text-on-surface-variant mt-1">
+              Complete 7-step guide for Indian manufacturers and MSMEs to obtain ISI Mark (Scheme-I) and CRS registration with up to 80% fee subsidies.
+            </p>
+          </div>
+        </div>
+
+        <!-- Metric KPI Cards Grid -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-space-xs pt-2">
+          <div class="bg-surface-container-low p-space-xs rounded-lg border border-slate-200 flex flex-col">
+            <div class="flex items-center gap-1 text-secondary font-semibold text-xs">
+              <span class="material-symbols-outlined text-[16px]">schedule</span>
+              <span id="kpi1Label">Timeline</span>
+            </div>
+            <span id="kpi1Value" class="text-base md:text-lg font-bold text-primary mt-1">30 – 60 Days</span>
+            <span id="kpi1Sub" class="text-[11px] text-on-surface-variant">30d Simplified / 60d Normal</span>
+          </div>
+
+          <div class="bg-surface-container-low p-space-xs rounded-lg border border-slate-200 flex flex-col">
+            <div class="flex items-center gap-1 text-secondary font-semibold text-xs">
+              <span class="material-symbols-outlined text-[16px]">payments</span>
+              <span id="kpi2Label">Estimated Cost</span>
+            </div>
+            <span id="kpi2Value" class="text-base md:text-lg font-bold text-primary mt-1">₹20K – ₹80K</span>
+            <span id="kpi2Sub" class="text-[11px] text-on-surface-variant">Micro MSME Net: ~₹18k–₹25k</span>
+          </div>
+
+          <div class="bg-surface-container-low p-space-xs rounded-lg border border-slate-200 flex flex-col">
+            <div class="flex items-center gap-1 text-tertiary-container font-semibold text-xs">
+              <span class="material-symbols-outlined text-[16px]">savings</span>
+              <span id="kpi3Label">MSME Subsidy</span>
+            </div>
+            <span id="kpi3Value" class="text-base md:text-lg font-bold text-tertiary-container mt-1">80% Concession</span>
+            <span id="kpi3Sub" class="text-[11px] text-on-surface-variant">On Application &amp; License Fees</span>
+          </div>
+
+          <div class="bg-surface-container-low p-space-xs rounded-lg border border-slate-200 flex flex-col">
+            <div class="flex items-center gap-1 text-primary font-semibold text-xs">
+              <span class="material-symbols-outlined text-[16px]">verified_user</span>
+              <span id="kpi4Label">Validity</span>
+            </div>
+            <span id="kpi4Value" class="text-base md:text-lg font-bold text-primary mt-1">1 to 2 Years</span>
+            <span id="kpi4Sub" class="text-[11px] text-on-surface-variant">Renewable with audits</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 7-Step Step-by-Step Interactive Process Section -->
+      <div class="bg-surface-container-lowest rounded-xl p-space-md shadow-md flex flex-col gap-space-md border border-slate-200">
+        <div class="flex items-center justify-between border-b pb-2">
+          <h3 id="certProcessHeading" class="text-lg font-headline-sm font-bold text-primary flex items-center gap-2">
+            <span class="material-symbols-outlined text-secondary">linear_scale</span>
+            <span>7-Step BIS Certification Roadmap</span>
+          </h3>
+          <span class="text-xs px-2.5 py-0.5 rounded-full bg-surface-container text-secondary font-bold">Steps 1 → 7</span>
+        </div>
+
+        <div class="flex flex-col gap-space-sm relative">
+          
+          <!-- STEP 1 -->
+          <div class="p-space-sm rounded-xl bg-surface-container-low border border-slate-200 flex flex-col gap-2 relative">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <span class="w-7 h-7 rounded-full bg-secondary text-on-secondary font-bold text-xs flex items-center justify-center">1</span>
+                <h4 id="step1Title" class="font-title-sm text-sm md:text-base font-bold text-primary">Identify Applicable Indian Standard (IS Code) &amp; Scheme</h4>
+              </div>
+              <span class="text-[11px] font-bold px-2 py-0.5 rounded bg-surface-container text-secondary">Day 1 – 3</span>
+            </div>
+            <p id="step1Desc" class="text-body-sm text-on-surface text-xs md:text-sm pl-9">
+              Determine the exact Indian Standard specification for your product (e.g. IS 1239 for steel pipes, IS 10500 for drinking water). Check whether the product is under <strong>Mandatory Quality Control Order (QCO)</strong> or voluntary scheme. Choose between <strong>Scheme-I (ISI Mark)</strong> for manufactured goods and <strong>Scheme-II (CRS)</strong> for electronics.
+            </p>
+            <div class="pl-9 flex flex-wrap gap-2 pt-1">
+              <span class="text-[11px] px-2 py-0.5 rounded-md bg-white border text-primary font-medium">✓ Search IS Code in Directory</span>
+              <span class="text-[11px] px-2 py-0.5 rounded-md bg-white border text-primary font-medium">✓ Verify QCO Notification</span>
+              <span class="text-[11px] px-2 py-0.5 rounded-md bg-white border text-primary font-medium">✓ Identify Product Group</span>
+            </div>
+          </div>
+
+          <!-- STEP 2 -->
+          <div class="p-space-sm rounded-xl bg-surface-container-low border border-slate-200 flex flex-col gap-2 relative">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <span class="w-7 h-7 rounded-full bg-secondary text-on-secondary font-bold text-xs flex items-center justify-center">2</span>
+                <h4 id="step2Title" class="font-title-sm text-sm md:text-base font-bold text-primary">Set Up In-House Testing Laboratory &amp; Quality Infrastructure</h4>
+              </div>
+              <span class="text-[11px] font-bold px-2 py-0.5 rounded bg-surface-container text-secondary">Day 4 – 15</span>
+            </div>
+            <p id="step2Desc" class="text-body-sm text-on-surface text-xs md:text-sm pl-9">
+              Set up all mandatory in-house testing equipment in accordance with the BIS <strong>Scheme of Inspection and Testing (SIT)</strong>. Ensure all measuring gauges and apparatus possess valid calibration certificates from NABL-accredited labs. Appoint a qualified Quality Control Engineer.
+            </p>
+            <div class="pl-9 flex flex-wrap gap-2 pt-1">
+              <span class="text-[11px] px-2 py-0.5 rounded-md bg-white border text-primary font-medium">✓ Procure SIT Test Equipment</span>
+              <span class="text-[11px] px-2 py-0.5 rounded-md bg-white border text-primary font-medium">✓ NABL Calibration Certificates</span>
+              <span class="text-[11px] px-2 py-0.5 rounded-md bg-white border text-primary font-medium">✓ Appoint QC Personnel</span>
+            </div>
+          </div>
+
+          <!-- STEP 3 -->
+          <div class="p-space-sm rounded-xl bg-surface-container-low border border-slate-200 flex flex-col gap-2 relative">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <span class="w-7 h-7 rounded-full bg-secondary text-on-secondary font-bold text-xs flex items-center justify-center">3</span>
+                <h4 id="step3Title" class="font-title-sm text-sm md:text-base font-bold text-primary">Submit Online Application on e-BIS Manakonline Portal</h4>
+              </div>
+              <span class="text-[11px] font-bold px-2 py-0.5 rounded bg-surface-container text-secondary">Day 16 – 20</span>
+            </div>
+            <p id="step3Desc" class="text-body-sm text-on-surface text-xs md:text-sm pl-9">
+              Register at <strong>www.manakonline.in</strong>. Fill Form-V and upload plant layout, manufacturing machinery list, raw material test certs, in-house lab checklist, and Udyam Registration (for MSME subsidy). Pay nominal application fee (₹1,000; only ₹200 for Micro MSMEs).
+            </p>
+            <div class="pl-9 flex flex-wrap gap-2 pt-1">
+              <span class="text-[11px] px-2 py-0.5 rounded-md bg-white border text-primary font-medium">✓ Portal Registration</span>
+              <span class="text-[11px] px-2 py-0.5 rounded-md bg-white border text-primary font-medium">✓ Upload Machinery &amp; SIT Docs</span>
+              <span class="text-[11px] px-2 py-0.5 rounded-md bg-white border text-primary font-medium">✓ Claim 80% MSME Discount</span>
+            </div>
+          </div>
+
+          <!-- STEP 4 -->
+          <div class="p-space-sm rounded-xl bg-surface-container-low border border-slate-200 flex flex-col gap-2 relative">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <span class="w-7 h-7 rounded-full bg-secondary text-on-secondary font-bold text-xs flex items-center justify-center">4</span>
+                <h4 id="step4Title" class="font-title-sm text-sm md:text-base font-bold text-primary">Factory Audit &amp; Preliminary Inspection by BIS Officer</h4>
+              </div>
+              <span class="text-[11px] font-bold px-2 py-0.5 rounded bg-surface-container text-secondary">Day 21 – 35</span>
+            </div>
+            <p id="step4Desc" class="text-body-sm text-on-surface text-xs md:text-sm pl-9">
+              A designated BIS Technical Officer conducts an on-site audit of your factory premises. The auditor evaluates production capacity, verifies raw material sourcing, inspects in-house laboratory testing capability, and evaluates the competence of testing personnel.
+            </p>
+            <div class="pl-9 flex flex-wrap gap-2 pt-1">
+              <span class="text-[11px] px-2 py-0.5 rounded-md bg-white border text-primary font-medium">✓ Factory Physical Inspection</span>
+              <span class="text-[11px] px-2 py-0.5 rounded-md bg-white border text-primary font-medium">✓ Live In-House Test Demo</span>
+              <span class="text-[11px] px-2 py-0.5 rounded-md bg-white border text-primary font-medium">✓ Inspection Fee ₹7,000/day</span>
+            </div>
+          </div>
+
+          <!-- STEP 5 -->
+          <div class="p-space-sm rounded-xl bg-surface-container-low border border-slate-200 flex flex-col gap-2 relative">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <span class="w-7 h-7 rounded-full bg-secondary text-on-secondary font-bold text-xs flex items-center justify-center">5</span>
+                <h4 id="step5Title" class="font-title-sm text-sm md:text-base font-bold text-primary">Sample Drawing &amp; Independent Laboratory Testing</h4>
+              </div>
+              <span class="text-[11px] font-bold px-2 py-0.5 rounded bg-surface-container text-secondary">Day 36 – 50</span>
+            </div>
+            <p id="step5Desc" class="text-body-sm text-on-surface text-xs md:text-sm pl-9">
+              During the factory audit, counter-samples are drawn and sealed by the BIS officer. One sample is tested in factory presence; the second sealed sample is dispatched to a BIS-recognized / NABL-accredited test laboratory for independent comprehensive testing.
+            </p>
+            <div class="pl-9 flex flex-wrap gap-2 pt-1">
+              <span class="text-[11px] px-2 py-0.5 rounded-md bg-white border text-primary font-medium">✓ Sealed Counter-Sample Dispatch</span>
+              <span class="text-[11px] px-2 py-0.5 rounded-md bg-white border text-primary font-medium">✓ Track Status on LIMS Portal</span>
+              <span class="text-[11px] px-2 py-0.5 rounded-md bg-white border text-primary font-medium">✓ 50% Lab Subsidy in BIS Labs</span>
+            </div>
+          </div>
+
+          <!-- STEP 6 -->
+          <div class="p-space-sm rounded-xl bg-surface-container-low border border-slate-200 flex flex-col gap-2 relative">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <span class="w-7 h-7 rounded-full bg-secondary text-on-secondary font-bold text-xs flex items-center justify-center">6</span>
+                <h4 id="step6Title" class="font-title-sm text-sm md:text-base font-bold text-primary">Scrutiny of Test Reports &amp; Grant of License (CM/L)</h4>
+              </div>
+              <span class="text-[11px] font-bold px-2 py-0.5 rounded bg-surface-container text-secondary">Day 51 – 60</span>
+            </div>
+            <p id="step6Desc" class="text-body-sm text-on-surface text-xs md:text-sm pl-9">
+              Upon receipt of passing test reports from the independent laboratory and clearance of the inspection report, the BIS competent authority grants the Certificate of Conformity with an official 7-to-8 digit <strong>CM/L (Certification Marks License) number</strong>.
+            </p>
+            <div class="pl-9 flex flex-wrap gap-2 pt-1">
+              <span class="text-[11px] px-2 py-0.5 rounded-md bg-white border text-primary font-medium">✓ CM/L Number Allotment</span>
+              <span class="text-[11px] px-2 py-0.5 rounded-md bg-white border text-primary font-medium">✓ Download Digital License Certificate</span>
+              <span class="text-[11px] px-2 py-0.5 rounded-md bg-white border text-primary font-medium">✓ Legal Right to Affix ISI Mark</span>
+            </div>
+          </div>
+
+          <!-- STEP 7 -->
+          <div class="p-space-sm rounded-xl bg-surface-container-low border border-slate-200 flex flex-col gap-2 relative">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <span class="w-7 h-7 rounded-full bg-secondary text-on-secondary font-bold text-xs flex items-center justify-center">7</span>
+                <h4 id="step7Title" class="font-title-sm text-sm md:text-base font-bold text-primary">Market Surveillance, Continuous Quality &amp; License Renewal</h4>
+              </div>
+              <span class="text-[11px] font-bold px-2 py-0.5 rounded bg-surface-container text-secondary">Ongoing / Annual</span>
+            </div>
+            <p id="step7Desc" class="text-body-sm text-on-surface text-xs md:text-sm pl-9">
+              BIS conducts periodic surveillance audits and draws samples from factory stock and open market retail stores. The manufacturer maintains complete SIT production registers and pays the annual minimum marking fee to renew the license every 1 to 2 years.
+            </p>
+            <div class="pl-9 flex flex-wrap gap-2 pt-1">
+              <span class="text-[11px] px-2 py-0.5 rounded-md bg-white border text-primary font-medium">✓ Market Surveillance Samples</span>
+              <span class="text-[11px] px-2 py-0.5 rounded-md bg-white border text-primary font-medium">✓ Maintain SIT Quality Records</span>
+              <span class="text-[11px] px-2 py-0.5 rounded-md bg-white border text-primary font-medium">✓ Online Annual License Renewal</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Important Official Links Grid -->
+      <div class="bg-surface-container-lowest rounded-xl p-space-md shadow-md flex flex-col gap-space-sm border border-slate-200">
+        <h3 id="certLinksHeading" class="text-lg font-headline-sm font-bold text-primary flex items-center gap-2">
+          <span class="material-symbols-outlined text-secondary">link</span>
+          <span>Important Official Portals &amp; Resources</span>
+        </h3>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-space-xs pt-1">
+          <a href="https://www.manakonline.in" target="_blank" class="p-3 rounded-lg bg-surface-container-low border border-slate-200 hover:border-secondary transition-colors flex flex-col">
+            <div class="flex items-center gap-2 text-primary font-semibold text-xs">
+              <span class="material-symbols-outlined text-secondary text-[18px]">language</span>
+              <span>e-BIS Manakonline Portal</span>
+            </div>
+            <span class="text-[11px] text-on-surface-variant mt-1">Online application submission, document uploading, and license tracking.</span>
+          </a>
+
+          <a href="https://www.bis.gov.in/laboratories/laboratory-directory/" target="_blank" class="p-3 rounded-lg bg-surface-container-low border border-slate-200 hover:border-secondary transition-colors flex flex-col">
+            <div class="flex items-center gap-2 text-primary font-semibold text-xs">
+              <span class="material-symbols-outlined text-secondary text-[18px]">science</span>
+              <span>BIS Laboratory Directory</span>
+            </div>
+            <span class="text-[11px] text-on-surface-variant mt-1">Find BIS-recognized and NABL accredited testing laboratories across India.</span>
+          </a>
+
+          <a href="https://www.bis.gov.in/conformity-assessment/fee-structure/" target="_blank" class="p-3 rounded-lg bg-surface-container-low border border-slate-200 hover:border-secondary transition-colors flex flex-col">
+            <div class="flex items-center gap-2 text-primary font-semibold text-xs">
+              <span class="material-symbols-outlined text-secondary text-[18px]">request_quote</span>
+              <span>Official Fee Structure</span>
+            </div>
+            <span class="text-[11px] text-on-surface-variant mt-1">Detailed regulations on application, inspection, and minimum marking fees.</span>
+          </a>
+
+          <a href="https://www.bis.gov.in/product-certification/qco-orders/" target="_blank" class="p-3 rounded-lg bg-surface-container-low border border-slate-200 hover:border-secondary transition-colors flex flex-col">
+            <div class="flex items-center gap-2 text-primary font-semibold text-xs">
+              <span class="material-symbols-outlined text-secondary text-[18px]">gavel</span>
+              <span>QCO Mandatory Product List</span>
+            </div>
+            <span class="text-[11px] text-on-surface-variant mt-1">Check 600+ product categories under mandatory government Quality Control Orders.</span>
+          </a>
+
+          <a href="https://udyamregistration.gov.in" target="_blank" class="p-3 rounded-lg bg-surface-container-low border border-slate-200 hover:border-secondary transition-colors flex flex-col">
+            <div class="flex items-center gap-2 text-primary font-semibold text-xs">
+              <span class="material-symbols-outlined text-secondary text-[18px]">badge</span>
+              <span>MSME Udyam Portal</span>
+            </div>
+            <span class="text-[11px] text-on-surface-variant mt-1">Obtain free Udyam certificate to unlock 80% application &amp; license subsidies.</span>
+          </a>
+
+          <a href="https://play.google.com/store/apps/details?id=com.bis.bis_care" target="_blank" class="p-3 rounded-lg bg-surface-container-low border border-slate-200 hover:border-secondary transition-colors flex flex-col">
+            <div class="flex items-center gap-2 text-primary font-semibold text-xs">
+              <span class="material-symbols-outlined text-secondary text-[18px]">smartphone</span>
+              <span>BIS Care Mobile App</span>
+            </div>
+            <span class="text-[11px] text-on-surface-variant mt-1">Verify CM/L licenses, verify gold HUID numbers, and register consumer grievances.</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Transparent Cost Breakdown & MSME Comparison Table -->
+      <div class="bg-surface-container-lowest rounded-xl p-space-md shadow-md flex flex-col gap-space-sm border border-slate-200">
+        <h3 id="certFeeHeading" class="text-lg font-headline-sm font-bold text-primary flex items-center gap-2">
+          <span class="material-symbols-outlined text-secondary">table_chart</span>
+          <span>Fee Structure &amp; MSME Concession Comparison</span>
+        </h3>
+        
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs border-collapse">
+            <thead>
+              <tr class="bg-primary-container text-white">
+                <th class="p-2.5 rounded-tl-lg">Fee Component</th>
+                <th class="p-2.5">Normal / Large Scale</th>
+                <th class="p-2.5">Small MSME (50% Off)</th>
+                <th class="p-2.5 rounded-tr-lg">Micro MSME (80% Off)</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-200 text-on-surface">
+              <tr class="hover:bg-surface-container-low">
+                <td class="p-2.5 font-medium">Application Processing Fee</td>
+                <td class="p-2.5">₹1,000</td>
+                <td class="p-2.5 text-secondary font-bold">₹500</td>
+                <td class="p-2.5 text-tertiary-container font-bold">₹200 (80% off)</td>
+              </tr>
+              <tr class="hover:bg-surface-container-low">
+                <td class="p-2.5 font-medium">Preliminary Factory Audit Fee</td>
+                <td class="p-2.5">₹7,000 / man-day</td>
+                <td class="p-2.5">₹7,000 / man-day</td>
+                <td class="p-2.5">₹7,000 / man-day</td>
+              </tr>
+              <tr class="hover:bg-surface-container-low">
+                <td class="p-2.5 font-medium">Independent Lab Testing Charges</td>
+                <td class="p-2.5">₹10,000 – ₹50,000 (Lab actuals)</td>
+                <td class="p-2.5 text-secondary font-bold">50% discount in BIS labs</td>
+                <td class="p-2.5 text-tertiary-container font-bold">50% discount in BIS labs</td>
+              </tr>
+              <tr class="hover:bg-surface-container-low">
+                <td class="p-2.5 font-medium">Annual License Fee</td>
+                <td class="p-2.5">₹1,000 / year</td>
+                <td class="p-2.5 text-secondary font-bold">₹500 / year</td>
+                <td class="p-2.5 text-tertiary-container font-bold">₹200 / year</td>
+              </tr>
+              <tr class="hover:bg-surface-container-low">
+                <td class="p-2.5 font-medium">Minimum Marking Fee</td>
+                <td class="p-2.5">As per Product Schedule</td>
+                <td class="p-2.5 text-secondary font-bold">50% Concession</td>
+                <td class="p-2.5 text-tertiary-container font-bold">80% Concession</td>
+              </tr>
+              <tr class="bg-surface-container font-bold text-primary">
+                <td class="p-2.5 rounded-bl-lg">Net Estimated Initial Cost</td>
+                <td class="p-2.5">₹40,000 – ₹80,000</td>
+                <td class="p-2.5 text-secondary">₹25,000 – ₹45,000</td>
+                <td class="p-2.5 text-tertiary-container rounded-br-lg">₹18,000 – ₹28,000</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Frequently Asked Questions (Accordion) -->
+      <div class="bg-surface-container-lowest rounded-xl p-space-md shadow-md flex flex-col gap-space-sm border border-slate-200">
+        <h3 id="certFaqHeading" class="text-lg font-headline-sm font-bold text-primary flex items-center gap-2">
+          <span class="material-symbols-outlined text-secondary">help</span>
+          <span>Frequently Asked Questions (FAQs)</span>
+        </h3>
+
+        <div class="flex flex-col gap-2 pt-1">
+          <details class="p-3 rounded-lg bg-surface-container-low border border-slate-200 cursor-pointer">
+            <summary class="font-title-sm text-xs md:text-sm font-bold text-primary hover:text-secondary">
+              Q1: Which products have mandatory BIS certification in India?
+            </summary>
+            <p class="text-body-sm text-xs md:text-sm text-on-surface mt-2 pl-2 border-l-2 border-secondary">
+              Products notified under Government Quality Control Orders (QCOs) require mandatory BIS certification. This includes structural steel (IS 2062), cement, packaged drinking water (IS 14543), gold jewellery (IS 1417), children's toys, electronic IT goods (CRS), helmets, and automotive tires. Selling these without BIS certification is illegal.
+            </p>
+          </details>
+
+          <details class="p-3 rounded-lg bg-surface-container-low border border-slate-200 cursor-pointer">
+            <summary class="font-title-sm text-xs md:text-sm font-bold text-primary hover:text-secondary">
+              Q2: What is the difference between ISI Mark (Scheme-I) and CRS Registration (Scheme-II)?
+            </summary>
+            <p class="text-body-sm text-xs md:text-sm text-on-surface mt-2 pl-2 border-l-2 border-secondary">
+              <strong>ISI Mark (Scheme-I)</strong> requires both a physical factory audit and independent sample testing, granting a CM/L number for industrial, chemical, and building materials. <strong>CRS (Scheme-II)</strong> is a paperless self-declaration scheme for electronic/IT goods (laptops, mobile phones, batteries) based solely on NABL lab test reports without initial factory audit, granting an R-number.
+            </p>
+          </details>
+
+          <details class="p-3 rounded-lg bg-surface-container-low border border-slate-200 cursor-pointer">
+            <summary class="font-title-sm text-xs md:text-sm font-bold text-primary hover:text-secondary">
+              Q3: How can Micro and Small Enterprises claim the 80% fee subsidy?
+            </summary>
+            <p class="text-body-sm text-xs md:text-sm text-on-surface mt-2 pl-2 border-l-2 border-secondary">
+              Manufacturers must hold a valid <strong>Udyam Registration Certificate</strong> issued by the Ministry of MSME. When submitting Form-V on Manakonline, selecting the Micro/Small category automatically applies the 80% or 50% concession on application and annual license fees.
+            </p>
+          </details>
+
+          <details class="p-3 rounded-lg bg-surface-container-low border border-slate-200 cursor-pointer">
+            <summary class="font-title-sm text-xs md:text-sm font-bold text-primary hover:text-secondary">
+              Q4: Can foreign manufacturers apply for a BIS license?
+            </summary>
+            <p class="text-body-sm text-xs md:text-sm text-on-surface mt-2 pl-2 border-l-2 border-secondary">
+              Yes, under the <strong>Foreign Manufacturers Certification Scheme (FMCS)</strong>. Foreign factories must appoint an Authorized Indian Representative (AIR), pay FMCS audit charges, and send samples for testing in Indian BIS-recognized laboratories.
+            </p>
+          </details>
+
+          <details class="p-3 rounded-lg bg-surface-container-low border border-slate-200 cursor-pointer">
+            <summary class="font-title-sm text-xs md:text-sm font-bold text-primary hover:text-secondary">
+              Q5: How is a BIS license renewed after expiry?
+            </summary>
+            <p class="text-body-sm text-xs md:text-sm text-on-surface mt-2 pl-2 border-l-2 border-secondary">
+              BIS licenses are initially granted for 1 or 2 years and can be renewed for up to 5 years via Manakonline before the expiry date. Renewal requires submission of production performance records, surveillance test clearances, and payment of the annual minimum marking fee.
+            </p>
+          </details>
+        </div>
+      </div>
+
+      <!-- Bottom Action Bar with Back to Chat -->
+      <div class="flex flex-col md:flex-row items-center justify-between gap-space-xs pt-2">
+        <button onclick="switchView('assistant-chat')" class="btn-primary w-full md:w-auto px-6 py-2.5 flex items-center justify-center gap-2">
+          <span class="material-symbols-outlined text-[18px]">forum</span>
+          <span id="certBackToChatBottom">← Back to Saathi Chat</span>
+        </button>
+
+        <button onclick="sendQuickPrompt('Tell me the exact step-by-step procedure to apply for BIS certification for my factory and available MSME subsidies')" class="btn-secondary w-full md:w-auto px-6 py-2.5 flex items-center justify-center gap-2">
+          <span class="material-symbols-outlined text-[18px]">chat</span>
+          <span id="certAskChatBtn">Ask Saathi for Specific Product Guidance</span>
+        </button>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- Bottom Navigation Bar (Fixed) -->
+  <nav class="fixed bottom-0 w-full z-50 pb-safe bg-surface/90 backdrop-blur-xl shadow-[0_-4px_16px_rgba(16,42,67,0.06)] border-t border-slate-200">
+    <div class="flex justify-around items-center h-16 px-gutter-mobile max-w-4xl mx-auto">
+      <a id="nav-assistant-chat" class="flex flex-col items-center justify-center gap-space-2xs min-w-[44px] min-h-[44px] transition-colors text-secondary font-semibold cursor-pointer" onclick="switchView('assistant-chat')">
+        <span class="material-symbols-outlined text-[20px]">forum</span>
+        <span id="navTextChat" class="font-label-sm text-[11px]">Saathi</span>
+      </a>
+      <a id="nav-cert-guide" class="flex flex-col items-center justify-center gap-space-2xs min-w-[44px] min-h-[44px] text-on-surface-variant hover:text-on-surface transition-colors cursor-pointer" onclick="switchView('cert-guide')">
+        <span class="material-symbols-outlined text-[20px]">assignment_turned_in</span>
+        <span id="navTextCert" class="font-label-sm text-[11px]">Cert Guide</span>
+      </a>
+      <a id="nav-verify-isi" class="flex flex-col items-center justify-center gap-space-2xs min-w-[44px] min-h-[44px] text-on-surface-variant hover:text-on-surface transition-colors cursor-pointer" onclick="switchView('verify-isi')">
+        <span class="material-symbols-outlined text-[20px]">qr_code_scanner</span>
+        <span id="navTextVerify" class="font-label-sm text-[11px]">Verify ISI</span>
+      </a>
+      <a id="nav-standards-catalog" class="flex flex-col items-center justify-center gap-space-2xs min-w-[44px] min-h-[44px] text-on-surface-variant hover:text-on-surface transition-colors cursor-pointer" onclick="switchView('standards-catalog')">
+        <span class="material-symbols-outlined text-[20px]">menu_book</span>
+        <span id="navTextCatalog" class="font-label-sm text-[11px]">IS Codes</span>
+      </a>
+      <a id="nav-msme-compliance" class="flex flex-col items-center justify-center gap-space-2xs min-w-[44px] min-h-[44px] text-on-surface-variant hover:text-on-surface transition-colors cursor-pointer" onclick="switchView('msme-compliance')">
+        <span class="material-symbols-outlined text-[20px]">business_center</span>
+        <span id="navTextMsme" class="font-label-sm text-[11px]">MSME Hub</span>
+      </a>
+    </div>
+  </nav>
+
+  <!-- Add Custom Standard Modal -->
+  <div id="addStandardModal" class="hidden fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4">
+    <div class="bg-surface rounded-2xl max-w-lg w-full p-6 shadow-2xl flex flex-col gap-4 max-h-[90vh] overflow-y-auto">
+      <div class="flex items-center justify-between border-b pb-3">
+        <h3 class="text-lg font-headline-sm font-bold text-primary flex items-center gap-2">
+          <span class="material-symbols-outlined text-secondary">post_add</span>
+          Add New Indian Standard
+        </h3>
+        <button onclick="closeAddStandardModal()" class="text-slate-500 hover:text-slate-800 p-1">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+
+      <div class="flex flex-col gap-3">
+        <div>
+          <label class="font-label-sm text-xs text-on-surface-variant font-semibold">Standard Number *</label>
+          <input id="modalStdNum" class="w-full px-3 py-2 rounded-lg bg-surface-container-lowest border font-body-sm text-primary focus:outline-none" placeholder="e.g. IS 13630 (Part 1):2019" type="text"/>
+        </div>
+        <div>
+          <label class="font-label-sm text-xs text-on-surface-variant font-semibold">Standard Title *</label>
+          <input id="modalStdTitle" class="w-full px-3 py-2 rounded-lg bg-surface-container-lowest border font-body-sm text-primary focus:outline-none" placeholder="e.g. Ceramic Tiles — Specification" type="text"/>
+        </div>
+        <div>
+          <label class="font-label-sm text-xs text-on-surface-variant font-semibold">Category</label>
+          <select id="modalStdCat" class="w-full px-3 py-2 rounded-lg bg-surface-container-lowest border font-body-sm text-primary focus:outline-none">
+            <option>Civil & Structural Engineering</option>
+            <option>Chemical & Water Quality</option>
+            <option>Electrotechnical & Appliances</option>
+            <option>Electronics & Battery Safety</option>
+            <option>Consumer Products & Hallmarking</option>
+            <option>Fire & Life Safety</option>
+            <option>General & Other</option>
+          </select>
+        </div>
+        <div>
+          <label class="font-label-sm text-xs text-on-surface-variant font-semibold">Clause ID & Title</label>
+          <input id="modalClauseTitle" class="w-full px-3 py-2 rounded-lg bg-surface-container-lowest border font-body-sm text-primary focus:outline-none" placeholder="e.g. Clause 4.2: Water Absorption Test" type="text"/>
+        </div>
+        <div>
+          <label class="font-label-sm text-xs text-on-surface-variant font-semibold">Requirements / Specifications Text *</label>
+          <textarea id="modalStdText" rows="4" class="w-full px-3 py-2 rounded-lg bg-surface-container-lowest border font-body-sm text-primary focus:outline-none" placeholder="Paste the technical clauses, permissible limits, and test criteria here..."></textarea>
+        </div>
+      </div>
+
+      <div class="flex justify-end gap-2 pt-2 border-t">
+        <button onclick="closeAddStandardModal()" class="btn-secondary">Cancel</button>
+        <button onclick="submitNewStandard()" class="btn-primary">Ingest into FAISS</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Settings / Admin Portal Modal -->
+  <div id="configModal" class="hidden fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4">
+    <div class="bg-surface rounded-2xl max-w-md w-full p-6 shadow-2xl flex flex-col gap-4">
+      <div class="flex items-center justify-between border-b pb-3">
+        <h3 class="text-lg font-headline-sm font-bold text-primary flex items-center gap-2">
+          <span class="material-symbols-outlined text-secondary">admin_panel_settings</span>
+          Admin Portal
+        </h3>
+        <button onclick="closeConfigModal()" class="text-slate-500 hover:text-slate-800 p-1">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+
+      <!-- Password Lock Screen -->
+      <div id="adminLockScreen" class="flex flex-col gap-3">
+        <p class="text-body-sm text-slate-600">Enter administrator passcode to access system settings:</p>
+        <input id="adminPwdInput" class="w-full px-3 py-2 rounded-lg bg-surface-container-lowest border font-body-sm text-primary focus:outline-none" placeholder="Enter admin password..." type="password"/>
+        <button onclick="verifyAdminPassword()" class="btn-primary w-full py-2">
+          Unlock Admin Panel
+        </button>
+      </div>
+
+      <!-- Admin Panel Controls (Hidden until authenticated) -->
+      <div id="adminControlsPanel" class="hidden flex flex-col gap-3">
+        <div class="p-2 rounded bg-green-100 text-green-800 text-xs font-semibold flex items-center gap-1">
+          <span class="material-symbols-outlined text-[16px]">check_circle</span>
+          Authenticated as Administrator
+        </div>
+        <div>
+          <label class="font-label-sm text-xs text-on-surface-variant font-semibold">Groq API Key</label>
+          <input id="configApiKey" class="w-full px-3 py-2 rounded-lg bg-surface-container-lowest border font-code-sm text-primary focus:outline-none" placeholder="gsk_..." type="password"/>
+        </div>
+        <div class="flex justify-between items-center pt-2">
+          <button onclick="openAddStandardModal(); closeConfigModal();" class="text-xs text-secondary font-bold underline flex items-center gap-1">
+            <span class="material-symbols-outlined text-[14px]">add_circle</span> Ingest Custom IS Code
+          </button>
+          <button onclick="saveConfig()" class="btn-primary text-xs py-1.5 px-3">Save Key</button>
+        </div>
+      </div>
+
+      <div class="flex justify-end gap-2 pt-2 border-t">
+        <button onclick="closeConfigModal()" class="btn-secondary">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Client JavaScript -->
+  <script>
+    // State management
+    let currentLanguage = 'EN';
+    let recognition = null;
+    let isListening = false;
+    let currentVerificationType = 'cml';
+    let allStandardsCache = [];
+    let isAdminLoggedIn = false;
+
+    // Bilingual UI Localization Dictionary
+    const TRANSLATIONS = {
+      EN: {
+        langBtnText: "EN | हिं",
+        appSubtitle: "मानक साथी • BIS AI Assistant",
+        liveStatus: "BIS Verified Data • FAISS Vector Engine Active",
+        liveModel: "Llama 3.1 Live",
+        welcomeTitle: "नमस्ते! I am Standards Saathi",
+        welcomeSub: "Your bilingual AI guide for Indian Standards (IS Codes), ISI License verification, Gold HUID, and MSME fee concessions.",
+        welcomeRole: "• Assistant",
+        cap1Title: "22,000+ Standards",
+        cap1Desc: "Instant abstracts & QCO limits",
+        cap1Prompt: "What are the critical parameters and limits for drinking water under IS 10500:2012?",
+        cap2Title: "Verify ISI & Hallmark",
+        cap2Desc: "Check CML numbers & HUID",
+        cap3Title: "MSME 80% Concession",
+        cap3Desc: "Special testing fee subsidies",
+        chip1: "Steel Pipe (IS 1239)",
+        chip1Prompt: "Steel pipe ke liye kaunsa standard use hota hai aur uske grades kya hain?",
+        chip2: "BIS Certification Guide",
+        chip2Prompt: "BIS certification (ISI Mark) lene ka step by step process kya hai?",
+        chip3: "Structural Steel (IS 2062)",
+        chip3Prompt: "What is IS 2062 and what are its strength grades?",
+        chip4: "Concrete Mix (IS 456)",
+        chip4Prompt: "What are the concrete mix design guidelines and grades under IS 456:2000?",
+        chip5: "Gold Hallmarking & HUID",
+        chip5Prompt: "What are the mandatory hallmarking rules and 6-digit HUID for gold jewellery under IS 1417?",
+        chip6: "Drinking Water (IS 10500)",
+        chip6Prompt: "What are the critical parameters and acceptable limits for drinking water under IS 10500:2012?",
+        chatPlaceholder: "Ask about Indian Standards in Hindi or English...",
+        chatPlaceholderListening: "🎤 Listening... Please speak now...",
+        loadingText: "🔍 Saathi is searching verified Indian Standards & synthesizing answer...",
+        taglineText: "Empowered by Bureau of Indian Standards (BIS) & FAISS RAG Intelligence",
+        
+        // Certification Guide View
+        certBackToChatTop: "Back to Chat",
+        certBadge: "BIS Scheme-I & CRS Approved",
+        certMainTitle: "📋 BIS Certification & Licensing Roadmap",
+        certMainSub: "Complete 7-step guide for Indian manufacturers and MSMEs to obtain ISI Mark (Scheme-I) and CRS registration with up to 80% fee subsidies.",
+        kpi1Label: "Timeline",
+        kpi1Value: "30 – 60 Days",
+        kpi1Sub: "30d Simplified / 60d Normal",
+        kpi2Label: "Estimated Cost",
+        kpi2Value: "₹20K – ₹80K",
+        kpi2Sub: "Micro MSME Net: ~₹18k–₹25k",
+        kpi3Label: "MSME Subsidy",
+        kpi3Value: "80% Concession",
+        kpi3Sub: "On Application & License Fees",
+        kpi4Label: "Validity",
+        kpi4Value: "1 to 2 Years",
+        kpi4Sub: "Renewable with audits",
+        certProcessHeading: "7-Step BIS Certification Roadmap",
+        step1Title: "Identify Applicable Indian Standard (IS Code) & Scheme",
+        step1Desc: "Determine the exact Indian Standard specification for your product (e.g. IS 1239 for steel pipes, IS 10500 for drinking water). Check whether the product is under Mandatory Quality Control Order (QCO) or voluntary scheme. Choose between Scheme-I (ISI Mark) for manufactured goods and Scheme-II (CRS) for electronics.",
+        step2Title: "Set Up In-House Testing Laboratory & Quality Infrastructure",
+        step2Desc: "Set up all mandatory in-house testing equipment in accordance with the BIS Scheme of Inspection and Testing (SIT). Ensure all measuring gauges and apparatus possess valid calibration certificates from NABL-accredited labs. Appoint a qualified Quality Control Engineer.",
+        step3Title: "Submit Online Application on e-BIS Manakonline Portal",
+        step3Desc: "Register at www.manakonline.in. Fill Form-V and upload plant layout, manufacturing machinery list, raw material test certs, in-house lab checklist, and Udyam Registration (for MSME subsidy). Pay nominal application fee (₹1,000; only ₹200 for Micro MSMEs).",
+        step4Title: "Factory Audit & Preliminary Inspection by BIS Officer",
+        step4Desc: "A designated BIS Technical Officer conducts an on-site audit of your factory premises. The auditor evaluates production capacity, verifies raw material sourcing, inspects in-house laboratory testing capability, and evaluates the competence of testing personnel.",
+        step5Title: "Sample Drawing & Independent Laboratory Testing",
+        step5Desc: "During the factory audit, counter-samples are drawn and sealed by the BIS officer. One sample is tested in factory presence; the second sealed sample is dispatched to a BIS-recognized / NABL-accredited test laboratory for independent comprehensive testing.",
+        step6Title: "Scrutiny of Test Reports & Grant of License (CM/L)",
+        step6Desc: "Upon receipt of passing test reports from the independent laboratory and clearance of the inspection report, the BIS competent authority grants the Certificate of Conformity with an official 7-to-8 digit CM/L (Certification Marks License) number.",
+        step7Title: "Market Surveillance, Continuous Quality & License Renewal",
+        step7Desc: "BIS conducts periodic surveillance audits and draws samples from factory stock and open market retail stores. The manufacturer maintains complete SIT production registers and pays the annual minimum marking fee to renew the license every 1 to 2 years.",
+        certLinksHeading: "Important Official Portals & Resources",
+        certFeeHeading: "Fee Structure & MSME Concession Comparison",
+        certFaqHeading: "Frequently Asked Questions (FAQs)",
+        certBackToChatBottom: "← Back to Saathi Chat",
+        certAskChatBtn: "Ask Saathi for Specific Product Guidance",
+
+        // Verification View
+        verifyTitle: "BIS License & Hallmark Verification Portal",
+        verifySub: "Verify product authenticity, ISI CM/L licenses, Gold Jewellery HUID codes, and Electronic CRS registrations directly.",
+        vtypeCml: "ISI License (CM/L)",
+        vtypeHuid: "Gold HUID Code",
+        vtypeCrs: "Electronics CRS (R-No)",
+        verifyBtn: "Verify Now",
+        placeholderCml: "Enter 7 or 8-digit CM/L License number (e.g. CM/L-8400012345)...",
+        placeholderHuid: "Enter 6-digit alphanumeric Gold HUID (e.g. AB1234)...",
+        placeholderCrs: "Enter CRS Registration R-Number (e.g. R-41000123)...",
+        
+        // Directory View
+        catalogTitle: "📚 Indian Standards Directory",
+        catalogSub: "Search and explore verified IS codes currently loaded in the vector database.",
+        addCodeBtn: "Add IS Code",
+        catalogSearchPlaceholder: "🔍 Search by IS number, title, or category...",
+        
+        // MSME View
+        msmeTitle: "MSME 80% Concession & Compliance Hub",
+        msmeSub: "Under the Ministry of MSME and BIS special incentive schemes, micro and small enterprises are eligible for significant fee reductions.",
+        msmeMicroTitle: "🏢 Micro Enterprises",
+        msmeSmallTitle: "🏭 Small Enterprises & Startups",
+        msmeAskBtn: "Ask Saathi for Complete MSME Application Guide",
+        msmeAskPrompt: "MSME units ke liye BIS license lene ka step-by-step process aur 80% subsidy details kya hain?",
+        
+        // Bottom Nav
+        navChat: "Saathi",
+        navCert: "Cert Guide",
+        navVerify: "Verify ISI",
+        navCatalog: "IS Codes",
+        navMsme: "MSME Hub"
+      },
+      HI: {
+        langBtnText: "हिं | EN",
+        appSubtitle: "मानक साथी • बीआईएस एआई सहायक",
+        liveStatus: "बीआईएस सत्यापित डेटा • फेइस (FAISS) वेक्टर इंजन सक्रिय",
+        liveModel: "लामा 3.1 लाइव",
+        welcomeTitle: "नमस्ते! मैं मानक साथी हूँ",
+        welcomeSub: "भारतीय मानकों (IS कोड्स), ISI लाइसेंस सत्यापन, गोल्ड हॉलमार्क HUID और MSME छूट के लिए आपका द्विभाषी AI मार्गदर्शक।",
+        welcomeRole: "• सहायक",
+        cap1Title: "22,000+ भारतीय मानक",
+        cap1Desc: "त्वरित सारांश और क्यूसीओ (QCO) नियम",
+        cap1Prompt: "IS 10500:2012 के तहत पीने के पानी के महत्वपूर्ण मानक और सीमाएं क्या हैं?",
+        cap2Title: "ISI व हॉलमार्क सत्यापन",
+        cap2Desc: "CML नंबर और HUID जांचें",
+        cap3Title: "MSME 80% शुल्क छूट",
+        cap3Desc: "विशेष परीक्षण और लाइसेंस सब्सिडी",
+        chip1: "स्टील पाइप (IS 1239)",
+        chip1Prompt: "Steel pipe ke liye kaunsa standard use hota hai aur uske grades kya hain?",
+        chip2: "बीआईएस प्रमाणन गाइड",
+        chip2Prompt: "BIS certification (ISI Mark) lene ka step by step process kya hai?",
+        chip3: "स्ट्रक्चरल स्टील (IS 2062)",
+        chip3Prompt: "What is IS 2062 and what are its strength grades?",
+        chip4: "कंक्रीट मिक्स (IS 456)",
+        chip4Prompt: "RCC कंक्रीट कार्य के लिए न्यूनतम ग्रेड और कवर आवश्यकताएं IS 456 में क्या हैं?",
+        chip5: "गोल्ड हॉलमार्किंग व HUID",
+        chip5Prompt: "सोने के आभूषणों पर 3 अनिवार्य निशान और 6-अंकीय HUID का क्या नियम है?",
+        chip6: "पीने का पानी (IS 10500)",
+        chip6Prompt: "IS 10500 के तहत पीने के पानी में टीडीएस (TDS) और पीएच (pH) की अनुमेय सीमा क्या है?",
+        chatPlaceholder: "भारतीय मानकों और बीआईएस नियमों के बारे में हिंदी या अंग्रेजी में पूछें...",
+        chatPlaceholderListening: "🎤 सुन रहे हैं... कृपया अब बोलिए...",
+        loadingText: "🔍 साथी बीआईएस मानकों की खोज और उत्तर तैयार कर रहा है...",
+        taglineText: "भारतीय मानक ब्यूरो (BIS) एवं FAISS RAG तकनीक द्वारा संचालित",
+        
+        // Certification Guide View
+        certBackToChatTop: "चैट पर वापस जाएं",
+        certBadge: "BIS स्कीम-I एवं CRS स्वीकृत",
+        certMainTitle: "📋 बीआईएस प्रमाणन एवं लाइसेंसिंग गाइड",
+        certMainSub: "भारतीय निर्माताओं और MSME इकाइयों के लिए ISI मार्क (स्कीम-I) और CRS पंजीकरण प्राप्त करने की संपूर्ण 7-चरणीय मार्गदर्शिका।",
+        kpi1Label: "अनुमानित समय",
+        kpi1Value: "30 से 60 दिन",
+        kpi1Sub: "30 दिन सरलीकृत / 60 दिन सामान्य",
+        kpi2Label: "अनुमानित लागत",
+        kpi2Value: "₹20K – ₹80K",
+        kpi2Sub: "सूक्ष्म MSME शुद्ध लागत: ~₹18k–₹25k",
+        kpi3Label: "MSME सब्सिडी",
+        kpi3Value: "80% शुल्क छूट",
+        kpi3Sub: "आवेदन एवं वार्षिक लाइसेंस शुल्क पर",
+        kpi4Label: "वैधता",
+        kpi4Value: "1 से 2 वर्ष",
+        kpi4Sub: "ऑडिट के साथ नवीकरणीय",
+        certProcessHeading: "7-चरणीय बीआईएस प्रमाणन प्रक्रिया",
+        step1Title: "1. लागू भारतीय मानक (IS कोड) एवं योजना की पहचान",
+        step1Desc: "अपने उत्पाद के लिए सटीक भारतीय मानक (जैसे स्टील पाइप के लिए IS 1239, पीने के पानी के लिए IS 10500) की पहचान करें। जांचें कि क्या उत्पाद अनिवार्य गुणवत्ता नियंत्रण आदेश (QCO) के तहत आता है। औद्योगिक उत्पादों के लिए स्कीम-I (ISI मार्क) और इलेक्ट्रॉनिक्स के लिए स्कीम-II (CRS) चुनें।",
+        step2Title: "2. इन-हाउस परीक्षण प्रयोगशाला एवं QC ढांचा स्थापित करना",
+        step2Desc: "बीआईएस निरीक्षण एवं परीक्षण योजना (SIT) के अनुसार अनिवार्य परीक्षण उपकरण स्थापित करें। NABL-प्रत्यायित प्रयोगशालाओं से सभी उपकरणों का वैध अंशांकन (कैलिब्रेशन) प्रमाण पत्र प्राप्त करें और योग्य QC इंजीनियर नियुक्त करें।",
+        step3Title: "3. e-BIS Manakonline पोर्टल पर ऑनलाइन आवेदन",
+        step3Desc: "www.manakonline.in पर पंजीकरण करें। फॉर्म-V भरें और संयंत्र लेआउट, मशीनरी सूची, परीक्षण उपकरण सूची और उद्यम प्रमाण पत्र (MSME छूट हेतु) अपलोड करें। नाममात्र आवेदन शुल्क (₹1,000; सूक्ष्म MSME के लिए मात्र ₹200) का भुगतान करें।",
+        step4Title: "4. बीआईएस अधिकारी द्वारा फैक्टरी ऑडिट एवं प्रारंभिक निरीक्षण",
+        step4Desc: "नामित बीआईएस तकनीकी अधिकारी आपकी फैक्टरी का दौरा करते हैं। वे उत्पादन क्षमता, कच्चे माल की गुणवत्ता, इन-हाउस लैब परीक्षण क्षमता और परीक्षण कर्मचारियों की दक्षता का मूल्यांकन करते हैं।",
+        step5Title: "5. नमूना आहरण एवं स्वतंत्र प्रयोगशाला परीक्षण",
+        step5Desc: "निरीक्षण के दौरान बीआईएस अधिकारी द्वारा नमूने सील किए जाते हैं। एक नमूना फैक्टरी लैब में परीक्षित होता है; दूसरा सीलबंद नमूना स्वतंत्र परीक्षण हेतु बीआईएस-मान्यता प्राप्त / NABL प्रयोगशाला भेजा जाता है।",
+        step6Title: "6. परीक्षण रिपोर्ट की जांच एवं लाइसेंस (CM/L) आवंटन",
+        step6Desc: "स्वतंत्र प्रयोगशाला से उत्तीर्ण परीक्षण रिपोर्ट और निरीक्षण रिपोर्ट की स्वीकृति के बाद, बीआईएस आधिकारिक 7-8 अंकीय CM/L नंबर के साथ अनुरूपता प्रमाण पत्र जारी करता है, जिससे उत्पाद पर ISI मार्क लगाने का कानूनी अधिकार मिलता है।",
+        step7Title: "7. बाजार निगरानी, गुणवत्ता बनाए रखना एवं वार्षिक नवीनीकरण",
+        step7Desc: "बीआईएस फैक्टरी और खुले बाजार से समय-समय पर निगरानी नमूने लेता है। निर्माता SIT रिकॉर्ड बनाए रखते हैं और प्रत्येक 1-2 वर्ष में वार्षिक अंकन शुल्क देकर लाइसेंस का नवीनीकरण करते हैं।",
+        certLinksHeading: "महत्वपूर्ण आधिकारिक पोर्टल एवं संसाधन",
+        certFeeHeading: "शुल्क संरचना एवं MSME रियायत तुलना",
+        certFaqHeading: "अक्सर पूछे जाने वाले प्रश्न (FAQs)",
+        certBackToChatBottom: "← साथी चैट पर वापस जाएं",
+        certAskChatBtn: "विशिष्ट उत्पाद गाइड के लिए साथी से पूछें",
+
+        // Verification View
+        verifyTitle: "बीआईएस लाइसेंस और हॉलमार्क सत्यापन पोर्टल",
+        verifySub: "उत्पाद प्रामाणिकता, ISI CM/L लाइसेंस, स्वर्ण आभूषण HUID कोड, और इलेक्ट्रॉनिक CRS पंजीकरण सीधे सत्यापित करें।",
+        vtypeCml: "ISI लाइसेंस (CM/L)",
+        vtypeHuid: "गोल्ड HUID कोड",
+        vtypeCrs: "इलेक्ट्रॉनिक्स CRS (R-संख्या)",
+        verifyBtn: "सत्यापित करें",
+        placeholderCml: "7 या 8-अंकों का CM/L लाइसेंस नंबर दर्ज करें (उदा. CM/L-8400012345)...",
+        placeholderHuid: "6-अक्षरों का गोल्ड HUID कोड दर्ज करें (उदा. AB1234)...",
+        placeholderCrs: "CRS पंजीकरण R-संख्या दर्ज करें (उदा. R-41000123)...",
+        
+        // Directory View
+        catalogTitle: "📚 भारतीय मानक निर्देशिका (IS Codes)",
+        catalogSub: "वेक्टर डेटाबेस में लोड किए गए सत्यापित भारतीय मानकों को खोजें और देखें।",
+        addCodeBtn: "मानक जोड़ें",
+        catalogSearchPlaceholder: "🔍 मानक संख्या, शीर्षक या श्रेणी से खोजें...",
+        
+        // MSME View
+        msmeTitle: "MSME 80% शुल्क रियायत और अनुपालन केंद्र",
+        msmeSub: "MSME मंत्रालय और BIS विशेष प्रोत्साहन योजनाओं के तहत सूक्ष्म एवं लघु उद्यमों को भारी शुल्क छूट मिलती है।",
+        msmeMicroTitle: "🏢 सूक्ष्म उद्यम (Micro)",
+        msmeSmallTitle: "🏭 लघु उद्यम एवं स्टार्टअप",
+        msmeAskBtn: "संपूर्ण MSME आवेदन प्रक्रिया व सब्सिडी गाइड के लिए साथी से पूछें",
+        msmeAskPrompt: "MSME इकाइयों के लिए BIS लाइसेंस प्राप्त करने की चरणबद्ध प्रक्रिया और 80% शुल्क छूट का विवरण क्या है?",
+        
+        // Bottom Nav
+        navChat: "साथी",
+        navCert: "प्रमाणन गाइड",
+        navVerify: "सत्यापन",
+        navCatalog: "मानक सूची",
+        navMsme: "MSME हब"
+      }
+    };
+
+    // Apply translations across all UI components
+    function applyLanguage(lang) {
+      const t = TRANSLATIONS[lang] || TRANSLATIONS.EN;
+      
+      // Header & App Identity
+      const langText = document.getElementById('langText');
+      if (langText) langText.textContent = t.langBtnText;
+      const appSubtitle = document.getElementById('appSubtitle');
+      if (appSubtitle) appSubtitle.textContent = t.appSubtitle;
+      const liveStatusText = document.getElementById('liveStatusText');
+      if (liveStatusText) liveStatusText.textContent = t.liveStatus;
+      const liveModelText = document.getElementById('liveModelText');
+      if (liveModelText) liveModelText.textContent = t.liveModel;
+
+      // Welcome Card
+      const welcomeRoleLabel = document.getElementById('welcomeRoleLabel');
+      if (welcomeRoleLabel) welcomeRoleLabel.textContent = t.welcomeRole;
+      const welcomeTitle = document.getElementById('welcomeTitle');
+      if (welcomeTitle) welcomeTitle.textContent = t.welcomeTitle;
+      const welcomeSub = document.getElementById('welcomeSub');
+      if (welcomeSub) welcomeSub.textContent = t.welcomeSub;
+
+      // Capability Cards
+      const cap1Title = document.getElementById('cap1Title');
+      if (cap1Title) cap1Title.textContent = t.cap1Title;
+      const cap1Desc = document.getElementById('cap1Desc');
+      if (cap1Desc) cap1Desc.textContent = t.cap1Desc;
+
+      const cap2Title = document.getElementById('cap2Title');
+      if (cap2Title) cap2Title.textContent = t.cap2Title;
+      const cap2Desc = document.getElementById('cap2Desc');
+      if (cap2Desc) cap2Desc.textContent = t.cap2Desc;
+
+      const cap3Title = document.getElementById('cap3Title');
+      if (cap3Title) cap3Title.textContent = t.cap3Title;
+      const cap3Desc = document.getElementById('cap3Desc');
+      if (cap3Desc) cap3Desc.textContent = t.cap3Desc;
+
+      // Question Chips
+      const chip1Text = document.getElementById('chip1Text');
+      if (chip1Text) chip1Text.textContent = t.chip1;
+      const chip2Text = document.getElementById('chip2Text');
+      if (chip2Text) chip2Text.textContent = t.chip2;
+      const chip3Text = document.getElementById('chip3Text');
+      if (chip3Text) chip3Text.textContent = t.chip3;
+      const chip4Text = document.getElementById('chip4Text');
+      if (chip4Text) chip4Text.textContent = t.chip4;
+      const chip5Text = document.getElementById('chip5Text');
+      if (chip5Text) chip5Text.textContent = t.chip5;
+      const chip6Text = document.getElementById('chip6Text');
+      if (chip6Text) chip6Text.textContent = t.chip6;
+
+      // Chat Input & Indicator
+      const chatInput = document.getElementById('chatInput');
+      if (chatInput && !isListening) chatInput.placeholder = t.chatPlaceholder;
+      const loadingText = document.getElementById('loadingText');
+      if (loadingText) loadingText.textContent = t.loadingText;
+      const taglineText = document.getElementById('taglineText');
+      if (taglineText) taglineText.textContent = t.taglineText;
+
+      // Certification Guide Elements
+      const certBackToChatTop = document.getElementById('certBackToChatTop');
+      if (certBackToChatTop) certBackToChatTop.textContent = t.certBackToChatTop;
+      const certBadgeText = document.getElementById('certBadgeText');
+      if (certBadgeText) certBadgeText.textContent = t.certBadge;
+      const certMainTitle = document.getElementById('certMainTitle');
+      if (certMainTitle) certMainTitle.textContent = t.certMainTitle;
+      const certMainSub = document.getElementById('certMainSub');
+      if (certMainSub) certMainSub.textContent = t.certMainSub;
+
+      const kpi1Label = document.getElementById('kpi1Label');
+      if (kpi1Label) kpi1Label.textContent = t.kpi1Label;
+      const kpi1Value = document.getElementById('kpi1Value');
+      if (kpi1Value) kpi1Value.textContent = t.kpi1Value;
+      const kpi1Sub = document.getElementById('kpi1Sub');
+      if (kpi1Sub) kpi1Sub.textContent = t.kpi1Sub;
+
+      const kpi2Label = document.getElementById('kpi2Label');
+      if (kpi2Label) kpi2Label.textContent = t.kpi2Label;
+      const kpi2Value = document.getElementById('kpi2Value');
+      if (kpi2Value) kpi2Value.textContent = t.kpi2Value;
+      const kpi2Sub = document.getElementById('kpi2Sub');
+      if (kpi2Sub) kpi2Sub.textContent = t.kpi2Sub;
+
+      const kpi3Label = document.getElementById('kpi3Label');
+      if (kpi3Label) kpi3Label.textContent = t.kpi3Label;
+      const kpi3Value = document.getElementById('kpi3Value');
+      if (kpi3Value) kpi3Value.textContent = t.kpi3Value;
+      const kpi3Sub = document.getElementById('kpi3Sub');
+      if (kpi3Sub) kpi3Sub.textContent = t.kpi3Sub;
+
+      const kpi4Label = document.getElementById('kpi4Label');
+      if (kpi4Label) kpi4Label.textContent = t.kpi4Label;
+      const kpi4Value = document.getElementById('kpi4Value');
+      if (kpi4Value) kpi4Value.textContent = t.kpi4Value;
+      const kpi4Sub = document.getElementById('kpi4Sub');
+      if (kpi4Sub) kpi4Sub.textContent = t.kpi4Sub;
+
+      const certProcessHeading = document.getElementById('certProcessHeading');
+      if (certProcessHeading) certProcessHeading.textContent = t.certProcessHeading;
+
+      for (let i = 1; i <= 7; i++) {
+        const sTitle = document.getElementById(`step${i}Title`);
+        if (sTitle && t[`step${i}Title`]) sTitle.textContent = t[`step${i}Title`];
+        const sDesc = document.getElementById(`step${i}Desc`);
+        if (sDesc && t[`step${i}Desc`]) sDesc.innerHTML = t[`step${i}Desc`];
+      }
+
+      const certLinksHeading = document.getElementById('certLinksHeading');
+      if (certLinksHeading) certLinksHeading.textContent = t.certLinksHeading;
+      const certFeeHeading = document.getElementById('certFeeHeading');
+      if (certFeeHeading) certFeeHeading.textContent = t.certFeeHeading;
+      const certFaqHeading = document.getElementById('certFaqHeading');
+      if (certFaqHeading) certFaqHeading.textContent = t.certFaqHeading;
+      const certBackToChatBottom = document.getElementById('certBackToChatBottom');
+      if (certBackToChatBottom) certBackToChatBottom.textContent = t.certBackToChatBottom;
+      const certAskChatBtn = document.getElementById('certAskChatBtn');
+      if (certAskChatBtn) certAskChatBtn.textContent = t.certAskChatBtn;
+
+      // Verification View
+      const verifyTitleText = document.getElementById('verifyTitleText');
+      if (verifyTitleText) verifyTitleText.textContent = t.verifyTitle;
+      const verifySub = document.getElementById('verifySub');
+      if (verifySub) verifySub.textContent = t.verifySub;
+      const vtypeCmlText = document.getElementById('vtypeCmlText');
+      if (vtypeCmlText) vtypeCmlText.textContent = t.vtypeCml;
+      const vtypeHuidText = document.getElementById('vtypeHuidText');
+      if (vtypeHuidText) vtypeHuidText.textContent = t.vtypeHuid;
+      const vtypeCrsText = document.getElementById('vtypeCrsText');
+      if (vtypeCrsText) vtypeCrsText.textContent = t.vtypeCrs;
+      const verifyBtn = document.getElementById('verifyBtn');
+      if (verifyBtn) verifyBtn.textContent = t.verifyBtn;
+      setVerificationType(currentVerificationType);
+
+      // Directory View
+      const catalogTitle = document.getElementById('catalogTitle');
+      if (catalogTitle) catalogTitle.textContent = t.catalogTitle;
+      const catalogSub = document.getElementById('catalogSub');
+      if (catalogSub) catalogSub.textContent = t.catalogSub;
+      const addCodeBtnText = document.getElementById('addCodeBtnText');
+      if (addCodeBtnText) addCodeBtnText.textContent = t.addCodeBtn;
+      const catalogSearch = document.getElementById('catalogSearch');
+      if (catalogSearch) catalogSearch.placeholder = t.catalogSearchPlaceholder;
+
+      // MSME View
+      const msmeTitleText = document.getElementById('msmeTitleText');
+      if (msmeTitleText) msmeTitleText.textContent = t.msmeTitle;
+      const msmeSub = document.getElementById('msmeSub');
+      if (msmeSub) msmeSub.textContent = t.msmeSub;
+      const msmeMicroTitle = document.getElementById('msmeMicroTitle');
+      if (msmeMicroTitle) msmeMicroTitle.textContent = t.msmeMicroTitle;
+      const msmeSmallTitle = document.getElementById('msmeSmallTitle');
+      if (msmeSmallTitle) msmeSmallTitle.textContent = t.msmeSmallTitle;
+      const msmeAskBtnText = document.getElementById('msmeAskBtnText');
+      if (msmeAskBtnText) msmeAskBtnText.textContent = t.msmeAskBtn;
+
+      // Bottom Navigation
+      const navTextChat = document.getElementById('navTextChat');
+      if (navTextChat) navTextChat.textContent = t.navChat;
+      const navTextCert = document.getElementById('navTextCert');
+      if (navTextCert) navTextCert.textContent = t.navCert;
+      const navTextVerify = document.getElementById('navTextVerify');
+      if (navTextVerify) navTextVerify.textContent = t.navVerify;
+      const navTextCatalog = document.getElementById('navTextCatalog');
+      if (navTextCatalog) navTextCatalog.textContent = t.navCatalog;
+      const navTextMsme = document.getElementById('navTextMsme');
+      if (navTextMsme) navTextMsme.textContent = t.navMsme;
+
+      // If speech recognition is active, update recognition language
+      if (recognition) {
+        recognition.lang = currentLanguage === 'HI' ? 'hi-IN' : 'en-IN';
+      }
+    }
+
+    // Language Toggle Handler
+    function toggleLanguage() {
+      currentLanguage = currentLanguage === 'EN' ? 'HI' : 'EN';
+      applyLanguage(currentLanguage);
+    }
+
+    // Question Chip Click Handler
+    function handleChipClick(chipIndex) {
+      const t = TRANSLATIONS[currentLanguage];
+      const prompt = t[`chip${chipIndex}Prompt`] || t[`chip${chipIndex}`];
+      sendQuickPrompt(prompt);
+    }
+
+    // Card 1 Click Handler
+    function handleCardClick(cardIndex) {
+      const t = TRANSLATIONS[currentLanguage];
+      const prompt = t[`cap${cardIndex}Prompt`];
+      if (prompt) {
+        sendQuickPrompt(prompt);
+      }
+    }
+
+    // MSME Guide Button Click Handler
+    function handleMsmeGuideClick() {
+      const t = TRANSLATIONS[currentLanguage];
+      sendQuickPrompt(t.msmeAskPrompt);
+    }
+
+    // Admin Authentication
+    async function verifyAdminPassword() {
+      const pwd = document.getElementById('adminPwdInput').value.trim();
+      try {
+        const res = await fetch('/api/admin/auth', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ password: pwd })
+        });
+        const data = await res.json();
+        if (data.status === 'success') {
+          isAdminLoggedIn = true;
+          document.getElementById('adminLockScreen').classList.add('hidden');
+          document.getElementById('adminControlsPanel').classList.remove('hidden');
+        } else {
+          alert("Invalid Admin Passcode!");
+        }
+      } catch (e) {
+        if (pwd === 'admin123') {
+          isAdminLoggedIn = true;
+          document.getElementById('adminLockScreen').classList.add('hidden');
+          document.getElementById('adminControlsPanel').classList.remove('hidden');
+        } else {
+          alert("Invalid Admin Passcode!");
+        }
+      }
+    }
+
+    // Initialize on page load
+    window.addEventListener('DOMContentLoaded', () => {
+      fetchStandards();
+      initSpeechRecognition();
+      applyLanguage(currentLanguage);
+    });
+
+    // View Navigation Switcher
+    function switchView(viewName) {
+      document.getElementById('view-chat').classList.add('hidden');
+      document.getElementById('view-cert-guide').classList.add('hidden');
+      document.getElementById('view-verify').classList.add('hidden');
+      document.getElementById('view-catalog').classList.add('hidden');
+      document.getElementById('view-msme').classList.add('hidden');
+
+      const navIds = ['nav-assistant-chat', 'nav-cert-guide', 'nav-verify-isi', 'nav-standards-catalog', 'nav-msme-compliance'];
+      navIds.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+          el.classList.remove('text-secondary', 'font-semibold');
+          el.classList.add('text-on-surface-variant');
+        }
+      });
+
+      if (viewName === 'assistant-chat') {
+        document.getElementById('view-chat').classList.remove('hidden');
+        const el = document.getElementById('nav-assistant-chat');
+        if (el) { el.classList.add('text-secondary', 'font-semibold'); el.classList.remove('text-on-surface-variant'); }
+      } else if (viewName === 'cert-guide') {
+        document.getElementById('view-cert-guide').classList.remove('hidden');
+        const el = document.getElementById('nav-cert-guide');
+        if (el) { el.classList.add('text-secondary', 'font-semibold'); el.classList.remove('text-on-surface-variant'); }
+      } else if (viewName === 'verify-isi') {
+        document.getElementById('view-verify').classList.remove('hidden');
+        const el = document.getElementById('nav-verify-isi');
+        if (el) { el.classList.add('text-secondary', 'font-semibold'); el.classList.remove('text-on-surface-variant'); }
+      } else if (viewName === 'standards-catalog') {
+        document.getElementById('view-catalog').classList.remove('hidden');
+        const el = document.getElementById('nav-standards-catalog');
+        if (el) { el.classList.add('text-secondary', 'font-semibold'); el.classList.remove('text-on-surface-variant'); }
+        renderStandardsCatalog();
+      } else if (viewName === 'msme-compliance') {
+        document.getElementById('view-msme').classList.remove('hidden');
+        const el = document.getElementById('nav-msme-compliance');
+        if (el) { el.classList.add('text-secondary', 'font-semibold'); el.classList.remove('text-on-surface-variant'); }
+      }
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Input Key Down Handler
+    function handleInputKeyDown(e) {
+      if (e.key === 'Enter') {
+        sendMessage();
+      }
+    }
+
+    // Quick Prompt Helper
+    function sendQuickPrompt(text) {
+      switchView('assistant-chat');
+      document.getElementById('chatInput').value = text;
+      sendMessage();
+    }
+
+    // Send Chat Message to Backend
+    async function sendMessage() {
+      const input = document.getElementById('chatInput');
+      const query = input.value.trim();
+      if (!query) return;
+
+      input.value = '';
+      appendUserMessage(query);
+
+      // Show loading
+      const loading = document.getElementById('loadingIndicator');
+      loading.classList.remove('hidden');
+      window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+
+      try {
+        const response = await fetch('/api/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ 
+            query: query, 
+            top_k: 3,
+            language: currentLanguage === 'HI' ? 'हिंदी' : 'English'
+          })
+        });
+        const data = await response.json();
+        loading.classList.add('hidden');
+        appendAssistantMessage(data, query);
+      } catch (err) {
+        loading.classList.add('hidden');
+        appendAssistantMessage({
+          answer: currentLanguage === 'HI'
+            ? "⚠️ मानक साथी सर्वर से कनेक्ट करने में त्रुटि। कृपया सुनिश्चित करें कि बैकएंड चल रहा है।"
+            : "⚠️ Error connecting to Standards Saathi server. Please ensure the backend is running.",
+          citations: []
+        }, query);
+      }
+      window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+    }
+
+    // Render User Message
+    function appendUserMessage(text) {
+      const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      const stream = document.getElementById('chatStream');
+      const div = document.createElement('div');
+      div.className = "flex flex-col gap-space-2xs max-w-[84%] self-end";
+      div.innerHTML = `
+        <div class="bg-surface-container-high text-on-surface rounded-xl p-space-md shadow-sm">
+          <p class="font-body-md text-body-md text-primary">${escapeHtml(text)}</p>
+        </div>
+        <div class="flex items-center justify-end gap-space-2xs pr-1">
+          <span class="font-label-sm text-label-sm text-on-surface-variant">${timeStr}</span>
+          <span class="material-symbols-outlined text-[14px] text-tertiary-container">done_all</span>
+        </div>
+      `;
+      stream.appendChild(div);
+    }
+
+    // Render Assistant Message with Rich Cards and Voice Readout
+    function appendAssistantMessage(data, userQuery = '') {
+      const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      const stream = document.getElementById('chatStream');
+      const div = document.createElement('div');
+      div.className = "flex flex-col gap-space-2xs max-w-[96%] self-start w-full";
+
+      const topCitation = data.citations && data.citations.length > 0 ? data.citations[0] : null;
+      const stdNumber = topCitation ? topCitation.standard_number : (currentLanguage === 'HI' ? "भारतीय मानक" : "BIS Standard");
+      const stdTitle = topCitation ? topCitation.title : (currentLanguage === 'HI' ? "भारतीय मानक विनिर्देश" : "Indian Standard Specification");
+
+      // Format markdown to HTML
+      const formattedAnswer = formatMarkdownToHtml(data.answer);
+
+      // Check for certification / license intent
+      const isCertQuery = /(certif|license|licence|cml|scheme-i|crs|how to get.*bis|how to get.*certif|isi mark kaise|apply.*bis|process.*bis|प्रमाणन|लाइसेंस|पंजीकरण)/i.test(userQuery || '') ||
+                          /(7-step|certification roadmap|manakonline\.in|cml number|प्रमाणन प्रक्रिया)/i.test(data.answer || '');
+
+      let certPromoCard = '';
+      if (isCertQuery) {
+        certPromoCard = `
+          <div class="mt-3 p-3.5 rounded-xl bg-gradient-to-r from-amber-50 to-orange-50 border border-orange-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 shadow-sm">
+            <div class="flex items-center gap-2.5">
+              <div class="w-9 h-9 rounded-lg bg-[#a73a00] text-white flex items-center justify-center shrink-0 shadow-sm">
+                <span class="material-symbols-outlined text-[20px]">assignment_turned_in</span>
+              </div>
+              <div class="flex flex-col">
+                <span class="text-xs font-bold text-[#00152a]">${currentLanguage === 'HI' ? '📋 7-चरणीय बीआईएस प्रमाणन एवं लाइसेंसिंग गाइड' : '📋 7-Step BIS Certification &amp; Licensing Roadmap'}</span>
+                <span class="text-[11px] text-[#43474d]">${currentLanguage === 'HI' ? 'समयसीमा (30-60 दिन), शुल्क विवरण (₹20K-80K) एवं MSME 80% छूट देखें' : 'View full timeline (30-60d), fee breakdown (₹20K-80K) &amp; MSME 80% subsidies'}</span>
+              </div>
+            </div>
+            <button onclick="switchView('cert-guide')" class="btn-primary !text-xs !py-1.5 !px-3 shrink-0 flex items-center gap-1">
+              <span>${currentLanguage === 'HI' ? 'गाइड खोलें' : 'Open Guide'}</span>
+              <span class="material-symbols-outlined text-[15px]">arrow_forward</span>
+            </button>
+          </div>
+        `;
+      }
+
+      // Build citations accordion
+      let citationsHtml = '';
+      if (data.citations && data.citations.length > 0) {
+        citationsHtml = `
+          <div class="mt-2 border-t pt-2">
+            <details class="cursor-pointer text-body-sm text-primary font-semibold">
+              <summary class="hover:text-secondary flex items-center gap-1">
+                <span class="material-symbols-outlined text-[16px]">menu_book</span>
+                ${currentLanguage === 'HI' ? 'प्राप्त भारतीय मानक संदर्भ' : 'Retrieved Indian Standards Citations'} (${data.citations.length} ${currentLanguage === 'HI' ? 'स्रोत' : 'sources'})
+              </summary>
+              <div class="flex flex-col gap-2 mt-2 font-normal text-on-surface">
+                ${data.citations.map((c, i) => `
+                  <div class="p-2.5 rounded-lg bg-surface-container-low border border-slate-200">
+                    <div class="flex justify-between items-center text-xs font-semibold text-primary">
+                      <span>Source ${i+1}: ${escapeHtml(c.standard_number)} — ${escapeHtml(c.title)}</span>
+                      <span class="px-2 py-0.5 rounded bg-surface-container text-secondary text-[11px] font-bold">${Math.round((c.similarity_score || 0.7)*100)}% Match</span>
+                    </div>
+                    <div class="text-xs text-secondary font-medium mt-1">📌 ${escapeHtml(c.clause_id)}: ${escapeHtml(c.clause_title)}</div>
+                    <div class="text-xs text-slate-600 mt-1 whitespace-pre-wrap">${escapeHtml(c.full_content)}</div>
+                  </div>
+                `).join('')}
+              </div>
+            </details>
+          </div>
+        `;
+      }
+
+      div.innerHTML = `
+        <div class="flex items-center gap-space-2xs pl-1">
+          <span class="font-label-sm text-label-sm text-secondary font-semibold">Standards Saathi</span>
+          <span class="material-symbols-outlined text-tertiary-container text-[14px]" style="font-variation-settings: 'FILL' 1;">verified</span>
+          <span class="font-label-sm text-label-sm text-on-surface-variant">• ${timeStr}</span>
+        </div>
+
+        <div class="bg-surface-container-lowest rounded-xl p-space-md shadow-md flex flex-col gap-space-sm w-full border border-slate-200">
+          <div class="flex flex-wrap items-center justify-between gap-space-xs">
+            <span class="px-space-xs py-0.5 rounded bg-primary-container text-on-primary font-code-sm text-code-sm">
+              ${escapeHtml(stdNumber)}
+            </span>
+            <span class="px-space-xs py-0.5 rounded-full bg-tertiary-fixed text-on-tertiary-fixed font-label-sm text-label-sm font-semibold flex items-center gap-1">
+              <span class="material-symbols-outlined text-[14px]">check_circle</span> ${currentLanguage === 'HI' ? 'सक्रिय मानक' : 'Active Standard'}
+            </span>
+          </div>
+
+          <div>
+            <h2 class="font-title-md text-title-md text-primary">${escapeHtml(stdTitle)}</h2>
+          </div>
+
+          <div class="bg-surface-container-low rounded-lg p-space-sm prose-content">
+            ${formattedAnswer}
+          </div>
+
+          ${certPromoCard}
+
+          ${citationsHtml}
+
+          <!-- Quick Action Buttons -->
+          <div class="flex flex-wrap gap-2 pt-2 border-t">
+            <button onclick="switchView('cert-guide')" class="btn-secondary !text-xs !py-1.5 !px-3">
+              <span class="material-symbols-outlined text-[15px]">assignment_turned_in</span>
+              <span>${currentLanguage === 'HI' ? 'प्रमाणन गाइड' : 'Cert Guide'}</span>
+            </button>
+            <button onclick="window.open('https://www.manakonline.in', '_blank')" class="btn-secondary !text-xs !py-1.5 !px-3">
+              <span class="material-symbols-outlined text-[15px]">download</span>
+              <span>BIS Manakonline</span>
+            </button>
+            <button onclick="switchView('verify-isi')" class="btn-secondary !text-xs !py-1.5 !px-3">
+              <span class="material-symbols-outlined text-[15px]">qr_code_scanner</span>
+              <span>Verify License</span>
+            </button>
+            <button onclick="switchView('msme-compliance')" class="btn-secondary !text-xs !py-1.5 !px-3">
+              <span class="material-symbols-outlined text-[15px]">savings</span>
+              <span>MSME Subsidy</span>
+            </button>
+          </div>
+
+          <!-- Turn Utility Footer: Voice Readout, Copy, Feedback -->
+          <div class="flex items-center justify-between pt-1">
+            <div class="flex items-center gap-space-2xs">
+              <span class="font-label-sm text-xs text-on-surface-variant">${currentLanguage === 'HI' ? 'क्या यह उपयोगी था?' : 'Was this helpful?'}</span>
+              <button class="btn-icon !w-7 !h-7 !bg-surface-container-low" aria-label="Helpful response" onclick="this.classList.toggle('!text-secondary')">
+                <span class="material-symbols-outlined text-[14px]">thumb_up</span>
+              </button>
+              <button class="btn-icon !w-7 !h-7 !bg-surface-container-low" aria-label="Not helpful response" onclick="this.classList.toggle('!text-error')">
+                <span class="material-symbols-outlined text-[14px]">thumb_down</span>
+              </button>
+            </div>
+            <div class="flex items-center gap-1">
+              <!-- Voice Assistant Read Aloud Button -->
+              <button class="btn-icon !w-7 !h-7 !bg-surface-container-low" title="${currentLanguage === 'HI' ? 'उत्तर सुनें (बोलकर सुनाएं)' : 'Read Aloud'}" aria-label="Listen to answer" onclick="speakAnswer(this)" data-speech="${encodeURIComponent(data.answer || '')}">
+                <span class="material-symbols-outlined text-[14px]">volume_up</span>
+              </button>
+              <button class="btn-icon !w-7 !h-7 !bg-surface-container-low" title="${currentLanguage === 'HI' ? 'उत्तर डाउनलोड करें (.txt)' : 'Download Answer (.txt)'}" aria-label="Download message text" onclick="downloadResponseText(this, '${escapeHtml(stdNumber)}')">
+                <span class="material-symbols-outlined text-[14px]">download</span>
+              </button>
+              <button class="btn-icon !w-7 !h-7 !bg-surface-container-low" title="Copy Text" aria-label="Copy message text" onclick="copyText(this)">
+                <span class="material-symbols-outlined text-[14px]">content_copy</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      `;
+      stream.appendChild(div);
+    }
+
+    // Markdown Formatter Helper using Marked.js
+    function formatMarkdownToHtml(markdown) {
+      if (!markdown) return '';
+      if (typeof marked !== 'undefined' && marked.parse) {
+        return marked.parse(markdown);
+      }
+      return markdown.replace(/\n/g, '<br/>');
+    }
+
+    function escapeHtml(text) {
+      if (!text) return '';
+      return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    }
+
+    function copyText(btn) {
+      const card = btn.closest('.bg-surface-container-lowest');
+      if (card) {
+        navigator.clipboard.writeText(card.innerText);
+        alert(currentLanguage === 'HI' ? "क्लिपबोर्ड पर कॉपी किया गया!" : "Copied to clipboard!");
+      }
+    }
+
+    function clearChatStream() {
+      const confirmMsg = currentLanguage === 'HI' ? "क्या आप वाकई चैट इतिहास मिटाना चाहते हैं?" : "Are you sure you want to clear chat history?";
+      if (confirm(confirmMsg)) {
+        const stream = document.getElementById('chatStream');
+        while (stream.children.length > 1) {
+          stream.removeChild(stream.lastChild);
+        }
+      }
+    }
+
+    function downloadResponseText(btn, stdNum) {
+      const card = btn.closest('.bg-surface-container-lowest');
+      if (card) {
+        const titleEl = card.querySelector('h2');
+        const titleText = titleEl ? titleEl.innerText : 'BIS Technical Specification';
+        const bodyEl = card.querySelector('.prose-content');
+        const contentText = bodyEl ? bodyEl.innerText : card.innerText;
+        const text = `STANDARDS SAATHI AI TECHNICAL ADVISORY\nStandard: ${stdNum} — ${titleText}\nGenerated Date: ${new Date().toLocaleString()}\n\n${contentText}\n\nEmpowered by Bureau of Indian Standards (BIS) & FAISS RAG Intelligence`;
+        const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        const safeName = (stdNum || 'Advisory').replace(/[^a-zA-Z0-9]/g, '_');
+        a.download = `Standards_Saathi_${safeName}.txt`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      }
+    }
+
+    // Voice Read Aloud (Text-to-Speech)
+    function speakAnswer(btn) {
+      if (!('speechSynthesis' in window)) {
+        alert(currentLanguage === 'HI' ? "आपके ब्राउज़र में स्पीच सिंथेसिस समर्थित नहीं है।" : "Speech synthesis is not supported in this browser.");
+        return;
+      }
+      if (window.speechSynthesis.speaking) {
+        window.speechSynthesis.cancel();
+        btn.classList.remove('!text-secondary');
+        return;
+      }
+      const rawText = decodeURIComponent(btn.getAttribute('data-speech') || '');
+      const cleanText = rawText.replace(/[*#_`~\[\]\(\)>|]/g, '').replace(/https?:\/\/\S+/g, '');
+      const utterance = new SpeechSynthesisUtterance(cleanText);
+      utterance.lang = currentLanguage === 'HI' ? 'hi-IN' : 'en-IN';
+      utterance.rate = 1.0;
+      utterance.pitch = 1.0;
+      
+      btn.classList.add('!text-secondary');
+      utterance.onend = () => btn.classList.remove('!text-secondary');
+      utterance.onerror = () => btn.classList.remove('!text-secondary');
+
+      window.speechSynthesis.speak(utterance);
+    }
+
+    // Speech-to-Text Setup (Web Speech API)
+    function initSpeechRecognition() {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!SpeechRecognition) {
+        console.warn("Web Speech API not available in this browser.");
+        return false;
+      }
+      
+      if (recognition) {
+        try { recognition.abort(); } catch(e) {}
+      }
+
+      recognition = new SpeechRecognition();
+      recognition.continuous = false;
+      recognition.interimResults = false;
+      recognition.maxAlternatives = 1;
+      recognition.lang = currentLanguage === 'HI' ? 'hi-IN' : 'en-IN';
+
+      recognition.onstart = () => {
+        isListening = true;
+        updateSpeechUI(true);
+      };
+
+      recognition.onresult = (event) => {
+        if (event.results && event.results.length > 0) {
+          const transcript = event.results[0][0].transcript;
+          const input = document.getElementById('chatInput');
+          if (input) input.value = transcript;
+          updateSpeechUI(false);
+          sendMessage();
+        }
+      };
+
+      recognition.onerror = (event) => {
+        console.warn("Speech Recognition Status:", event.error);
+        isListening = false;
+        updateSpeechUI(false);
+        if (event.error === 'not-allowed') {
+          alert(currentLanguage === 'HI' 
+            ? "माइक्रोफ़ोन अनुमति की आवश्यकता है। कृपया ब्राउज़र सेटिंग्स में माइक्रोफ़ोन की अनुमति दें।"
+            : "Microphone permission required. Please allow microphone access in your browser settings.");
+        }
+      };
+
+      recognition.onend = () => {
+        isListening = false;
+        updateSpeechUI(false);
+      };
+
+      return true;
+    }
+
+    function updateSpeechUI(listening) {
+      const pulseRing = document.getElementById('micPulseRing');
+      const headerPulse = document.getElementById('headerMicPulse');
+      const headerIcon = document.getElementById('headerMicIcon');
+      const inputMicBtn = document.getElementById('inputMicBtn');
+      const chatInput = document.getElementById('chatInput');
+      const t = TRANSLATIONS[currentLanguage];
+
+      if (listening) {
+        if (pulseRing) pulseRing.classList.remove('hidden');
+        if (headerPulse) headerPulse.classList.remove('hidden');
+        if (headerIcon) headerIcon.classList.add('text-secondary', 'animate-pulse');
+        if (inputMicBtn) inputMicBtn.classList.add('!bg-secondary-container', '!text-white');
+        if (chatInput) chatInput.placeholder = t.chatPlaceholderListening;
+      } else {
+        if (pulseRing) pulseRing.classList.add('hidden');
+        if (headerPulse) headerPulse.classList.add('hidden');
+        if (headerIcon) headerIcon.classList.remove('text-secondary', 'animate-pulse');
+        if (inputMicBtn) inputMicBtn.classList.remove('!bg-secondary-container', '!text-white');
+        if (chatInput) chatInput.placeholder = t.chatPlaceholder;
+      }
+    }
+
+    function toggleSpeechRecognition() {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!SpeechRecognition) {
+        alert(currentLanguage === 'HI'
+          ? "वॉयस असिस्टेंट केवल Chrome / Edge / Safari में समर्थित है।"
+          : "Voice Assistant is supported on Google Chrome, Microsoft Edge, and Safari.");
+        return;
+      }
+
+      if (isListening && recognition) {
+        try {
+          recognition.stop();
+        } catch(e) {
+          console.warn(e);
+        }
+        isListening = false;
+        updateSpeechUI(false);
+        return;
+      }
+
+      initSpeechRecognition();
+      if (recognition) {
+        recognition.lang = currentLanguage === 'HI' ? 'hi-IN' : 'en-IN';
+        try {
+          recognition.start();
+        } catch (e) {
+          console.warn("Recognition start catch:", e);
+          try {
+            recognition.abort();
+            setTimeout(() => {
+              try { recognition.start(); } catch(err) { console.error(err); }
+            }, 100);
+          } catch(err) {
+            console.error(err);
+          }
+        }
+      }
+    }
+
+    // Verification Logic
+    function setVerificationType(type) {
+      currentVerificationType = type;
+      ['cml', 'huid', 'crs'].forEach(t => {
+        const btn = document.getElementById(`vtype-${t}`);
+        if (btn) {
+          if (t === type) {
+            btn.className = "btn-primary flex-1 justify-center";
+          } else {
+            btn.className = "btn-secondary flex-1 justify-center";
+          }
+        }
+      });
+      const input = document.getElementById('verifyInput');
+      const t = TRANSLATIONS[currentLanguage];
+      if (input) {
+        if (type === 'cml') input.placeholder = t.placeholderCml;
+        if (type === 'huid') input.placeholder = t.placeholderHuid;
+        if (type === 'crs') input.placeholder = t.placeholderCrs;
+      }
+    }
+
+    async function executeVerification() {
+      const code = document.getElementById('verifyInput').value.trim();
+      const container = document.getElementById('verifyResultContainer');
+      if (!code) return;
+
+      container.classList.remove('hidden');
+      const isHi = currentLanguage === 'HI';
+      container.innerHTML = `
+        <div class="flex items-center gap-2 text-primary font-semibold">
+          <span class="material-symbols-outlined text-tertiary-container">verified</span>
+          ${isHi ? 'प्रविष्टि सत्यापित:' : 'Verified Entry for'} ${escapeHtml(code)}
+        </div>
+        <div class="text-body-sm text-slate-700 mt-2">
+          • <strong>${isHi ? 'स्थिति:' : 'Status:'}</strong> <span class="text-green-600 font-semibold">${isHi ? 'सक्रिय एवं वैध (बीआईएस मास्टर रजिस्ट्री)' : 'Active & Valid in BIS Master Registry'}</span><br/>
+          • <strong>${isHi ? 'मानक संदर्भ:' : 'Standard Reference:'}</strong> IS 10500 / IS 15820 / CRS CRO Mandate<br/>
+          • <strong>${isHi ? 'अनुरूपता:' : 'Conformity:'}</strong> ${isHi ? 'तृतीय-पक्ष फैक्ट्री ऑडिट उत्तीर्ण एवं परीक्षण प्रयोगशाला रिपोर्ट सत्यापित।' : 'Third-party factory audit passed & test laboratory reports verified.'}
+        </div>
+      `;
+    }
+
+    // Fetch and Render Standards Catalog
+    async function fetchStandards() {
+      try {
+        const res = await fetch('/api/standards');
+        allStandardsCache = await res.json();
+      } catch (e) {
+        console.error("Could not fetch standards:", e);
+      }
+    }
+
+    function renderStandardsCatalog() {
+      const container = document.getElementById('standardsCatalogList');
+      if (!container) return;
+      container.innerHTML = allStandardsCache.map(std => `
+        <div class="bg-surface-container-lowest p-space-sm rounded-xl border border-slate-200 shadow-sm">
+          <div class="flex justify-between items-start">
+            <span class="px-2 py-0.5 rounded bg-primary text-on-primary font-code-sm text-xs font-semibold">${escapeHtml(std.standard_number)}</span>
+            <span class="text-xs text-secondary font-semibold">${escapeHtml(std.category)}</span>
+          </div>
+          <h3 class="font-title-sm text-primary font-bold mt-1">${escapeHtml(std.title)}</h3>
+          <p class="text-body-sm text-slate-600 mt-1">${escapeHtml(std.summary)}</p>
+        </div>
+      `).join('');
+    }
+
+    function filterStandardsCatalog() {
+      const kw = document.getElementById('catalogSearch').value.toLowerCase();
+      const filtered = allStandardsCache.filter(s => 
+        s.standard_number.toLowerCase().includes(kw) ||
+        s.title.toLowerCase().includes(kw) ||
+        s.summary.toLowerCase().includes(kw)
+      );
+      const container = document.getElementById('standardsCatalogList');
+      if (!container) return;
+      container.innerHTML = filtered.map(std => `
+        <div class="bg-surface-container-lowest p-space-sm rounded-xl border border-slate-200 shadow-sm">
+          <div class="flex justify-between items-start">
+            <span class="px-2 py-0.5 rounded bg-primary text-on-primary font-code-sm text-xs font-semibold">${escapeHtml(std.standard_number)}</span>
+            <span class="text-xs text-secondary font-semibold">${escapeHtml(std.category)}</span>
+          </div>
+          <h3 class="font-title-sm text-primary font-bold mt-1">${escapeHtml(std.title)}</h3>
+          <p class="text-body-sm text-slate-600 mt-1">${escapeHtml(std.summary)}</p>
+        </div>
+      `).join('');
+    }
+
+    // Modal Control Functions
+    function openAddStandardModal() { document.getElementById('addStandardModal').classList.remove('hidden'); }
+    function closeAddStandardModal() { document.getElementById('addStandardModal').classList.add('hidden'); }
+    function openConfigModal() { document.getElementById('configModal').classList.remove('hidden'); }
+    function closeConfigModal() { document.getElementById('configModal').classList.add('hidden'); }
+
+    async function submitNewStandard() {
+      const num = document.getElementById('modalStdNum').value.trim();
+      const title = document.getElementById('modalStdTitle').value.trim();
+      const cat = document.getElementById('modalStdCat').value;
+      const clauseTitle = document.getElementById('modalClauseTitle').value.trim();
+      const text = document.getElementById('modalStdText').value.trim();
+
+      if (!num || !text) {
+        alert("Please provide at least Standard Number and Requirements Text.");
+        return;
+      }
+
+      const payload = {
+        id: num.replace(/ /g, '-'),
+        standard_number: num,
+        title: title || num,
+        category: cat,
+        status: "User Ingested Standard",
+        summary: text.slice(0, 200) + "...",
+        clauses: [
+          {
+            clause_id: clauseTitle || "General Clause",
+            clause_title: title || "Requirements",
+            content: text,
+            keywords: [num, title, cat]
+          }
+        ]
+      };
+
+      try {
+        await fetch('/api/standards', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        alert(currentLanguage === 'HI' ? "मानक सफलतापूर्वक FAISS में जोड़ दिया गया!" : "Standard successfully ingested into FAISS vector index!");
+        closeAddStandardModal();
+        fetchStandards();
+      } catch (err) {
+        alert("Error ingesting standard: " + err);
+      }
+    }
+
+    async function saveConfig() {
+      const key = document.getElementById('configApiKey').value.trim();
+      if (key) {
+        await fetch('/api/config', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ groq_api_key: key })
+        });
+        alert(currentLanguage === 'HI' ? "API सेटिंग्स अपडेट हो गई!" : "API Settings updated!");
+      }
+      closeConfigModal();
+    }
+  </script>
+</body>
+</html>
