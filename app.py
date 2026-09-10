@@ -12,10 +12,16 @@ import base64
 import streamlit as st
 
 # Automatically launch Streamlit if executed directly via `python app.py` or the VS Code Play button
-if __name__ == "__main__" and not st.runtime.exists():
-    from streamlit.web import cli as stcli
-    sys.argv = ["streamlit", "run", os.path.abspath(__file__)]
-    sys.exit(stcli.main())
+if __name__ == "__main__":
+    _is_running = False
+    try:
+        _is_running = hasattr(st, "runtime") and hasattr(st.runtime, "exists") and st.runtime.exists()
+    except Exception:
+        _is_running = False
+    if not _is_running:
+        from streamlit.web import cli as stcli
+        sys.argv = ["streamlit", "run", os.path.abspath(__file__)]
+        sys.exit(stcli.main())
 
 from dotenv import load_dotenv
 
@@ -31,6 +37,19 @@ def get_logo_data_uri() -> str:
     return ""
 
 LOGO_DATA_URI = get_logo_data_uri()
+
+# Safe toast fallback for Streamlit versions without st.toast
+def safe_toast(message: str, icon: Optional[str] = None):
+    try:
+        if hasattr(st, "toast"):
+            if icon:
+                st.toast(message, icon=icon)
+            else:
+                st.toast(message)
+        else:
+            st.info(message)
+    except Exception:
+        pass
 
 # Load environment variables (.env for local, st.secrets for Streamlit Cloud)
 load_dotenv(override=True)
@@ -627,7 +646,7 @@ with st.sidebar:
     clear_btn_label = "🗑️ चैट साफ़ करें" if is_hindi else "🗑️ Clear Chat"
     if st.button(clear_btn_label, use_container_width=True):
         st.session_state.messages = []
-        st.toast("✅ " + ("चैट इतिहास रीसेट हो गया है।" if is_hindi else "Chat history has been reset!"))
+        safe_toast("✅ " + ("चैट इतिहास रीसेट हो गया है।" if is_hindi else "Chat history has been reset!"))
         st.rerun()
 
     st.markdown("---")
@@ -662,9 +681,11 @@ T = {
 # Initialize RAG Engine (must happen before the header so we can report real retrieval status)
 rag_engine = get_rag_engine()
 
+is_engine_degraded = getattr(rag_engine, "is_degraded", False)
+
 _status_label = (
     "⚠️ Basic Keyword Match (semantic model unavailable)"
-    if rag_engine.is_degraded
+    if is_engine_degraded
     else "BIS Verified Data • FAISS Vector Store Active"
 )
 
@@ -707,7 +728,7 @@ st.markdown(f"""
 </div>
 """, unsafe_allow_html=True)
 
-if rag_engine.is_degraded:
+if is_engine_degraded:
     st.warning(
         "⚠️ Running in basic keyword-match mode — the semantic search model (sentence-transformers/FAISS) "
         "failed to load, likely due to hosting resource limits. Answers may cite the wrong Indian Standard. "
@@ -834,11 +855,11 @@ with tab_chat:
                 with act_col2:
                     if st.button(T["helpful"], key=f"help_pos_{idx}"):
                         st.session_state.feedback_log[idx] = "helpful"
-                        st.toast(T["feedback_thanks"], icon="👍")
+                        safe_toast(T["feedback_thanks"], icon="👍")
                 with act_col3:
                     if st.button(T["not_helpful"], key=f"help_neg_{idx}"):
                         st.session_state.feedback_log[idx] = "not_helpful"
-                        st.toast(T["feedback_thanks"], icon="🙏")
+                        safe_toast(T["feedback_thanks"], icon="🙏")
 
     # Chat Input Handler
     user_input = st.chat_input(T["chat_placeholder"])
@@ -864,17 +885,18 @@ with tab_chat:
                     language=selected_language
                 )
 
-            top_cit = resp["citations"][0] if resp["citations"] else {}
+            citations = resp.get("citations", []) if isinstance(resp, dict) else []
+            top_cit = citations[0] if citations else {}
             std_num = top_cit.get("standard_number", "Indian Standard")
             std_title = top_cit.get("title", "BIS Specification")
 
             st.session_state.messages.append({
                 "role": "assistant",
-                "content": resp["answer"],
+                "content": resp.get("answer", "") if isinstance(resp, dict) else str(resp),
                 "standard_number": std_num,
                 "title": std_title,
-                "citations": resp["citations"],
-                "related_standards": resp.get("related_standards", [])
+                "citations": citations,
+                "related_standards": resp.get("related_standards", []) if isinstance(resp, dict) else []
             })
             st.rerun()
 
