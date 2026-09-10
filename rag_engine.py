@@ -86,6 +86,10 @@ class StandardsRAGEngine:
         sentence-transformer + FAISS pipeline (e.g. because those packages failed to load)."""
         return self.embedding_model is None or not HAS_FAISS
 
+    @is_degraded.setter
+    def is_degraded(self, value: bool):
+        pass
+
     def set_groq_api_key(self, api_key: str):
         """Updates the Groq API key dynamically."""
         self.groq_api_key = api_key

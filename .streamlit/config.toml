@@ -1,6 +1,9 @@
 [browser]
 gatherUsageStats = false
 
+[client]
+showErrorDetails = "full"
+
 [theme]
 primaryColor = "#ff6926"
 backgroundColor = "#f7f9ff"
@@ -8,4 +11,5 @@ secondaryBackgroundColor = "#e3efff"
 textColor = "#001d33"
 
 [server]
-fileWatcherType = "none"
+fileWatcherType = "auto"
+headless = true
