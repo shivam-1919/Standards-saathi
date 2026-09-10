@@ -91,7 +91,6 @@ st.markdown("""
     }
 
     header[data-testid="stHeader"] { background: transparent !important; }
-    .stDeployButton { display: none !important; }
     #MainMenu { display: none !important; }
     footer { display: none !important; }
 
