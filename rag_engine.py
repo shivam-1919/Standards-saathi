@@ -44,7 +44,15 @@ class StandardsRAGEngine:
 
     def __init__(self, model_name: str = "all-MiniLM-L6-v2", groq_api_key: Optional[str] = None):
         self.model_name = model_name
-        self.groq_api_key = groq_api_key or os.getenv("GROQ_API_KEY", "")
+        key = groq_api_key or os.getenv("GROQ_API_KEY", "")
+        if not key:
+            try:
+                import streamlit as st
+                if hasattr(st, "secrets") and "GROQ_API_KEY" in st.secrets:
+                    key = str(st.secrets["GROQ_API_KEY"])
+            except Exception:
+                pass
+        self.groq_api_key = key
         self.embedding_model = None
         self.faiss_index = None
         self.chunks: List[Dict[str, Any]] = []

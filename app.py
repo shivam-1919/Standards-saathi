@@ -5,18 +5,34 @@ Two-stage Loading States, Rich Sidebar Stats, Download Answer, Feedback Buttons,
 """
 
 import os
+import sys
 import json
 import time
 import streamlit as st
+
+# Automatically launch Streamlit if executed directly via `python app.py` or the VS Code Play button
+if __name__ == "__main__" and not st.runtime.exists():
+    from streamlit.web import cli as stcli
+    sys.argv = ["streamlit", "run", os.path.abspath(__file__)]
+    sys.exit(stcli.main())
+
 from dotenv import load_dotenv
 
 from sample_data import get_all_standards
 from rag_engine import get_rag_engine
 
-# Load environment variables
+# Load environment variables (.env for local, st.secrets for Streamlit Cloud)
 load_dotenv(override=True)
 
 ADMIN_PASSWORD = os.getenv("ADMIN_PASSWORD", "admin123")
+try:
+    if hasattr(st, "secrets"):
+        if "GROQ_API_KEY" in st.secrets and not os.getenv("GROQ_API_KEY"):
+            os.environ["GROQ_API_KEY"] = str(st.secrets["GROQ_API_KEY"])
+        if "ADMIN_PASSWORD" in st.secrets:
+            ADMIN_PASSWORD = str(st.secrets["ADMIN_PASSWORD"])
+except Exception:
+    pass
 
 # Page Configuration
 st.set_page_config(
