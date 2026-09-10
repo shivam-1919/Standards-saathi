@@ -390,7 +390,7 @@ with st.sidebar:
     with st.expander("ℹ️ " + ("मानक साथी के बारे में" if is_hindi else "About Standards Saathi")):
         st.caption(
             "मानक साथी (Standards Saathi) भारतीय मानकों (IS Codes), गुणवत्ता नियंत्रण आदेशों (QCO), "
-            "और बीआईएस प्रमाणन के लिए एक आधिकारिक-स्तरीय AI सहायक है。"
+            "और बीआईएस प्रमाणन के लिए एक आधिकारिक-स्तरीय AI सहायक है।"
             if is_hindi else
             "Standards Saathi is an official-grade AI assistant for Indian Standards (IS Codes), "
             "Quality Control Orders (QCOs), Gold Hallmarking, and BIS certification advisory."
@@ -434,6 +434,15 @@ T = {
 }
 
 
+# Initialize RAG Engine (must happen before the header so we can report real retrieval status)
+rag_engine = get_rag_engine()
+
+_status_label = (
+    "⚠️ Basic Keyword Match (semantic model unavailable)"
+    if rag_engine.is_degraded
+    else "BIS Verified Data • FAISS Vector Store Active"
+)
+
 # Top App Header (Civic / Stitch Design)
 st.markdown(f"""
 <div class="stitch-header">
@@ -464,7 +473,7 @@ st.markdown(f"""
 <div class="stitch-assurance-banner">
     <div class="assurance-left">
         <span class="material-symbols-outlined text-[16px]" style="color: #003016;">shield</span>
-        <span>BIS Verified Data • FAISS Vector Store Active</span>
+        <span>{_status_label}</span>
     </div>
     <div class="assurance-badge">
         <span class="pulse-dot"></span>
@@ -473,9 +482,13 @@ st.markdown(f"""
 </div>
 """, unsafe_allow_html=True)
 
-
-# Initialize RAG Engine
-rag_engine = get_rag_engine()
+if rag_engine.is_degraded:
+    st.warning(
+        "⚠️ Running in basic keyword-match mode — the semantic search model (sentence-transformers/FAISS) "
+        "failed to load, likely due to hosting resource limits. Answers may cite the wrong Indian Standard. "
+        "Check your deployment logs / requirements.txt.",
+        icon="⚠️"
+    )
 
 
 # Main Navigation Tabs

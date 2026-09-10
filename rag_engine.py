@@ -78,6 +78,11 @@ class StandardsRAGEngine:
         self.rebuild_index()
         self.is_initialized = True
 
+    @property
+    def is_degraded(self) -> bool:
+        """Returns True if the semantic embedding model or FAISS index failed to initialize."""
+        return self.embedding_model is None or self.faiss_index is None
+
     def set_groq_api_key(self, api_key: str):
         """Updates the Groq API key dynamically."""
         self.groq_api_key = api_key
