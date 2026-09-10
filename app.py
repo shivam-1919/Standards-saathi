@@ -8,6 +8,7 @@ import os
 import sys
 import json
 import time
+import base64
 import streamlit as st
 
 # Automatically launch Streamlit if executed directly via `python app.py` or the VS Code Play button
@@ -20,6 +21,16 @@ from dotenv import load_dotenv
 
 from sample_data import get_all_standards
 from rag_engine import get_rag_engine
+
+# Load local SVG logo as reliable Data URI (works offline, locally & on Streamlit Cloud)
+def get_logo_data_uri() -> str:
+    logo_path = os.path.join(os.path.dirname(__file__), "static", "logo.svg")
+    if os.path.exists(logo_path):
+        with open(logo_path, "rb") as f:
+            return f"data:image/svg+xml;base64,{base64.b64encode(f.read()).decode('utf-8')}"
+    return ""
+
+LOGO_DATA_URI = get_logo_data_uri()
 
 # Load environment variables (.env for local, st.secrets for Streamlit Cloud)
 load_dotenv(override=True)
@@ -342,7 +353,8 @@ st.markdown("""
 # SIDEBAR CONFIGURATION (Language, Stats, Admin)
 # ==========================================
 with st.sidebar:
-    st.image("https://upload.wikimedia.org/wikipedia/commons/thumb/5/55/Emblem_of_India.svg/200px-Emblem_of_India.svg.png", width=42)
+    if LOGO_DATA_URI:
+        st.image(LOGO_DATA_URI, width=44)
     st.title("🇮🇳 Standards Saathi")
 
     # FEATURE 3: Language Toggle
@@ -426,7 +438,7 @@ T = {
 st.markdown(f"""
 <div class="stitch-header">
     <div class="stitch-header-left">
-        <img alt="Standards Saathi Logo" class="stitch-logo" src="https://lh3.googleusercontent.com/aida/AEtjO1VCcgth8wPtmagkSJxnes7mJ_iUqSVs1qTE-8A9XVnQfOhMUH7rn-1gOpriCzm1PGMVbDJ34YUQZ6hL3stQJYRWZ-BXhbDiz26p68O6hAmOURXuyV1Idd3Z7Hcg24fyzgC43MBIrwLKvHK2VjbFeeR4zn5o52DCrppj-WhDg-S734w0QpbthR2UK7uS5QN1ymwNiZbaForIQy6sg3Xy1jBxf8XvNbJTTXQ6ukm5As_s9Gei314YFTvJY_k"/>
+        <img alt="Standards Saathi Logo" class="stitch-logo" src="{LOGO_DATA_URI}"/>
         <div>
             <div class="stitch-header-title">
                 <span>Standards Saathi</span>
