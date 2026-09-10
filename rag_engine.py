@@ -70,6 +70,8 @@ class StandardsRAGEngine:
             except Exception as e:
                 print(f"[RAG Engine Warning] Could not load SentenceTransformer '{self.model_name}': {e}")
                 self.embedding_model = None
+        else:
+            print("[RAG Engine Warning] sentence-transformers not installed — using weak hash-based fallback retriever.")
 
         # 2. Ingest Sample Standards
         self.chunks = get_flattened_chunks()
@@ -80,8 +82,9 @@ class StandardsRAGEngine:
 
     @property
     def is_degraded(self) -> bool:
-        """Returns True if the semantic embedding model or FAISS index failed to initialize."""
-        return self.embedding_model is None or self.faiss_index is None
+        """True when running on the weak hash-based fallback retriever instead of the real
+        sentence-transformer + FAISS pipeline (e.g. because those packages failed to load)."""
+        return self.embedding_model is None or not HAS_FAISS
 
     def set_groq_api_key(self, api_key: str):
         """Updates the Groq API key dynamically."""
@@ -328,11 +331,12 @@ class StandardsRAGEngine:
         candidate_models = []
         if model_override:
             candidate_models.append(model_override)
-        candidate_models.extend(["groq/compound-mini", "llama-3.1-8b-instant", "qwen/qwen3.6-27b", "allam-2-7b"])
+        candidate_models.extend(["groq/compound-mini", "openai/gpt-oss-20b", "qwen/qwen3.6-27b"])
         candidate_models = list(dict.fromkeys(candidate_models))
 
         client = Groq(api_key=api_key)
         raw_answer = ""
+        successful_model = None
 
         for model_name in candidate_models:
             try:
@@ -346,6 +350,7 @@ class StandardsRAGEngine:
                 raw_answer = completion.choices[0].message.content
                 if "<think>" in raw_answer and "</think>" in raw_answer:
                     raw_answer = raw_answer.split("</think>")[-1].strip()
+                successful_model = model_name
                 break
             except Exception as e:
                 continue
@@ -366,8 +371,8 @@ class StandardsRAGEngine:
             "citations": retrieved_chunks,
             "sources_text": "\n".join(source_citations),
             "related_standards": related_standards_list,
-            "is_fallback": False,
-            "model": f"{model_name} (Groq)"
+            "is_fallback": successful_model is None,
+            "model": f"{successful_model} (Groq)" if successful_model else "Local RAG Retriever (all Groq models failed)"
         }
 
     def _generate_offline_fallback(self, query: str, retrieved_chunks: List[Dict[str, Any]], source_citations: Optional[List[str]] = None) -> str:
