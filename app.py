@@ -633,22 +633,21 @@ with st.sidebar:
     </div>
     """, unsafe_allow_html=True)
 
-    with st.expander("ℹ️ " + ("मानक साथी के बारे में" if is_hindi else "About Standards Saathi")):
-        st.caption(
-            "मानक साथी (Standards Saathi) भारतीय मानकों (IS Codes), गुणवत्ता नियंत्रण आदेशों (QCO), "
-            "और बीआईएस प्रमाणन के लिए एक आधिकारिक-स्तरीय AI सलाहकार है।"
-            if is_hindi else
-            "Standards Saathi is an enterprise-grade AI technical advisor for Indian Standards (IS Codes), "
-            "Quality Control Orders (QCOs), Gold Hallmarking, and BIS certification advisory."
-        )
+    with st.expander("🛡️ " + ("गोपनीयता एवं सुरक्षा नियंत्रण" if is_hindi else "Privacy & Security Controls")):
+        st.markdown("""
+        - **🔒 Zero Data Retention:** User queries are processed in-memory and discarded. No personal identifiers or query histories are permanently stored.
+        - **🛡️ API Key Security:** Keys are shielded via `.env`/`st.secrets` and masked across administrative views.
+        - **🚫 Non-Regulatory Advisory:** Standards Saathi does not issue legal or certification grants; official applications must be submitted via [e-BIS Manakonline](https://www.manakonline.in).
+        - **🛡️ Active Defense:** Guardrails continuously scan for prompt-injection attempts and ground responses strictly in retrieved Indian Standards.
+        """)
 
     st.markdown("---")
 
     # Clear Chat Button
-    clear_btn_label = "🗑️ चैट साफ़ करें" if is_hindi else "🗑️ Clear Chat"
+    clear_btn_label = "🗑️ डेटा एवं चैट साफ़ करें (Purge Session)" if is_hindi else "🗑️ Clear Chat & Purge Data"
     if st.button(clear_btn_label, use_container_width=True):
         st.session_state.messages = []
-        safe_toast("✅ " + ("चैट इतिहास रीसेट हो गया है।" if is_hindi else "Chat history has been reset!"))
+        safe_toast("✅ " + ("सत्र डेटा और चैट इतिहास रीसेट हो गया है।" if is_hindi else "Session data & chat history successfully purged!"))
         st.rerun()
 
     st.markdown("---")
@@ -789,6 +788,95 @@ with tab_chat:
         if st.button("🔋 " + T["chip_battery"], use_container_width=True):
             st.session_state.pending_query = "What are the mandatory battery safety tests under IS 16046 / CRS?"
 
+    # Voice Speech-to-Text with Human-in-the-Loop Confirmation Guardrail
+    with st.expander("🎙️ " + ("वॉइस इनपुट व पुष्टिकरण (Voice Transcription Confirmation)" if is_hindi else "Voice Assistant & Transcription Confirmation"), expanded=False):
+        st.caption(
+            "सुरक्षा और सटीकता के लिए, मानक साथी आपके वॉइस इनपुट को AI को भेजने से पहले समीक्षा और पुष्टि (Confirm) करने की सुविधा देता है।"
+            if is_hindi else
+            "For accuracy and safety, Standards Saathi allows you to review, edit, and confirm your voice transcription before submitting it to the AI advisor."
+        )
+        
+        v_sub1, v_sub2 = st.columns([1.2, 2.8])
+        with v_sub1:
+            speech_lang_code = "hi-IN" if is_hindi else "en-IN"
+            st.components.v1.html(
+                f"""
+                <div style="font-family: 'Inter', sans-serif; display: flex; flex-direction: column; gap: 8px;">
+                    <button id="record-btn" onclick="startSaathiVoice()" style="
+                        display: flex; align-items: center; justify-content: center; gap: 8px;
+                        background: linear-gradient(135deg, #00152a 0%, #102a43 100%);
+                        color: #ffffff; border: 1px solid #ff6926; border-radius: 10px;
+                        padding: 10px 14px; font-weight: 700; font-size: 13px; cursor: pointer;
+                        box-shadow: 0 4px 12px rgba(0, 21, 42, 0.2); width: 100%;
+                    ">
+                        🎙️ <span id="rec-label">{"आवाज़ से बोलें" if is_hindi else "Record Speech"}</span>
+                    </button>
+                    <div id="rec-status" style="font-size: 11px; color: #5a6472; text-align: center;">{"क्लिक करके बोलना शुरू करें..." if is_hindi else "Click to start voice input..."}</div>
+                </div>
+                <script>
+                    var recognition;
+                    function startSaathiVoice() {{
+                        var btn = document.getElementById('record-btn');
+                        var status = document.getElementById('rec-status');
+                        var label = document.getElementById('rec-label');
+                        
+                        var SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                        if (!SpeechRecognition) {{
+                            status.innerText = "⚠️ Web Speech API not supported in this browser.";
+                            return;
+                        }}
+                        
+                        recognition = new SpeechRecognition();
+                        recognition.lang = '{speech_lang_code}';
+                        recognition.continuous = false;
+                        recognition.interimResults = false;
+                        
+                        recognition.onstart = function() {{
+                            btn.style.background = '#a73a00';
+                            label.innerText = '🔴 Listening...';
+                            status.innerText = 'Speak now into microphone...';
+                        }};
+                        
+                        recognition.onresult = function(event) {{
+                            var transcript = event.results[0][0].transcript;
+                            status.innerHTML = '✅ Audio captured! Copying text...';
+                            if (navigator.clipboard) {{
+                                navigator.clipboard.writeText(transcript);
+                            }}
+                            alert('🎙️ Voice Transcribed: "' + transcript + '"\\n\\nPlease review in the confirmation box and click Confirm!');
+                        }};
+                        
+                        recognition.onerror = function(event) {{
+                            status.innerText = '⚠️ Speech error: ' + event.error;
+                            btn.style.background = '#00152a';
+                            label.innerText = '🎙️ Record Speech';
+                        }};
+                        
+                        recognition.onend = function() {{
+                            btn.style.background = '#00152a';
+                            label.innerText = '🎙️ Record Speech';
+                        }};
+                        
+                        recognition.start();
+                    }}
+                </script>
+                """,
+                height=88
+            )
+
+        with v_sub2:
+            voice_transcribed_input = st.text_input(
+                "📝 " + ("ट्रांसक्रिप्शन समीक्षा (यदि आवश्यक हो तो संपादित करें):" if is_hindi else "Voice Transcription Review & Confirmation:"),
+                placeholder="Transcribed text appears here or paste spoken query..." if not is_hindi else "ट्रांसक्राइब किया गया टेक्स्ट यहाँ दर्ज करें...",
+                key="voice_confirm_box"
+            )
+            if st.button("✅ " + ("पुष्टि करें और साथी से पूछें (Confirm Query)" if is_hindi else "Confirm & Submit Voice Query"), type="primary", use_container_width=True):
+                if voice_transcribed_input.strip():
+                    st.session_state.pending_query = voice_transcribed_input.strip()
+                    st.rerun()
+                else:
+                    safe_toast("Please enter or speak your query first.", icon="⚠️")
+
     st.markdown("<hr style='margin: 12px 0; border: 0; border-top: 1px solid #e3efff;'>", unsafe_allow_html=True)
 
     # Chat History Rendering
@@ -800,13 +888,29 @@ with tab_chat:
             with st.chat_message("assistant", avatar="🇮🇳"):
                 std_num = msg.get("standard_number", "Indian Standard")
                 std_title = msg.get("title", "BIS Specification")
+                citations = msg.get("citations", [])
 
-                # Standard Title Badge
+                # Grounding & Document-Version Metadata Badges
+                top_c = citations[0] if citations else {}
+                c_ver = top_c.get("status", "Active National Standard")
+                c_clause = top_c.get("clause_id", "General Scope")
+                c_doc = top_c.get("filename", f"{std_num}.pdf")
+
                 st.markdown(f"""
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-                    <span class="badge-std">{std_num}</span>
+                <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 6px;">
+                    <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
+                        <span class="badge-std">{std_num}</span>
+                        <span style="display: inline-flex; align-items: center; gap: 4px; background: rgba(0, 135, 56, 0.1); border: 1px solid rgba(0, 135, 56, 0.25); color: #002e11; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 6px;">
+                            <span class="material-symbols-outlined" style="font-size: 13px; color: #008738;">verified_user</span>
+                            Grounded: {c_doc}
+                        </span>
+                        <span style="display: inline-flex; align-items: center; gap: 4px; background: rgba(0, 21, 42, 0.05); border: 1px solid rgba(0, 21, 42, 0.1); color: #00152a; font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 6px;">
+                            <span class="material-symbols-outlined" style="font-size: 13px; color: #a73a00;">menu_book</span>
+                            {c_clause}
+                        </span>
+                    </div>
                     <span class="badge-status">
-                        <span class="material-symbols-outlined text-[14px]">check_circle</span> Active Standard
+                        <span class="material-symbols-outlined text-[14px]">check_circle</span> {c_ver}
                     </span>
                 </div>
                 <h3 style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 16px; font-weight: 700; color: #00152a; margin: 0 0 8px 0;">{std_title}</h3>

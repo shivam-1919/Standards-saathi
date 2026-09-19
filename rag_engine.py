@@ -212,7 +212,7 @@ class StandardsRAGEngine:
                     score += 0.05
                     
             chunk_data = dict(chunk)
-            chunk_data["similarity_score"] = min(0.99, max(0.40, float(score * 1.5)))
+            chunk_data["similarity_score"] = min(0.99, max(0.0, float(score * 1.8)))
             scored.append((score, chunk_data))
             
         scored.sort(key=lambda x: x[0], reverse=True)
@@ -306,6 +306,59 @@ class StandardsRAGEngine:
         # Use robust TF-IDF / BM25 fallback
         return self._fallback_retrieve(query, top_k=top_k)
 
+    def _detect_prompt_injection(self, query: str) -> Optional[str]:
+        """Detects prompt injection attempts, system prompt exfiltration, and jailbreak patterns."""
+        injection_patterns = [
+            r"ignore\s+(all\s+)?(previous|prior|above)\s+instructions",
+            r"disregard\s+(all\s+)?(previous|prior|above)",
+            r"forget\s+(all\s+)?(previous|prior|your)\s+instructions",
+            r"system\s*prompt",
+            r"reveal\s+(your\s+)?(system|initial)\s+prompt",
+            r"print\s+(your\s+)?(system|initial)\s+prompt",
+            r"you\s+are\s+now\s+(in\s+)?(dan|developer|jailbreak|unrestricted)\s+mode",
+            r"bypass\s+(all\s+)?(safety|security|rules|guardrails)",
+            r"<\|im_start\|>",
+            r"<\|system\|>",
+            r"```\s*system",
+            r"act\s+as\s+(an?\s+)?unfiltered",
+            r"override\s+(all\s+)?(safety|system)\s+directives",
+            r"grant\s+me\s+(a\s+)?legal\s+(license|exemption|ruling)"
+        ]
+        q_lower = query.lower()
+        for pat in injection_patterns:
+            if re.search(pat, q_lower):
+                return (
+                    "🛡️ **Safety & Security Advisory**: Unauthorized instruction override, prompt-injection pattern, "
+                    "or legal ruling request detected. Standards Saathi strictly adheres to official Bureau of Indian Standards (BIS) "
+                    "knowledge and safety guidelines. Please submit a valid technical inquiry regarding Indian Standards (IS Codes) or BIS certification procedures."
+                )
+        return None
+
+    def _generate_no_evidence_response(self, query: str, language: str = "English") -> str:
+        """Generates a reliable refusal response when relevant evidence is not found in the BIS database."""
+        if language == "हिंदी":
+            return (
+                "### ℹ️ बीआईएस ज्ञान आधार में पर्याप्त साक्ष्य उपलब्ध नहीं है\n\n"
+                "मानक साथी (Standards Saathi) के अधिकृत डेटाबेस में इस प्रश्न का सटीक व सत्यापित उत्तर देने के लिए **पर्याप्त क्लॉज या दस्तावेजी साक्ष्य नहीं मिले हैं।**\n\n"
+                "सटीकता और विश्वसनीयता बनाए रखने के लिए, मानक साथी अनुमान नहीं लगाता है।\n\n"
+                "**आधिकारिक बीआईएस संसाधन:**\n"
+                "- 🔍 **बीआईएस मानक पोर्टल**: 20,000+ भारतीय मानकों को खोजने के लिए [www.standardsbis.in](https://www.standardsbis.in) पर जाएं।\n"
+                "- 📋 **e-BIS मानकऑनलाइन पोर्टल**: प्रमाणन और लाइसेंसिंग के लिए [www.manakonline.in](https://www.manakonline.in) पर जाएं।\n"
+                "- 🏢 **निकटतम बीआईएस शाखा कार्यालय**: आधिकारिक बीआईएस कार्यालयों की सूची के लिए [BIS Branch Directory](https://www.bis.gov.in/about-bis/branch-offices/) देखें।\n\n"
+                "---\n*⚖️ वैधानिक सूचना: मानक साथी एक तकनीकी सलाहकार AI उपकरण है और यह कोई कानूनी, नियामक या लाइसेंसिंग निर्णय प्रदान नहीं करता है।*"
+            )
+        return (
+            "### ℹ️ Insufficient Evidence in BIS Knowledge Base\n\n"
+            "Based on the authorized Bureau of Indian Standards (BIS) knowledge base loaded in Standards Saathi, "
+            "**sufficient verified evidence was not found to reliably answer this query without speculation.**\n\n"
+            "To ensure absolute technical reliability and compliance, Standards Saathi does not guess or extrapolate beyond authorized documents.\n\n"
+            "**Recommended Official Actions:**\n"
+            "- 🔍 **Search the BIS Catalog**: Visit the official [BIS Standards Portal](https://www.standardsbis.in) or [e-BIS Manakonline](https://www.manakonline.in) to search across 20,000+ Indian Standards.\n"
+            "- 📋 **Check Mandatory Quality Control Orders (QCOs)**: View official ministerial mandates at [BIS QCO Tracker](https://www.bis.gov.in/product-certification/qco-orders/).\n"
+            "- 🏢 **Contact BIS Directorate**: Reach out to your nearest [BIS Regional or Branch Office](https://www.bis.gov.in/about-bis/branch-offices/).\n\n"
+            "---\n*⚖️ Statutory Notice: Standards Saathi is an AI technical advisory assistant. Official certification decisions, licensing grants, and statutory rulings are subject to formal verification by the Bureau of Indian Standards.*"
+        )
+
     def generate_response(
         self,
         query: str,
@@ -316,22 +369,52 @@ class StandardsRAGEngine:
         model_override: Optional[str] = None
     ) -> Dict[str, Any]:
         """
-        Executes full RAG workflow with citations and related standards.
+        Executes full RAG workflow with safety guardrails, prompt injection detection,
+        grounding threshold verification, clause citations, and version tracking.
         """
+        # Guardrail 1: Prompt Injection Defense
+        injection_alert = self._detect_prompt_injection(query)
+        if injection_alert:
+            return {
+                "answer": injection_alert,
+                "raw_answer": injection_alert,
+                "citations": [],
+                "sources_text": "",
+                "related_standards": [],
+                "is_fallback": True,
+                "model": "Guardrails Defense Filter"
+            }
+
         # Step 1: Retrieve context chunks
         retrieved_chunks = self.retrieve(query, top_k=top_k)
 
-        # Extract related standards and unique source documents
+        # Guardrail 2: Grounding Confidence Check
+        max_score = max([c.get("similarity_score", 0.0) for c in retrieved_chunks]) if retrieved_chunks else 0.0
+        # If max similarity score is low (< 0.38) or empty, refuse to guess
+        if not retrieved_chunks or max_score < 0.38:
+            no_ev_ans = self._generate_no_evidence_response(query, language=language)
+            return {
+                "answer": no_ev_ans,
+                "raw_answer": no_ev_ans,
+                "citations": [],
+                "sources_text": "",
+                "related_standards": [],
+                "is_fallback": True,
+                "model": "Grounding Threshold Guardrail"
+            }
+
+        # Extract related standards and unique source documents with Version Tracking
         related_standards_set = set()
         source_citations = []
         for idx, chunk in enumerate(retrieved_chunks, 1):
             filename = chunk.get("filename", f"{chunk['standard_number'].replace(':', '_').replace(' ', '_')}.pdf")
             page_num = chunk.get("page_number", idx * 2)
             section_num = chunk.get("section_number", chunk.get("clause_id", "Section 1.0"))
-            purchase_url = chunk.get("purchase_url", "https://www.manakonline.in/MANAK/home")
+            purchase_url = chunk.get("purchase_url", "https://www.standardsbis.in")
+            status_ver = chunk.get("status", "Active National Standard")
             
             source_citations.append(
-                f"📄 {filename}, Page {page_num}, {section_num} | 🔗 Purchase: {purchase_url}"
+                f"📄 {filename} ({status_ver}), Page {page_num}, {section_num} | 🔗 Official Link: {purchase_url}"
             )
             for rel in chunk.get("related_standards", []):
                 related_standards_set.add(rel)
@@ -343,7 +426,7 @@ class StandardsRAGEngine:
         for idx, chunk in enumerate(retrieved_chunks, 1):
             context_blocks.append(
                 f"[Source {idx}]: {chunk['standard_number']} — {chunk['title']}\n"
-                f"Document: {chunk.get('filename')} | Page {chunk.get('page_number')} | Section: {chunk.get('section_number')}\n"
+                f"Document: {chunk.get('filename')} | Version/Status: {chunk.get('status')} | Page {chunk.get('page_number')} | Section: {chunk.get('section_number')}\n"
                 f"Clause: {chunk['clause_id']} ({chunk['clause_title']})\n"
                 f"Content:\n{chunk['full_content']}\n"
             )
@@ -352,10 +435,18 @@ class StandardsRAGEngine:
         # Step 3: Check Groq API Availability
         api_key = self.groq_api_key or os.getenv("GROQ_API_KEY", "")
         
+        statutory_disclaimer = (
+            "\n\n---\n*⚖️ Statutory Notice: Standards Saathi provides technical and procedural advisory grounded in Indian Standards. "
+            "It does NOT issue legal decisions, licensing grants, or statutory laboratory approval rulings. "
+            "For official certifications, please apply through e-BIS Manakonline (www.manakonline.in).*"
+            if language == "English" else
+            "\n\n---\n*⚖️ वैधानिक सूचना: मानक साथी भारतीय मानकों पर आधारित एक AI तकनीकी सलाहकार उपकरण है। यह कोई कानूनी, प्रमाणन, या प्रयोगशाला अनुमोदन निर्णय जारी नहीं करता है। आधिकारिक प्रमाणन के लिए e-BIS मानकऑनलाइन (www.manakonline.in) पर आवेदन करें।*"
+        )
+
         if not api_key:
             fallback_answer = self._generate_offline_fallback(query, retrieved_chunks, source_citations)
             return {
-                "answer": fallback_answer,
+                "answer": f"{fallback_answer}{statutory_disclaimer}",
                 "citations": retrieved_chunks,
                 "sources_text": "\n".join(source_citations),
                 "related_standards": related_standards_list,
@@ -363,9 +454,9 @@ class StandardsRAGEngine:
                 "model": "Local RAG Retriever"
             }
 
-        # Step 4: Construct System Prompt & Messages for Groq LLM
+        # Step 4: Construct System Prompt & Messages for Groq LLM with Strict Guardrails
         lang_instruction = (
-            "Respond in clear, professional English."
+            "Respond in clear, authoritative, professional English."
             if language == "English"
             else "Respond in natural, professional Hindi (हिंदी / Hinglish) with clear Devanagari or Hinglish explanations."
         )
@@ -374,19 +465,19 @@ class StandardsRAGEngine:
             "You are 'Standards Saathi' (मानक साथी), the official-grade AI technical advisor for Indian Standards (IS Codes), "
             "Bureau of Indian Standards (BIS) regulations, Quality Control Orders (QCOs), and certification schemes.\n\n"
             f"LANGUAGE DIRECTIVE: {lang_instruction}\n\n"
-            "INSTRUCTIONS:\n"
-            "1. Answer the question accurately, authoritatively, and concisely based strictly on the retrieved context.\n"
-            "2. Structure your response with a Direct Answer (1-2 sentences), followed by a clean Markdown Table (if comparing limits/grades), followed by 2-3 key bullet points.\n"
-            "3. Mention whether mandatory Quality Control Orders (QCO) or ISI mark applies.\n"
-            "4. Mention MSME 80% fee concession or verification via BIS Care App if applicable.\n"
-            "5. Do NOT include generic disclaimers. End your response neatly."
+            "SAFETY & RELIABILITY GUARDRAILS (CRITICAL RULES):\n"
+            "1. STRICT GROUNDING: Base your entire answer ONLY on the provided Indian Standards context. Do NOT extrapolate, hallucinate, or guess.\n"
+            "2. REGULATORY & LEGAL BOUNDARIES: You do NOT have the authority to grant licenses, issue legal rulings, or make definitive regulatory/laboratory pass-fail approvals. Always direct users to official BIS portals (www.manakonline.in / www.bis.gov.in) for formal verification.\n"
+            "3. ACCURACY & ATTRIBUTION: Mention the exact standard number (e.g. IS 10500:2012, IS 2062:2011), relevant clauses, and whether mandatory QCO / ISI mark applies.\n"
+            "4. MSME BENEFITS: Mention MSME 80% fee concession on application/license fees or 50% lab testing subsidy where applicable.\n"
+            "5. STRUCTURE: Provide a Direct Answer (1-2 sentences), clean Markdown Table (if comparing parameters/grades), followed by 2-3 bullet points."
         )
 
         user_content = (
             f"USER QUESTION:\n{query}\n\n"
-            f"RETRIEVED INDIAN STANDARDS CONTEXT:\n"
+            f"RETRIEVED INDIAN STANDARDS CONTEXT (AUTHORIZED EVIDENCE):\n"
             f"{context_str}\n\n"
-            f"Please provide an accurate answer directly addressing the user's question."
+            f"Please provide an accurate, strictly grounded response."
         )
 
         messages = [{"role": "system", "content": system_prompt}]
@@ -422,18 +513,19 @@ class StandardsRAGEngine:
                     raw_answer = raw_answer.split("</think>")[-1].strip()
                 successful_model = model_name
                 break
-            except Exception as e:
+            except Exception:
                 continue
 
         if not raw_answer:
             raw_answer = self._generate_offline_fallback(query, retrieved_chunks, source_citations)
 
-        # Format Final Answer with Required Citations Block
+        # Format Final Answer with Required Citations Block and Statutory Disclaimer
         if len(source_citations) == 1:
-            sources_block = f"\n\n**Sources:** {source_citations[0]}"
+            sources_block = f"\n\n**Sources & Document Attribution:** {source_citations[0]}"
         else:
-            sources_block = "\n\n**Sources:**\n" + "\n".join([f"- {s}" for s in source_citations])
-        full_formatted_answer = f"{raw_answer}\n{sources_block}"
+            sources_block = "\n\n**Sources & Document Attribution:**\n" + "\n".join([f"- {s}" for s in source_citations])
+            
+        full_formatted_answer = f"{raw_answer}\n{sources_block}{statutory_disclaimer}"
 
         return {
             "answer": full_formatted_answer,
@@ -442,7 +534,7 @@ class StandardsRAGEngine:
             "sources_text": "\n".join(source_citations),
             "related_standards": related_standards_list,
             "is_fallback": successful_model is None,
-            "model": f"{successful_model} (Groq)" if successful_model else "Local RAG Retriever (all Groq models failed)"
+            "model": f"{successful_model} (Groq)" if successful_model else "Local RAG Retriever"
         }
 
     def _generate_offline_fallback(self, query: str, retrieved_chunks: List[Dict[str, Any]], source_citations: Optional[List[str]] = None) -> str:

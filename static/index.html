@@ -1920,9 +1920,20 @@
         if (event.results && event.results.length > 0) {
           const transcript = event.results[0][0].transcript;
           const input = document.getElementById('chatInput');
-          if (input) input.value = transcript;
+          if (input) {
+            input.value = transcript;
+            input.focus();
+          }
           updateSpeechUI(false);
-          sendMessage();
+          const isHi = currentLanguage === 'HI';
+          const confirmSend = confirm(
+            isHi
+              ? `🎙️ वॉयस ट्रांसक्रिप्शन समीक्षा:\n\n"${transcript}"\n\nक्या आप इस प्रश्न को AI सलाहकार को भेजना चाहते हैं?\n(संपादित करने के लिए 'Cancel' दबाएं)`
+              : `🎙️ Voice Transcription Review:\n\n"${transcript}"\n\nConfirm and submit this query to Standards Saathi?\n(Click 'Cancel' to edit manually in the input box)`
+          );
+          if (confirmSend) {
+            sendMessage();
+          }
         }
       };
 
