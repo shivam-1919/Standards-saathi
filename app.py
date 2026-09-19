@@ -94,6 +94,9 @@ if "selected_language" not in st.session_state:
 if "verify_sample_code" not in st.session_state:
     st.session_state.verify_sample_code = ""
 
+if "verify_type" not in st.session_state:
+    st.session_state.verify_type = "cml"
+
 if "selected_showcase_std" not in st.session_state:
     st.session_state.selected_showcase_std = None
 
@@ -653,6 +656,32 @@ with st.sidebar:
     </div>
     """, unsafe_allow_html=True)
 
+    # 14 Standards Showcase in Sidebar for Judges & Technical Evaluation
+    with st.expander("🏛️ " + ("14 भारतीय मानक शोकेस (जज पैनल)" if is_hindi else "14 Official Indian Standards (Judges Showcase)"), expanded=False):
+        st.caption("Inspect any of the 14 loaded Indian Standards, their technical committees, scopes, and key clauses:")
+        all_14_stds = get_all_standards()
+        std_options = ["-- Select Standard to View --"] + [f"{s['standard_number'].split(':')[0]} - {s['title'][:22]}..." for s in all_14_stds]
+        
+        selected_std_idx = st.selectbox(
+            "Select Standard",
+            options=range(len(std_options)),
+            format_func=lambda x: std_options[x],
+            key="sidebar_std_selector"
+        )
+        
+        if selected_std_idx > 0:
+            sel_item = all_14_stds[selected_std_idx - 1]
+            st.markdown(f"**📖 {sel_item['standard_number']}**")
+            st.markdown(f"*{sel_item['title']}*")
+            st.markdown(f"• **Category:** `{sel_item.get('category')}`")
+            st.markdown(f"• **Department:** `{sel_item.get('department')}`")
+            st.markdown(f"• **Status:** `{sel_item.get('status')}`")
+            st.caption(f"**Scope:** {sel_item['summary'][:160]}...")
+            
+            if st.button(f"⚡ Ask Saathi about {sel_item['standard_number'].split(':')[0]}", key=f"sidebar_ask_btn_{sel_item['id']}", use_container_width=True, type="primary"):
+                st.session_state.pending_query = f"What are the main technical requirements, grades, and testing limits under {sel_item['standard_number']}?"
+                st.rerun()
+
     with st.expander("🛡️ " + ("गोपनीयता एवं सुरक्षा नियंत्रण" if is_hindi else "Privacy & Security Controls")):
         st.markdown("""
         - **🔒 Zero Data Retention:** User queries are processed in-memory and discarded. No personal identifiers or query histories are permanently stored.
@@ -784,92 +813,7 @@ with tab_chat:
     </div>
     """, unsafe_allow_html=True)
 
-    # 2. 🏛️ 14 Official Indian Standards Showcase for Judges & Technical Evaluation
-    st.markdown("### 🏛️ " + ("14 अधिकृत भारतीय मानक ज्ञान आधार (मूल्यांकन एवं जज शोकेस)" if is_hindi else "14 Official Indian Standards in Knowledge Base (Judges & Technical Showcase)"))
-    st.caption("Click any of the 14 loaded Indian Standards below to inspect its exact IS code, technical committee, mandatory QCO status, and key clauses used by Standards Saathi.")
-
-    all_14_stds = get_all_standards()
-    
-    # Render 14 standards in an attractive 4-column responsive grid
-    col_a, col_b, col_c, col_d = st.columns(4)
-    cols = [col_a, col_b, col_c, col_d]
-    
-    std_icons = {
-        "IS-10500": "🚰",
-        "IS-2062": "🏗️",
-        "IS-1239-P1": "🔧",
-        "IS-456": "🧱",
-        "IS-10262": "🧪",
-        "IS-1417": "🥇",
-        "IS-15820": "🔬",
-        "IS-16046": "🔋",
-        "IS-2720-P1": "🚜",
-        "IS-1786": "🔩",
-        "IS-1293": "🔌",
-        "IS-732": "⚡",
-        "IS-2189": "🚨",
-        "BIS-ACT-2016": "📜"
-    }
-
-    for idx, std_item in enumerate(all_14_stds):
-        target_col = cols[idx % 4]
-        std_id = std_item.get("id", f"std_{idx}")
-        s_num = std_item.get("standard_number", "IS Code").split(":")[0]
-        s_icon = std_icons.get(std_id, "📖")
-        is_selected = (st.session_state.selected_showcase_std == std_id)
-        
-        with target_col:
-            btn_label = f"{s_icon} {s_num}"
-            if st.button(btn_label, key=f"showcase_btn_{std_id}", use_container_width=True, type="primary" if is_selected else "secondary"):
-                if st.session_state.selected_showcase_std == std_id:
-                    st.session_state.selected_showcase_std = None
-                else:
-                    st.session_state.selected_showcase_std = std_id
-                st.rerun()
-
-    # Detailed Inspection Card for Clicked Standard
-    if st.session_state.selected_showcase_std:
-        selected_data = next((s for s in all_14_stds if s.get("id") == st.session_state.selected_showcase_std), None)
-        if selected_data:
-            s_icon = std_icons.get(selected_data.get("id", ""), "📖")
-            st.markdown(f"""
-            <div style="background: #ffffff; border: 1.5px solid #00152a; border-left: 5px solid #ff6926; border-radius: 12px; padding: 18px 22px; margin: 12px 0; box-shadow: 0 4px 18px rgba(0, 21, 42, 0.08);">
-                <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 8px;">
-                    <div>
-                        <div style="font-size: 18px; font-weight: 800; font-family: 'Plus Jakarta Sans', sans-serif; color: #00152a;">
-                            {s_icon} {selected_data['standard_number']} — {selected_data['title']}
-                        </div>
-                        <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px;">
-                            <span style="background: #e3efff; color: #00152a; font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 6px;">📂 {selected_data.get('category')}</span>
-                            <span style="background: #e8f5e9; color: #003016; font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 6px;">🏛️ {selected_data.get('department', 'Bureau of Indian Standards')}</span>
-                            <span style="background: #fff3e0; color: #a73a00; font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 6px;">⚡ Status: {selected_data.get('status', 'Active')}</span>
-                        </div>
-                    </div>
-                </div>
-                <div style="font-size: 13.5px; color: #2d3748; line-height: 1.6; margin-top: 10px;">
-                    <strong>Overview &amp; Scope:</strong> {selected_data['summary']}
-                </div>
-                <div style="margin-top: 10px; font-size: 13px; color: #00152a;">
-                    <strong>Key Indexed Clauses ({len(selected_data.get('clauses', []))} Clauses):</strong>
-                    <ul style="margin: 4px 0 0 16px; padding: 0;">
-                        {''.join([f"<li><strong>{c['clause_id']}:</strong> {c['clause_title']} (Page {c.get('page_number', 1)})</li>" for c in selected_data.get('clauses', [])[:3]])}
-                    </ul>
-                </div>
-            </div>
-            """, unsafe_allow_html=True)
-            
-            c_ask1, c_ask2 = st.columns([3, 1])
-            with c_ask1:
-                st.caption(f"Click 'Ask AI Saathi' to query technical requirements of {selected_data['standard_number']}.")
-            with c_ask2:
-                if st.button(f"⚡ Ask Saathi about {selected_data['standard_number'].split(':')[0]}", key=f"ask_std_btn_{selected_data['id']}", use_container_width=True, type="primary"):
-                    st.session_state.pending_query = f"What are the main technical requirements, grades, and testing limits under {selected_data['standard_number']}?"
-                    st.session_state.selected_showcase_std = None
-                    st.rerun()
-
-    st.markdown("<hr style='margin: 14px 0; border: 0; border-top: 1px solid #e3efff;'>", unsafe_allow_html=True)
-
-    # 3. Top-First Chat Input Area (Starts from Top)
+    # Top-First Chat Input Area (Starts from Top)
     st.markdown("### 💬 " + ("मानक साथी से पूछें (Top-First Inquiry)" if is_hindi else "Ask Standards Saathi (Top-First Inquiry)"))
     
     # Top Query Input Form
