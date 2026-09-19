@@ -94,8 +94,28 @@ if "selected_language" not in st.session_state:
 if "verify_sample_code" not in st.session_state:
     st.session_state.verify_sample_code = ""
 
-if "verify_type" not in st.session_state:
-    st.session_state.verify_type = "cml"
+if "selected_showcase_std" not in st.session_state:
+    st.session_state.selected_showcase_std = None
+
+def clean_text_for_speech(text: str) -> str:
+    """Strips markdown, tables, links, emojis, and disclaimers to ensure smooth, natural TTS speech."""
+    import re
+    # Remove statutory disclaimer block
+    text = re.sub(r'---\s*\*?⚖️.*$', '', text, flags=re.DOTALL)
+    # Remove sources block
+    text = re.sub(r'\*\*Sources.*$', '', text, flags=re.DOTALL)
+    # Remove markdown tables
+    text = re.sub(r'\|[^\n]+\|', ' ', text)
+    text = re.sub(r'\|[-:\s|]+\|', ' ', text)
+    # Remove URLs
+    text = re.sub(r'https?://\S+', '', text)
+    # Remove markdown symbols
+    text = re.sub(r'[*#_`~\[\]\(\)>]', ' ', text)
+    # Remove special chars and emojis
+    text = re.sub(r'[^\w\s\.,;:?\-–—/%₹°C]', ' ', text)
+    # Collapse whitespace
+    text = re.sub(r'\s+', ' ', text).strip()
+    return text
 
 # Custom Indian Theme Styling (Saffron / White / Green / Deep Navy Blue)
 st.markdown("""
@@ -749,7 +769,7 @@ tab_chat, tab_cert, tab_verify, tab_catalog, tab_msme, tab_admin = st.tabs([
 # TAB 1: SAATHI CHAT VIEW
 # ==========================================
 with tab_chat:
-    # Welcome Card
+    # 1. Welcome Card
     st.markdown(f"""
     <div class="intro-turn">
         <div class="intro-header">
@@ -764,31 +784,107 @@ with tab_chat:
     </div>
     """, unsafe_allow_html=True)
 
-    # Clickable Example Question Chips
-    st.markdown("**💡 " + ("त्वरित तकनीकी प्रश्न विकल्प (क्लिक करें):" if is_hindi else "Quick Technical Question Prompts (Click to ask):") + "**")
-    q_col1, q_col2, q_col3 = st.columns(3)
-    q_col4, q_col5, q_col6 = st.columns(3)
-    
-    with q_col1:
-        if st.button("🚰 " + T["chip_pipe"], use_container_width=True):
-            st.session_state.pending_query = "Steel pipe ke liye kaunsa standard use hota hai aur uske grades kya hain?"
-    with q_col2:
-        if st.button("📜 " + T["chip_cert"], use_container_width=True):
-            st.session_state.pending_query = "BIS certification (ISI Mark) lene ka step by step process kya hai?"
-    with q_col3:
-        if st.button("🏗️ " + T["chip_2062"], use_container_width=True):
-            st.session_state.pending_query = "What is IS 2062 and what are its strength grades?"
-    with q_col4:
-        if st.button("🧱 " + T["chip_concrete"], use_container_width=True):
-            st.session_state.pending_query = "What are the concrete mix design guidelines and grades under IS 456:2000?"
-    with q_col5:
-        if st.button("🥇 " + T["chip_gold"], use_container_width=True):
-            st.session_state.pending_query = "What are the gold purity grades and mandatory marks under IS 1417?"
-    with q_col6:
-        if st.button("🔋 " + T["chip_battery"], use_container_width=True):
-            st.session_state.pending_query = "What are the mandatory battery safety tests under IS 16046 / CRS?"
+    # 2. 🏛️ 14 Official Indian Standards Showcase for Judges & Technical Evaluation
+    st.markdown("### 🏛️ " + ("14 अधिकृत भारतीय मानक ज्ञान आधार (मूल्यांकन एवं जज शोकेस)" if is_hindi else "14 Official Indian Standards in Knowledge Base (Judges & Technical Showcase)"))
+    st.caption("Click any of the 14 loaded Indian Standards below to inspect its exact IS code, technical committee, mandatory QCO status, and key clauses used by Standards Saathi.")
 
-    # Voice Speech-to-Text with Human-in-the-Loop Confirmation Guardrail
+    all_14_stds = get_all_standards()
+    
+    # Render 14 standards in an attractive 4-column responsive grid
+    col_a, col_b, col_c, col_d = st.columns(4)
+    cols = [col_a, col_b, col_c, col_d]
+    
+    std_icons = {
+        "IS-10500": "🚰",
+        "IS-2062": "🏗️",
+        "IS-1239-P1": "🔧",
+        "IS-456": "🧱",
+        "IS-10262": "🧪",
+        "IS-1417": "🥇",
+        "IS-15820": "🔬",
+        "IS-16046": "🔋",
+        "IS-2720-P1": "🚜",
+        "IS-1786": "🔩",
+        "IS-1293": "🔌",
+        "IS-732": "⚡",
+        "IS-2189": "🚨",
+        "BIS-ACT-2016": "📜"
+    }
+
+    for idx, std_item in enumerate(all_14_stds):
+        target_col = cols[idx % 4]
+        std_id = std_item.get("id", f"std_{idx}")
+        s_num = std_item.get("standard_number", "IS Code").split(":")[0]
+        s_icon = std_icons.get(std_id, "📖")
+        is_selected = (st.session_state.selected_showcase_std == std_id)
+        
+        with target_col:
+            btn_label = f"{s_icon} {s_num}"
+            if st.button(btn_label, key=f"showcase_btn_{std_id}", use_container_width=True, type="primary" if is_selected else "secondary"):
+                if st.session_state.selected_showcase_std == std_id:
+                    st.session_state.selected_showcase_std = None
+                else:
+                    st.session_state.selected_showcase_std = std_id
+                st.rerun()
+
+    # Detailed Inspection Card for Clicked Standard
+    if st.session_state.selected_showcase_std:
+        selected_data = next((s for s in all_14_stds if s.get("id") == st.session_state.selected_showcase_std), None)
+        if selected_data:
+            s_icon = std_icons.get(selected_data.get("id", ""), "📖")
+            st.markdown(f"""
+            <div style="background: #ffffff; border: 1.5px solid #00152a; border-left: 5px solid #ff6926; border-radius: 12px; padding: 18px 22px; margin: 12px 0; box-shadow: 0 4px 18px rgba(0, 21, 42, 0.08);">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 8px;">
+                    <div>
+                        <div style="font-size: 18px; font-weight: 800; font-family: 'Plus Jakarta Sans', sans-serif; color: #00152a;">
+                            {s_icon} {selected_data['standard_number']} — {selected_data['title']}
+                        </div>
+                        <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px;">
+                            <span style="background: #e3efff; color: #00152a; font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 6px;">📂 {selected_data.get('category')}</span>
+                            <span style="background: #e8f5e9; color: #003016; font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 6px;">🏛️ {selected_data.get('department', 'Bureau of Indian Standards')}</span>
+                            <span style="background: #fff3e0; color: #a73a00; font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 6px;">⚡ Status: {selected_data.get('status', 'Active')}</span>
+                        </div>
+                    </div>
+                </div>
+                <div style="font-size: 13.5px; color: #2d3748; line-height: 1.6; margin-top: 10px;">
+                    <strong>Overview &amp; Scope:</strong> {selected_data['summary']}
+                </div>
+                <div style="margin-top: 10px; font-size: 13px; color: #00152a;">
+                    <strong>Key Indexed Clauses ({len(selected_data.get('clauses', []))} Clauses):</strong>
+                    <ul style="margin: 4px 0 0 16px; padding: 0;">
+                        {''.join([f"<li><strong>{c['clause_id']}:</strong> {c['clause_title']} (Page {c.get('page_number', 1)})</li>" for c in selected_data.get('clauses', [])[:3]])}
+                    </ul>
+                </div>
+            </div>
+            """, unsafe_allow_html=True)
+            
+            c_ask1, c_ask2 = st.columns([3, 1])
+            with c_ask1:
+                st.caption(f"Click 'Ask AI Saathi' to query technical requirements of {selected_data['standard_number']}.")
+            with c_ask2:
+                if st.button(f"⚡ Ask Saathi about {selected_data['standard_number'].split(':')[0]}", key=f"ask_std_btn_{selected_data['id']}", use_container_width=True, type="primary"):
+                    st.session_state.pending_query = f"What are the main technical requirements, grades, and testing limits under {selected_data['standard_number']}?"
+                    st.session_state.selected_showcase_std = None
+                    st.rerun()
+
+    st.markdown("<hr style='margin: 14px 0; border: 0; border-top: 1px solid #e3efff;'>", unsafe_allow_html=True)
+
+    # 3. Top-First Chat Input Area (Starts from Top)
+    st.markdown("### 💬 " + ("मानक साथी से पूछें (Top-First Inquiry)" if is_hindi else "Ask Standards Saathi (Top-First Inquiry)"))
+    
+    # Top Query Input Form
+    with st.form("top_query_form", clear_on_submit=True):
+        top_in_c1, top_in_c2 = st.columns([4.2, 1.2])
+        with top_in_c1:
+            top_user_text = st.text_input(
+                "Inquiry Input",
+                placeholder=T["chat_placeholder"],
+                label_visibility="collapsed"
+            )
+        with top_in_c2:
+            top_submit = st.form_submit_button("🚀 " + ("पूछें (Ask)" if is_hindi else "Ask Saathi"), use_container_width=True)
+
+    # Voice Input with Human-in-the-Loop Confirmation
     with st.expander("🎙️ " + ("वॉइस इनपुट व पुष्टिकरण (Voice Transcription Confirmation)" if is_hindi else "Voice Assistant & Transcription Confirmation"), expanded=False):
         st.caption(
             "सुरक्षा और सटीकता के लिए, मानक साथी आपके वॉइस इनपुट को AI को भेजने से पहले समीक्षा और पुष्टि (Confirm) करने की सुविधा देता है।"
@@ -877,160 +973,299 @@ with tab_chat:
                 else:
                     safe_toast("Please enter or speak your query first.", icon="⚠️")
 
-    st.markdown("<hr style='margin: 12px 0; border: 0; border-top: 1px solid #e3efff;'>", unsafe_allow_html=True)
+    # Clickable Example Question Chips
+    st.markdown("**💡 " + ("त्वरित तकनीकी प्रश्न विकल्प (क्लिक करें):" if is_hindi else "Quick Technical Question Prompts (Click to ask):") + "**")
+    q_col1, q_col2, q_col3 = st.columns(3)
+    q_col4, q_col5, q_col6 = st.columns(3)
+    
+    with q_col1:
+        if st.button("🚰 " + T["chip_pipe"], use_container_width=True):
+            st.session_state.pending_query = "Steel pipe ke liye kaunsa standard use hota hai aur uske grades kya hain?"
+    with q_col2:
+        if st.button("📜 " + T["chip_cert"], use_container_width=True):
+            st.session_state.pending_query = "BIS certification (ISI Mark) lene ka step by step process kya hai?"
+    with q_col3:
+        if st.button("🏗️ " + T["chip_2062"], use_container_width=True):
+            st.session_state.pending_query = "What is IS 2062 and what are its strength grades?"
+    with q_col4:
+        if st.button("🧱 " + T["chip_concrete"], use_container_width=True):
+            st.session_state.pending_query = "What are the concrete mix design guidelines and grades under IS 456:2000?"
+    with q_col5:
+        if st.button("🥇 " + T["chip_gold"], use_container_width=True):
+            st.session_state.pending_query = "What are the gold purity grades and mandatory marks under IS 1417?"
+    with q_col6:
+        if st.button("🔋 " + T["chip_battery"], use_container_width=True):
+            st.session_state.pending_query = "What are the mandatory battery safety tests under IS 16046 / CRS?"
 
-    # Chat History Rendering
-    for idx, msg in enumerate(st.session_state.messages):
-        if msg["role"] == "user":
-            with st.chat_message("user", avatar="👤"):
-                st.markdown(f"**{msg['content']}**")
-        else:
-            with st.chat_message("assistant", avatar="🇮🇳"):
-                std_num = msg.get("standard_number", "Indian Standard")
-                std_title = msg.get("title", "BIS Specification")
-                citations = msg.get("citations", [])
+    # Bottom sticky chat input (supports direct Enter key)
+    bottom_input = st.chat_input(T["chat_placeholder"])
 
-                # Grounding & Document-Version Metadata Badges
-                top_c = citations[0] if citations else {}
-                c_ver = top_c.get("status", "Active National Standard")
-                c_clause = top_c.get("clause_id", "General Scope")
-                c_doc = top_c.get("filename", f"{std_num}.pdf")
-
-                st.markdown(f"""
-                <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 6px;">
-                    <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
-                        <span class="badge-std">{std_num}</span>
-                        <span style="display: inline-flex; align-items: center; gap: 4px; background: rgba(0, 135, 56, 0.1); border: 1px solid rgba(0, 135, 56, 0.25); color: #002e11; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 6px;">
-                            <span class="material-symbols-outlined" style="font-size: 13px; color: #008738;">verified_user</span>
-                            Grounded: {c_doc}
-                        </span>
-                        <span style="display: inline-flex; align-items: center; gap: 4px; background: rgba(0, 21, 42, 0.05); border: 1px solid rgba(0, 21, 42, 0.1); color: #00152a; font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 6px;">
-                            <span class="material-symbols-outlined" style="font-size: 13px; color: #a73a00;">menu_book</span>
-                            {c_clause}
-                        </span>
-                    </div>
-                    <span class="badge-status">
-                        <span class="material-symbols-outlined text-[14px]">check_circle</span> {c_ver}
-                    </span>
-                </div>
-                <h3 style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 16px; font-weight: 700; color: #00152a; margin: 0 0 8px 0;">{std_title}</h3>
-                """, unsafe_allow_html=True)
-
-                # Render Answer
-                st.markdown(msg["content"])
-
-                # Mandatory QCO Notice
-                st.markdown("""
-                <div class="alert-qco" style="margin-top: 10px;">
-                    <span class="material-symbols-outlined text-[18px]" style="color: #a73a00; flex-shrink: 0; margin-top: 1px;">notification_important</span>
-                    <div>
-                        <span class="alert-qco-title">Mandatory QCO in Effect</span>
-                        <span class="alert-qco-desc">Ministry Quality Control Orders mandate Scheme-I (ISI Mark) or CRS compliance. Sale without valid BIS certification is legally prohibited.</span>
-                    </div>
-                </div>
-                """, unsafe_allow_html=True)
-
-                # Certification Guide Callout Banner
-                if any(k in msg["content"].lower() for k in ["certification", "license", "licence", "cml", "scheme-i", "crs", "7-step", "manakonline", "प्रमाणन", "लाइसेंस"]):
-                    st.success("📋 " + ("**पूर्ण 7-चरणीय बीआईएस प्रमाणन गाइड, प्रयोगशाला परीक्षण, और ₹20K-80K लागत विवरण के लिए ऊपर '📋 BIS Certification Roadmap' टैब देखें!**" if is_hindi else "**For the full 7-step roadmap, lab testing, fee schedule, and MSME 80% subsidy, switch to the '📋 BIS Certification Roadmap' tab above!**"))
-
-                # Related Standards Strip
-                related_stds = msg.get("related_standards", [])
-                if related_stds:
-                    pills_html = " ".join([f'<span class="related-pill">{r}</span>' for r in related_stds])
-                    st.markdown(f"""
-                    <div class="related-strip">
-                        <span>{T["related_label"]}</span>
-                        {pills_html}
-                    </div>
-                    """, unsafe_allow_html=True)
-
-                # Action Row: Audio TTS, Download Answer & Feedback Buttons
-                st.markdown("<div style='margin-top: 12px;'></div>", unsafe_allow_html=True)
-                act_col1, act_col2, act_col3, act_col4 = st.columns([1.8, 1.8, 1.2, 1.2])
-                
-                # Audio Read Aloud (Text-to-Speech)
-                with act_col1:
-                    clean_text_speech = msg['content'].replace('"', "'").replace("\n", " ").replace("*", "").replace("#", "")
-                    speech_lang = "hi-IN" if is_hindi else "en-IN"
-                    st.components.v1.html(
-                        f"""
-                        <button onclick="
-                            window.speechSynthesis.cancel();
-                            var u = new SpeechSynthesisUtterance('{clean_text_speech[:500]}');
-                            u.lang = '{speech_lang}';
-                            window.speechSynthesis.speak(u);
-                        " style="
-                            display: inline-flex; align-items: center; gap: 6px;
-                            padding: 6px 14px; border-radius: 8px; border: 1px solid #00152a;
-                            background: #ffffff; color: #00152a; font-family: sans-serif;
-                            font-weight: 700; font-size: 12px; cursor: pointer;
-                        ">
-                            🔊 {T["speak_btn"]}
-                        </button>
-                        """,
-                        height=42
-                    )
-
-                # Download Answer Button
-                with act_col2:
-                    download_text = f"STANDARDS SAATHI AI ADVISORY\nStandard: {std_num} - {std_title}\n\n{msg['content']}\n\nEmpowered by Bureau of Indian Standards (BIS)"
-                    st.download_button(
-                        label=T["download_btn"],
-                        data=download_text,
-                        file_name=f"Standards_Saathi_{std_num.replace(':', '_').replace(' ', '_')}.txt",
-                        mime="text/plain",
-                        key=f"dl_btn_{idx}"
-                    )
-
-                # Feedback Buttons
-                with act_col3:
-                    if st.button(T["helpful"], key=f"help_pos_{idx}"):
-                        st.session_state.feedback_log[idx] = "helpful"
-                        safe_toast(T["feedback_thanks"], icon="👍")
-                with act_col4:
-                    if st.button(T["not_helpful"], key=f"help_neg_{idx}"):
-                        st.session_state.feedback_log[idx] = "not_helpful"
-                        safe_toast(T["feedback_thanks"], icon="🙏")
-
-    # Chat Input Handler
-    user_input = st.chat_input(T["chat_placeholder"])
-    query_to_process = st.session_state.pending_query or user_input
-    st.session_state.pending_query = None
+    # Process Incoming Query from Top Form, Bottom Input, Voice, or Prompt Chips
+    query_to_process = None
+    if top_submit and top_user_text.strip():
+        query_to_process = top_user_text.strip()
+    elif bottom_input and bottom_input.strip():
+        query_to_process = bottom_input.strip()
+    elif st.session_state.pending_query:
+        query_to_process = st.session_state.pending_query
+        st.session_state.pending_query = None
 
     if query_to_process:
         st.session_state.messages.append({"role": "user", "content": query_to_process})
         st.session_state.questions_count += 1
         
-        # Two-Stage Loading States
-        with st.chat_message("assistant", avatar="🇮🇳"):
-            with st.spinner(T["search_spinner"]):
-                retrieved_chunks = rag_engine.retrieve(query_to_process, top_k=3)
-                time.sleep(0.2)
+        with st.spinner(T["search_spinner"]):
+            retrieved_chunks = rag_engine.retrieve(query_to_process, top_k=3)
+            time.sleep(0.15)
 
-            with st.spinner(T["gen_spinner"]):
-                resp = rag_engine.generate_response(
-                    query=query_to_process,
-                    chat_history=st.session_state.messages[:-1],
-                    top_k=3,
-                    temperature=0.2,
-                    language=st.session_state.selected_language
-                )
+        with st.spinner(T["gen_spinner"]):
+            resp = rag_engine.generate_response(
+                query=query_to_process,
+                chat_history=st.session_state.messages[:-1],
+                top_k=3,
+                temperature=0.2,
+                language=st.session_state.selected_language
+            )
 
-            citations = resp.get("citations", []) if isinstance(resp, dict) else []
-            top_cit = citations[0] if citations else {}
-            std_num = top_cit.get("standard_number", "Indian Standard")
-            std_title = top_cit.get("title", "BIS Specification")
+        citations = resp.get("citations", []) if isinstance(resp, dict) else []
+        top_cit = citations[0] if citations else {}
+        std_num = top_cit.get("standard_number", "Indian Standard")
+        std_title = top_cit.get("title", "BIS Specification")
 
-            st.session_state.messages.append({
-                "role": "assistant",
-                "content": resp.get("answer", "") if isinstance(resp, dict) else str(resp),
-                "standard_number": std_num,
-                "title": std_title,
-                "citations": citations,
-                "related_standards": resp.get("related_standards", []) if isinstance(resp, dict) else []
-            })
-            st.rerun()
+        st.session_state.messages.append({
+            "role": "assistant",
+            "content": resp.get("answer", "") if isinstance(resp, dict) else str(resp),
+            "standard_number": std_num,
+            "title": std_title,
+            "citations": citations,
+            "related_standards": resp.get("related_standards", []) if isinstance(resp, dict) else []
+        })
+        st.rerun()
+
+    st.markdown("<hr style='margin: 16px 0; border: 0; border-top: 1.5px solid #00152a;'>", unsafe_allow_html=True)
+
+    # 4. Top-First Chat Display: Render Latest Response Prominently at the Top!
+    if st.session_state.messages:
+        st.markdown("### 🎯 " + ("नवीनतम AI तकनीकी परामर्श (Latest Advisory Answer)" if is_hindi else "Latest AI Technical Advisory (Top-First Answer)"))
+        
+        # Pair up messages (User, Assistant)
+        message_pairs = []
+        i = 0
+        while i < len(st.session_state.messages):
+            if st.session_state.messages[i]["role"] == "user":
+                user_msg = st.session_state.messages[i]
+                asst_msg = st.session_state.messages[i+1] if (i+1 < len(st.session_state.messages) and st.session_state.messages[i+1]["role"] == "assistant") else None
+                message_pairs.append((user_msg, asst_msg, i))
+                i += 2 if asst_msg else 1
+            else:
+                i += 1
+
+        # Render Most Recent Q&A Pair at the Very Top
+        if message_pairs:
+            latest_user, latest_asst, latest_idx = message_pairs[-1]
+            
+            # User Question Card
+            with st.chat_message("user", avatar="👤"):
+                st.markdown(f"**{latest_user['content']}**")
+
+            # Assistant Answer Card
+            if latest_asst:
+                with st.chat_message("assistant", avatar="🇮🇳"):
+                    std_num = latest_asst.get("standard_number", "Indian Standard")
+                    std_title = latest_asst.get("title", "BIS Specification")
+                    citations = latest_asst.get("citations", [])
+
+                    # Grounding & Document-Version Metadata Badges
+                    top_c = citations[0] if citations else {}
+                    c_ver = top_c.get("status", "Active National Standard")
+                    c_clause = top_c.get("clause_id", "General Scope")
+                    c_doc = top_c.get("filename", f"{std_num}.pdf")
+
+                    st.markdown(f"""
+                    <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 6px;">
+                        <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
+                            <span class="badge-std">{std_num}</span>
+                            <span style="display: inline-flex; align-items: center; gap: 4px; background: rgba(0, 135, 56, 0.1); border: 1px solid rgba(0, 135, 56, 0.25); color: #002e11; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 6px;">
+                                <span class="material-symbols-outlined" style="font-size: 13px; color: #008738;">verified_user</span>
+                                Grounded: {c_doc}
+                            </span>
+                            <span style="display: inline-flex; align-items: center; gap: 4px; background: rgba(0, 21, 42, 0.05); border: 1px solid rgba(0, 21, 42, 0.1); color: #00152a; font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 6px;">
+                                <span class="material-symbols-outlined" style="font-size: 13px; color: #a73a00;">menu_book</span>
+                                {c_clause}
+                            </span>
+                        </div>
+                        <span class="badge-status">
+                            <span class="material-symbols-outlined text-[14px]">check_circle</span> {c_ver}
+                        </span>
+                    </div>
+                    <h3 style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 16px; font-weight: 700; color: #00152a; margin: 0 0 8px 0;">{std_title}</h3>
+                    """, unsafe_allow_html=True)
+
+                    # Render Content
+                    st.markdown(latest_asst["content"])
+
+                    # Mandatory QCO Notice
+                    st.markdown("""
+                    <div class="alert-qco" style="margin-top: 10px;">
+                        <span class="material-symbols-outlined text-[18px]" style="color: #a73a00; flex-shrink: 0; margin-top: 1px;">notification_important</span>
+                        <div>
+                            <span class="alert-qco-title">Mandatory QCO in Effect</span>
+                            <span class="alert-qco-desc">Ministry Quality Control Orders mandate Scheme-I (ISI Mark) or CRS compliance. Sale without valid BIS certification is legally prohibited.</span>
+                        </div>
+                    </div>
+                    """, unsafe_allow_html=True)
+
+                    # Certification Guide Callout Banner
+                    if any(k in latest_asst["content"].lower() for k in ["certification", "license", "licence", "cml", "scheme-i", "crs", "7-step", "manakonline", "प्रमाणन", "लाइसेंस"]):
+                        st.success("📋 " + ("**पूर्ण 7-चरणीय बीआईएस प्रमाणन गाइड, प्रयोगशाला परीक्षण, और ₹20K-80K लागत विवरण के लिए ऊपर '📋 BIS Certification Roadmap' टैब देखें!**" if is_hindi else "**For the full 7-step roadmap, lab testing, fee schedule, and MSME 80% subsidy, switch to the '📋 BIS Certification Roadmap' tab above!**"))
+
+                    # Related Standards Strip
+                    related_stds = latest_asst.get("related_standards", [])
+                    if related_stds:
+                        pills_html = " ".join([f'<span class="related-pill">{r}</span>' for r in related_stds])
+                        st.markdown(f"""
+                        <div class="related-strip">
+                            <span>{T["related_label"]}</span>
+                            {pills_html}
+                        </div>
+                        """, unsafe_allow_html=True)
+
+                    # Action Row: Upgraded Toggle Audio TTS (Play/Stop), Download Answer & Feedback
+                    st.markdown("<div style='margin-top: 14px;'></div>", unsafe_allow_html=True)
+                    act_col1, act_col2, act_col3, act_col4 = st.columns([2.0, 1.6, 1.1, 1.1])
+                    
+                    # Robust Toggle Audio TTS with Clean Speech and Stop Control
+                    with act_col1:
+                        cleaned_speech = clean_text_for_speech(latest_asst['content'])
+                        escaped_speech = cleaned_speech.replace('\\', '\\\\').replace('"', '\\"').replace("'", "\\'").replace('\n', ' ')[:800]
+                        speech_lang = "hi-IN" if is_hindi else "en-IN"
+                        label_listen = "🔊 बोलकर सुनें (Listen)" if is_hindi else "🔊 Read Aloud"
+                        label_stop = "⏹️ आवाज़ रोकें (Stop)" if is_hindi else "⏹️ Stop Speaking"
+                        
+                        st.components.v1.html(
+                            f"""
+                            <div style="font-family: 'Inter', sans-serif;">
+                                <button id="tts-toggle-btn" onclick="handleTTSToggle()" style="
+                                    display: inline-flex; align-items: center; gap: 7px;
+                                    padding: 7px 16px; border-radius: 8px; border: 1.5px solid #00152a;
+                                    background: #ffffff; color: #00152a; font-weight: 700; font-size: 12.5px;
+                                    cursor: pointer; transition: all 0.2s ease; box-shadow: 0 2px 6px rgba(0, 21, 42, 0.08);
+                                ">
+                                    <span id="tts-icon">🔊</span>
+                                    <span id="tts-text">{label_listen}</span>
+                                </button>
+                            </div>
+                            <script>
+                                var isSpeaking = false;
+                                var fullText = "{escaped_speech}";
+                                
+                                function handleTTSToggle() {{
+                                    var btn = document.getElementById('tts-toggle-btn');
+                                    var icon = document.getElementById('tts-icon');
+                                    var text = document.getElementById('tts-text');
+                                    
+                                    if (!('speechSynthesis' in window)) {{
+                                        alert("Speech synthesis is not supported in this browser.");
+                                        return;
+                                    }}
+                                    
+                                    if (window.speechSynthesis.speaking || isSpeaking) {{
+                                        window.speechSynthesis.cancel();
+                                        isSpeaking = false;
+                                        btn.style.background = '#ffffff';
+                                        btn.style.color = '#00152a';
+                                        btn.style.borderColor = '#00152a';
+                                        icon.innerText = '🔊';
+                                        text.innerText = '{label_listen}';
+                                        return;
+                                    }}
+                                    
+                                    window.speechSynthesis.cancel();
+                                    
+                                    var sentences = fullText.match(/[^.!?]+[.!?]+/g) || [fullText];
+                                    if (sentences.length === 0) return;
+                                    
+                                    isSpeaking = true;
+                                    btn.style.background = '#a73a00';
+                                    btn.style.color = '#ffffff';
+                                    btn.style.borderColor = '#a73a00';
+                                    icon.innerText = '⏹️';
+                                    text.innerText = '{label_stop}';
+                                    
+                                    var currentIdx = 0;
+                                    
+                                    function speakNext() {{
+                                        if (!isSpeaking || currentIdx >= sentences.length) {{
+                                            isSpeaking = false;
+                                            btn.style.background = '#ffffff';
+                                            btn.style.color = '#00152a';
+                                            btn.style.borderColor = '#00152a';
+                                            icon.innerText = '🔊';
+                                            text.innerText = '{label_listen}';
+                                            return;
+                                        }}
+                                        
+                                        var utterance = new SpeechSynthesisUtterance(sentences[currentIdx].trim());
+                                        utterance.lang = '{speech_lang}';
+                                        utterance.rate = 1.05;
+                                        utterance.pitch = 1.0;
+                                        
+                                        utterance.onend = function() {{
+                                            currentIdx++;
+                                            speakNext();
+                                        }};
+                                        
+                                        utterance.onerror = function() {{
+                                            isSpeaking = false;
+                                            btn.style.background = '#ffffff';
+                                            btn.style.color = '#00152a';
+                                            btn.style.borderColor = '#00152a';
+                                            icon.innerText = '🔊';
+                                            text.innerText = '{label_listen}';
+                                        }};
+                                        
+                                        window.speechSynthesis.speak(utterance);
+                                    }}
+                                    
+                                    speakNext();
+                                }}
+                            </script>
+                            """,
+                            height=44
+                        )
+
+                    # Download Answer Button
+                    with act_col2:
+                        download_text = f"STANDARDS SAATHI AI ADVISORY\nStandard: {std_num} - {std_title}\n\n{latest_asst['content']}\n\nEmpowered by Bureau of Indian Standards (BIS)"
+                        st.download_button(
+                            label=T["download_btn"],
+                            data=download_text,
+                            file_name=f"Standards_Saathi_{std_num.replace(':', '_').replace(' ', '_')}.txt",
+                            mime="text/plain",
+                            key=f"dl_btn_{latest_idx}"
+                        )
+
+                    # Feedback Buttons
+                    with act_col3:
+                        if st.button(T["helpful"], key=f"help_pos_{latest_idx}"):
+                            st.session_state.feedback_log[latest_idx] = "helpful"
+                            safe_toast(T["feedback_thanks"], icon="👍")
+                    with act_col4:
+                        if st.button(T["not_helpful"], key=f"help_neg_{latest_idx}"):
+                            st.session_state.feedback_log[latest_idx] = "not_helpful"
+                            safe_toast(T["feedback_thanks"], icon="🙏")
+
+            # 5. Render Previous Conversation History in Accordion Below (Newest to Oldest)
+            if len(message_pairs) > 1:
+                with st.expander(f"📜 " + ("पूर्व बातचीत इतिहास (" if is_hindi else "Previous Inquiries History (") + f"{len(message_pairs)-1} Questions)", expanded=False):
+                    for prev_user, prev_asst, p_idx in reversed(message_pairs[:-1]):
+                        st.markdown(f"**👤 You:** {prev_user['content']}")
+                        if prev_asst:
+                            p_std = prev_asst.get("standard_number", "Indian Standard")
+                            p_title = prev_asst.get("title", "")
+                            st.markdown(f"**🇮🇳 Saathi ({p_std} — {p_title}):**\n{prev_asst['content']}")
+                        st.markdown("<hr style='margin: 10px 0; border: 0; border-top: 1px dashed #c3c6ce;'>", unsafe_allow_html=True)
+
 
 
 # ==========================================

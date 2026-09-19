@@ -1868,29 +1868,95 @@
       }
     }
 
-    // Voice Read Aloud (Text-to-Speech)
+    // Voice Read Aloud (Text-to-Speech) with Play/Stop Toggle & Sentence Queueing
+    var currentSpeechUtteranceQueue = [];
+    var currentSpeechBtn = null;
+
     function speakAnswer(btn) {
       if (!('speechSynthesis' in window)) {
         alert(currentLanguage === 'HI' ? "आपके ब्राउज़र में स्पीच सिंथेसिस समर्थित नहीं है।" : "Speech synthesis is not supported in this browser.");
         return;
       }
-      if (window.speechSynthesis.speaking) {
+      
+      const iconSpan = btn.querySelector('.material-symbols-outlined');
+      
+      // If already speaking, cancel immediately and reset icon
+      if (window.speechSynthesis.speaking || (currentSpeechBtn === btn)) {
         window.speechSynthesis.cancel();
-        btn.classList.remove('!text-secondary');
+        currentSpeechUtteranceQueue = [];
+        if (currentSpeechBtn) {
+          const prevIcon = currentSpeechBtn.querySelector('.material-symbols-outlined');
+          if (prevIcon) prevIcon.innerText = 'volume_up';
+          currentSpeechBtn.classList.remove('!text-secondary', 'font-bold');
+        }
+        currentSpeechBtn = null;
         return;
       }
-      const rawText = decodeURIComponent(btn.getAttribute('data-speech') || '');
-      const cleanText = rawText.replace(/[*#_`~\[\]\(\)>|]/g, '').replace(/https?:\/\/\S+/g, '');
-      const utterance = new SpeechSynthesisUtterance(cleanText);
-      utterance.lang = currentLanguage === 'HI' ? 'hi-IN' : 'en-IN';
-      utterance.rate = 1.0;
-      utterance.pitch = 1.0;
-      
-      btn.classList.add('!text-secondary');
-      utterance.onend = () => btn.classList.remove('!text-secondary');
-      utterance.onerror = () => btn.classList.remove('!text-secondary');
 
-      window.speechSynthesis.speak(utterance);
+      // If another button was speaking, cancel previous
+      window.speechSynthesis.cancel();
+      if (currentSpeechBtn) {
+        const prevIcon = currentSpeechBtn.querySelector('.material-symbols-outlined');
+        if (prevIcon) prevIcon.innerText = 'volume_up';
+        currentSpeechBtn.classList.remove('!text-secondary', 'font-bold');
+      }
+
+      const rawText = decodeURIComponent(btn.getAttribute('data-speech') || '');
+      // Clean markdown, tables, disclaimers, links
+      let cleanText = rawText
+        .replace(/---\s*\*?⚖️[\s\S]*$/g, '')
+        .replace(/\*\*Sources[\s\S]*$/g, '')
+        .replace(/\|[^\n]+\|/g, ' ')
+        .replace(/https?:\/\/\S+/g, '')
+        .replace(/[*#_`~\[\]\(\)>]/g, ' ')
+        .replace(/[^\w\s\.,;:?\-–—/%₹°C]/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim();
+
+      const sentences = cleanText.match(/[^.!?]+[.!?]+/g) || [cleanText];
+      if (sentences.length === 0 || !sentences[0].trim()) return;
+
+      currentSpeechBtn = btn;
+      btn.classList.add('!text-secondary', 'font-bold');
+      if (iconSpan) iconSpan.innerText = 'stop_circle';
+
+      let currentIdx = 0;
+      const lang = currentLanguage === 'HI' ? 'hi-IN' : 'en-IN';
+
+      function speakNextChunk() {
+        if (!currentSpeechBtn || currentIdx >= sentences.length) {
+          if (currentSpeechBtn) {
+            const ic = currentSpeechBtn.querySelector('.material-symbols-outlined');
+            if (ic) ic.innerText = 'volume_up';
+            currentSpeechBtn.classList.remove('!text-secondary', 'font-bold');
+            currentSpeechBtn = null;
+          }
+          return;
+        }
+
+        const utterance = new SpeechSynthesisUtterance(sentences[currentIdx].trim());
+        utterance.lang = lang;
+        utterance.rate = 1.05;
+        utterance.pitch = 1.0;
+
+        utterance.onend = () => {
+          currentIdx++;
+          speakNextChunk();
+        };
+
+        utterance.onerror = () => {
+          if (currentSpeechBtn) {
+            const ic = currentSpeechBtn.querySelector('.material-symbols-outlined');
+            if (ic) ic.innerText = 'volume_up';
+            currentSpeechBtn.classList.remove('!text-secondary', 'font-bold');
+            currentSpeechBtn = null;
+          }
+        };
+
+        window.speechSynthesis.speak(utterance);
+      }
+
+      speakNextChunk();
     }
 
     // Speech-to-Text Setup (Web Speech API)
