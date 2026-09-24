@@ -53,12 +53,12 @@ from sample_data import get_flattened_chunks, SAMPLE_STANDARDS
 INDIC_CROSS_LINGUAL_MAP = [
     # Steel, Pipes, Iron, Tubes, Structural, GI, TMT
     (
-        ["स्टील", "पाइप", "लोहा", "नली", "ट्यूब", "पाइपों", "कुழாய்", "இரும்பு", "கம்பி", "குழாய்கள்", "পাইপ", "ইস্পাত", "লোহা", "নল", "पाईप", "लोखंड", "स्टिल", "रॉड", "सरिया", "gi pipe", "tmt"],
+        ["स्टील", "पाइप", "लोहा", "नली", "ट्यूब", "पाइपों", "குழாய்", "இரும்பு", "கம்பி", "குழாய்கள்", "குழா", "পাইপ", "ইস্পাত", "লোহা", "নল", "पाईप", "लोखंड", "स्टिल", "रॉड", "सरिया", "gi pipe", "tmt"],
         "steel tubes pipes structural steel plumbing IS 1239 IS 3589 IS 2062 IS 1786 galvanized iron"
     ),
     # Drinking Water, Bottled Water, RO, Mineral Water
     (
-        ["पानी", "जल", "पीने का पानी", "बोतलबंद", "मिनरल वाटर", "தண்ணீர்", "நீர்", "குடிநீர்", "பாட்டில் தண்ணீர்", "जल", "পানীয় জল", "মিনারেল ওয়াটার", "পাখী", "पाणी", "पिण्याचे पाणी", "बाटलीबंद पाणी", "जलशुद्धीकरण"],
+        ["पानी", "जल", "पीने", "बोतलबंद", "मिनरल", "தண்ணீர்", "தண்ணீ", "நீர்", "குடிநீர்", "குடி", "பாட்டில்", "জল", "পানীয়", "মিনারেল", "পাখী", "पाणी", "पाण्या", "पिण्या", "पिण्याचे", "बाटलीबंद", "जलशुद्धीकरण"],
         "packaged drinking water potable water mineral water IS 10500 IS 14543 water testing"
     ),
     # Gold, Jewellery, Hallmarking, HUID, Silver
@@ -73,7 +73,7 @@ INDIC_CROSS_LINGUAL_MAP = [
     ),
     # Toys, Children Safety
     (
-        ["खिलौना", "खिलौने", "बच्चों", "गुड़िया", "பொம்மை", "பொம்மைகள்", "குழந்தைகள்", "খেলনা", "বাচ্চাদের খেলনা", "खेळणी", "खेळणी", "बाळांची"],
+        ["खिलौना", "खिलौने", "बच्चों", "गुड़िया", "பொம்மை", "பொம்மைகள்", "குழந்தைகள்", "খেলনা", "বাচ্চাদের", "खेळणी", "बाळांची"],
         "safety of toys mechanical physical flammability electric toys IS 9873 IS 15644"
     ),
     # Electronics, Batteries, Mobile, Laptops, Chargers
@@ -83,7 +83,7 @@ INDIC_CROSS_LINGUAL_MAP = [
     ),
     # Fire Safety, Fire Alarms, Extinguishers
     (
-        ["आग", "अग्नि", "अग्निशामक", "फायर", "अलार्म", "தீ", "தீயணைப்பான்", "அலாரம்", "আগুন", "অগ্নি নির্বাপক", "অ্যালার্ম", "अग्निशामक यंत्र"],
+        ["आग", "अग्नि", "अग्निशामक", "फायर", "अलार्म", "தீ", "தீயணைப்பான்", "அலாரம்", "আগুন", "অগ্নি", "অ্যালার্ম", "अग्निशामक"],
         "fire detection alarm system portable fire extinguisher safety IS 2189 IS 15683"
     ),
     # Soil Testing, Earth, Compaction
@@ -118,7 +118,7 @@ INDIC_CROSS_LINGUAL_MAP = [
     ),
     # MSME, Small business, Subsidy, Concession, Discount, Factory
     (
-        ["एमएसएमई", "सब्सिडी", "छूट", "कारीगर", "दुकान", "छोटे उद्योग", "सहुलत", "தள்ளுபடி", "மானிய", "சிறு தொழில்", "ছাড়", "ভর্তুকি", "ক্ষুদ্র শিল্প", "सवलत", "अनुदान", "लघु उद्योग", "लहान व्यवसाय"],
+        ["msme", "एमएसएमई", "लघु उद्योग", "सूक्ष्म", "छूट", "सब्सिडी", "सवलत", "கட்டணச் சலுகை", "மானிய", "சிறு தொழில்", "ফি ছাড়", "ভর্তুকি", "ক্ষুদ্র শিল্প", "सवलती", "अनुदान", "लहान व्यवसाय"],
         "MSME 80% fee concession 50% testing subsidy simplified scheme micro small enterprise"
     ),
     # BIS License, Certificate, ISI Mark, Procedure, Steps
@@ -777,8 +777,11 @@ class StandardsRAGEngine:
         clause citations, and spoken-friendly voice formatting.
         Supports Saral Voice Saathi (Illiterate / Low-Literacy Assistant Mode).
         """
+        # Step 0: Auto-detect Effective Language from Query
+        effective_lang = self._detect_effective_language(query, requested_language=language)
+
         # Guardrail 1: Prompt Injection Defense
-        injection_alert = self._detect_prompt_injection(query, language=language)
+        injection_alert = self._detect_prompt_injection(query, language=effective_lang)
         if injection_alert:
             return {
                 "answer": injection_alert,
@@ -801,8 +804,8 @@ class StandardsRAGEngine:
         
         # If max similarity score is low or empty, refuse to guess
         if not retrieved_chunks or max_score < threshold:
-            no_ev_ans = self._generate_no_evidence_response(query, language=language)
-            statutory_disc = self._get_statutory_disclaimer(language=language)
+            no_ev_ans = self._generate_no_evidence_response(query, language=effective_lang)
+            statutory_disc = self._get_statutory_disclaimer(language=effective_lang)
             return {
                 "answer": f"{no_ev_ans}{statutory_disc}",
                 "raw_answer": no_ev_ans,
