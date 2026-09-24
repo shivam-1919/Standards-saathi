@@ -643,45 +643,87 @@ class StandardsRAGEngine:
     def _detect_effective_language(self, query: str, requested_language: Optional[str] = "English") -> str:
         """
         Intelligently determines the effective language for generation:
-        1. If query contains Indic scripts (Tamil, Bengali, Devanagari), auto-detect language!
-        2. If query contains strong Romanized Indic keywords (e.g. 'paani ke liye', 'kivabe'), auto-detect language.
-        3. Otherwise defaults to the user's selected language.
+        1. Native Script Detection:
+           - Tamil script (\\u0B80-\\u0BFF) -> Tamil
+           - Bengali script (\\u0980-\\u09FF) -> Bengali
+           - Devanagari script (\\u0900-\\u097F) -> Marathi (if Marathi markers present) else Hindi
+        2. Romanized Indic keyword detection (e.g. 'kya hai', 'kaise', 'thanni', 'kivabe', 'ahe')
+        3. English Language Detection:
+           - If Latin text contains English query words (e.g. 'what', 'how', 'which', 'is', 'are', 'standard', 'for', 'the', 'explain', 'tell', 'requirement') -> English
+        4. If short / numeric / ambiguous -> defaults to requested_language or English.
         """
         if not query:
             return self._detect_language_name(requested_language or "English")
 
-        # Tamil script (\u0B80-\u0BFF)
+        # 1. Tamil script (\u0B80-\u0BFF)
         if re.search(r'[\u0B80-\u0BFF]', query):
             return "Tamil"
 
-        # Bengali script (\u0980-\u09FF)
+        # 2. Bengali script (\u0980-\u09FF)
         if re.search(r'[\u0980-\u09FF]', query):
             return "Bengali"
 
-        # Devanagari script (\u0900-\u097F)
+        # 3. Devanagari script (\u0900-\u097F)
         if re.search(r'[\u0900-\u097F]', query):
-            marathi_markers = ["आहे", "नाही", "काय", "कसे", "कसा", "सांगा", "पाईप", "मानके", "सवलत", "मिळेल", "करावे", "कोणते", "दागिने"]
+            marathi_markers = ["आहे", "नाही", "काय", "कसे", "कसा", "सांगा", "पाईप", "मानके", "सवलत", "मिळेल", "करावे", "कोणते", "दागिने", "तपशील", "माहिती"]
             if any(m in query for m in marathi_markers) or requested_language == "Marathi":
                 return "Marathi"
             return "Hindi"
 
-        # Romanized Indic keywords
+        # 4. Romanized Indic keywords
         q_low = query.lower()
-        hindi_words = ["kaunsa", "konsa", "kya hai", "kaise", "chahiye", "batao", "paani", "loha", "sariya", "soona", "chandi", "milega", "karein", "niyam", "manak"]
-        tamil_words = ["enna", "eppadi", "thanni", "kuzhai", "thangam", "thevai", "solunga"]
-        bengali_words = ["kivabe", "ki", "dorkar", "bolun", "pabo", "ispat", "manak"]
-        marathi_words = ["kasa", "kay", "pahije", "sangaa", "ahe", "nahi", "milnar", "konte"]
 
-        if any(w in q_low for w in marathi_words):
-            return "Marathi"
-        if any(w in q_low for w in tamil_words):
-            return "Tamil"
-        if any(w in q_low for w in bengali_words):
-            return "Bengali"
-        if any(w in q_low for w in hindi_words):
-            return "Hindi"
+        marathi_patterns = [
+            r"\b(kasa|kase|kay|pahije|sangaa|sanga|ahe|nahi|milnar|konte|dagine|mahiti|kiti)\b",
+            r"kay ahe", r"kasa milnar", r"sathi kay"
+        ]
+        tamil_patterns = [
+            r"\b(enna|eppadi|thanni|kuzhai|thangam|thevai|solunga|eppati|irukku|sollunga)\b",
+            r"enna standard", r"eppadi vanganum"
+        ]
+        bengali_patterns = [
+            r"\b(kivabe|ki|dorkar|bolun|pabo|ispat|manak|lagbe|kothay|janiye)\b",
+            r"ki bhabe", r"kivabe pabo"
+        ]
+        hindi_patterns = [
+            r"\b(kaunsa|konsa|kya|kyu|kaise|kese|chahiye|batao|bataiye|paani|pani|loha|sariya|soona|sona|chandi|milega|milta|karein|kare|niyam|manak|suvidha|chhoot|shulk|kahan|jaana)\b",
+            r"kya hai", r"kaise le", r"ke liye", r"bata do", r"chahiye", r"hoga kya"
+        ]
 
-        return self._detect_language_name(requested_language or "English")
+        for p in marathi_patterns:
+            if re.search(p, q_low):
+                return "Marathi"
+        for p in tamil_patterns:
+            if re.search(p, q_low):
+                return "Tamil"
+        for p in bengali_patterns:
+            if re.search(p, q_low):
+                return "Bengali"
+        for p in hindi_patterns:
+            if re.search(p, q_low):
+                return "Hindi"
+
+        # 5. English Language Word Overlap Check
+        english_indicators = {
+            "what", "is", "are", "how", "to", "for", "the", "in", "of", "and", "a", "an",
+            "which", "standard", "standards", "code", "codes", "specification", "specifications",
+            "explain", "tell", "give", "detail", "details", "mandatory", "qco", "requirement",
+            "requirements", "test", "testing", "laboratory", "license", "licensing", "certification",
+            "apply", "process", "procedure", "msme", "subsidy", "concession", "water", "steel",
+            "pipe", "pipes", "gold", "hallmarking", "cement", "concrete", "toy", "toys", "battery",
+            "cable", "wire", "helmet", "shoe", "footwear", "compliance", "checklist", "analyzer",
+            "tender", "clause", "verify", "can", "does", "do", "should", "must", "please", "help"
+        }
+        query_words = set(re.findall(r'[a-z]+', q_low))
+        english_overlap = len(query_words.intersection(english_indicators))
+
+        if english_overlap >= 2 or any(w in query_words for w in ["what", "how", "which", "explain", "tell", "why", "where", "when", "does", "do", "is", "are"]):
+            return "English"
+
+        if requested_language:
+            return self._detect_language_name(requested_language)
+
+        return "English"
 
     def _get_statutory_disclaimer(self, language: str = "English") -> str:
         """Returns statutory disclaimer in the selected language."""
