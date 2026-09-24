@@ -174,6 +174,14 @@ def test_server_routes():
     assert res_root.status_code == 200, f"Root returned {res_root.status_code}"
     print("GET / : PASS")
 
+    # 1b. GET /health & /healthz (UptimeRobot & Render health check)
+    res_health = client.get("/health")
+    assert res_health.status_code == 200
+    assert res_health.json()["status"] == "healthy"
+    assert client.get("/healthz").status_code == 200
+    assert client.get("/api/health").status_code == 200
+    print("GET /health, /healthz, /api/health : PASS")
+
     # 2. GET /api/standards
     res_stds = client.get("/api/standards")
     assert res_stds.status_code == 200

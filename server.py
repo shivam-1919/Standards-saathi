@@ -99,6 +99,26 @@ async def get_index():
     return JSONResponse({"message": "Standards Saathi API Running. Place static/index.html to view UI."})
 
 # ---------------------------------------------------------------------------
+# HEALTH CHECK & MONITORING ENDPOINTS (FOR UPTIMEROBOT & RENDER)
+# ---------------------------------------------------------------------------
+
+@app.get("/health", status_code=200)
+@app.get("/healthz", status_code=200)
+@app.get("/api/health", status_code=200)
+@app.head("/health", status_code=200)
+@app.head("/healthz", status_code=200)
+async def health_check():
+    """Lightweight health check endpoint for UptimeRobot, Render, and external uptime monitors."""
+    import datetime
+    return {
+        "status": "healthy",
+        "service": "Standards Saathi AI",
+        "version": "2.0.0",
+        "timestamp": datetime.datetime.utcnow().isoformat() + "Z",
+        "uptime": "active"
+    }
+
+# ---------------------------------------------------------------------------
 # CORE CHAT & RAG ENDPOINTS
 # ---------------------------------------------------------------------------
 
