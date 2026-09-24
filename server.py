@@ -236,6 +236,35 @@ async def update_admin_config_endpoint(req: AdminConfigRequest):
         "has_groq": bool(os.getenv("GROQ_API_KEY"))
     }
 
+@app.post("/api/admin/security-logs")
+async def get_admin_security_logs_endpoint(req: AuthRequest):
+    """Retrieves blocked prompt injection attempts and audit logs for authenticated admin."""
+    current_admin_pwd = os.getenv("ADMIN_PASSWORD", "admin123")
+    if req.password != current_admin_pwd:
+        raise HTTPException(status_code=401, detail="Unauthorized: Invalid admin password")
+
+    engine = get_rag_engine()
+    logs = engine.get_security_logs()
+    return {
+        "status": "success",
+        "total_blocked": len(logs),
+        "logs": logs
+    }
+
+@app.post("/api/admin/clear-security-logs")
+async def clear_admin_security_logs_endpoint(req: AuthRequest):
+    """Clears security audit logs for authenticated admin."""
+    current_admin_pwd = os.getenv("ADMIN_PASSWORD", "admin123")
+    if req.password != current_admin_pwd:
+        raise HTTPException(status_code=401, detail="Unauthorized: Invalid admin password")
+
+    engine = get_rag_engine()
+    engine.clear_security_logs()
+    return {
+        "status": "success",
+        "message": "Security logs cleared successfully."
+    }
+
 @app.on_event("startup")
 async def startup_event():
     print("\n" + "=" * 64)

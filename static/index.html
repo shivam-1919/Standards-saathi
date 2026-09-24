@@ -1115,7 +1115,7 @@
   <!-- PROTECTED ADMIN PORTAL MODAL -->
   <!-- ========================================================================= -->
   <div id="adminModal" class="fixed inset-0 bg-black/60 backdrop-blur-xs z-50 flex items-center justify-center p-4 hidden">
-    <div class="bg-white rounded-xl max-w-md w-full p-6 shadow-2xl border border-gray-300 flex flex-col gap-4">
+    <div class="bg-white rounded-xl max-w-lg w-full p-6 shadow-2xl border border-gray-300 flex flex-col gap-4">
       
       <div class="flex items-center justify-between border-b pb-3">
         <h3 class="font-headline text-base font-bold text-[#0B3C68] flex items-center gap-2" id="adminModalTitle">
@@ -1138,33 +1138,64 @@
         </div>
       </div>
 
-      <!-- Config Panel (Unlocked) -->
-      <div id="adminControlPanel" class="space-y-4 text-xs hidden">
-        <div class="p-3 bg-emerald-50 border border-emerald-300 rounded text-emerald-950 font-medium" id="adminSuccessMsg">
-          ✅ एडमिन प्रमाणीकरण सफल। यहां से आप API Keys और सिस्टम कॉन्फ़िगरेशन सुरक्षित रूप से अपडेट कर सकते हैं।
+      <!-- Config & Security Panel (Unlocked) -->
+      <div id="adminControlPanel" class="space-y-3 text-xs hidden">
+        
+        <!-- Admin Navigation Tabs -->
+        <div class="flex border-b border-gray-200 gap-1 pb-1">
+          <button id="adminTabBtn-config" onclick="switchAdminTab('config')" class="px-3 py-1.5 rounded-t text-xs font-bold bg-[#0B3C68] text-white">
+            ⚙️ API सेटिंग्स
+          </button>
+          <button id="adminTabBtn-security" onclick="switchAdminTab('security')" class="px-3 py-1.5 rounded-t text-xs font-bold bg-gray-100 text-gray-700 hover:bg-gray-200 flex items-center gap-1.5">
+            🛡️ सुरक्षा ऑडिट लॉग
+            <span id="adminSecurityBadge" class="px-1.5 py-0.2 rounded-full text-[10px] bg-red-600 text-white font-bold">0</span>
+          </button>
         </div>
 
-        <div>
-          <label class="block font-bold text-gray-800 mb-1">Google Gemini API Key:</label>
-          <input id="adminGeminiKey" type="password" placeholder="नई Gemini API कुंजी दर्ज करें..." class="w-full px-3 py-2 rounded border border-gray-300 text-xs font-mono" />
+        <!-- Tab 1: API Configuration -->
+        <div id="adminTabContent-config" class="space-y-3">
+          <div class="p-2.5 bg-emerald-50 border border-emerald-300 rounded text-emerald-950 font-medium" id="adminSuccessMsg">
+            ✅ एडमिन प्रमाणीकरण सफल। यहां से आप API Keys और सिस्टम कॉन्फ़िगरेशन सुरक्षित रूप से अपडेट कर सकते हैं।
+          </div>
+
+          <div>
+            <label class="block font-bold text-gray-800 mb-1">Google Gemini API Key:</label>
+            <input id="adminGeminiKey" type="password" placeholder="नई Gemini API कुंजी दर्ज करें..." class="w-full px-3 py-2 rounded border border-gray-300 text-xs font-mono" />
+          </div>
+
+          <div>
+            <label class="block font-bold text-gray-800 mb-1">Groq Fallback API Key:</label>
+            <input id="adminGroqKey" type="password" placeholder="नई Groq API कुंजी दर्ज करें..." class="w-full px-3 py-2 rounded border border-gray-300 text-xs font-mono" />
+          </div>
+
+          <div>
+            <label class="block font-bold text-gray-800 mb-1">नया एडमिन पासवर्ड (वैकल्पिक):</label>
+            <input id="adminNewPassword" type="password" placeholder="नया मास्टर पासवर्ड..." class="w-full px-3 py-2 rounded border border-gray-300 text-xs" />
+          </div>
+
+          <div class="flex justify-end gap-2 pt-2 border-t">
+            <button onclick="saveAdminConfig()" class="btn-primary bg-[#0B3C68] hover:bg-[#072d50] text-white" id="adminSaveBtn">सहेजें (Save)</button>
+          </div>
         </div>
 
-        <div>
-          <label class="block font-bold text-gray-800 mb-1">Groq Fallback API Key:</label>
-          <input id="adminGroqKey" type="password" placeholder="नई Groq API कुंजी दर्ज करें..." class="w-full px-3 py-2 rounded border border-gray-300 text-xs font-mono" />
-        </div>
+        <!-- Tab 2: Security & Prompt Injection Audit Logs -->
+        <div id="adminTabContent-security" class="space-y-3 hidden">
+          <div class="flex items-center justify-between">
+            <span class="font-bold text-[#0B3C68]">अवरोधित प्रॉम्प्ट इंजेक्शन और सुरक्षा घटनाएं:</span>
+            <div class="flex gap-1.5">
+              <button onclick="fetchAdminSecurityLogs()" class="btn-secondary h-6 px-2 text-[11px]">ताजा करें</button>
+              <button onclick="clearAdminSecurityLogs()" class="btn-secondary h-6 px-2 text-[11px] text-red-600 hover:bg-red-50">साफ़ करें</button>
+            </div>
+          </div>
 
-        <div>
-          <label class="block font-bold text-gray-800 mb-1">नया एडमिन पासवर्ड (वैकल्पिक):</label>
-          <input id="adminNewPassword" type="password" placeholder="नया मास्टर पासवर्ड..." class="w-full px-3 py-2 rounded border border-gray-300 text-xs" />
+          <div id="adminSecurityLogContainer" class="max-h-60 overflow-y-auto space-y-2 border border-gray-200 rounded p-2 bg-[#F8FAFC]">
+            <!-- Rendered security log entries -->
+          </div>
         </div>
 
         <div class="flex justify-between items-center pt-2 border-t">
           <button onclick="logoutAdmin()" class="text-xs text-red-600 font-bold hover:underline" id="adminLogoutBtn">लॉगआउट</button>
-          <div class="flex gap-2">
-            <button onclick="closeAdminModal()" class="btn-secondary" id="adminCloseBtn">बंद करें</button>
-            <button onclick="saveAdminConfig()" class="btn-primary bg-[#0B3C68] hover:bg-[#072d50] text-white" id="adminSaveBtn">सहेजें (Save)</button>
-          </div>
+          <button onclick="closeAdminModal()" class="btn-secondary" id="adminCloseBtn">बंद करें</button>
         </div>
       </div>
 
@@ -2765,6 +2796,89 @@
       document.getElementById('adminModal').classList.add('hidden');
     }
 
+    function switchAdminTab(tab) {
+      const cfgTab = document.getElementById('adminTabContent-config');
+      const secTab = document.getElementById('adminTabContent-security');
+      const btnCfg = document.getElementById('adminTabBtn-config');
+      const btnSec = document.getElementById('adminTabBtn-security');
+
+      if (tab === 'config') {
+        cfgTab?.classList.remove('hidden');
+        secTab?.classList.add('hidden');
+        btnCfg.className = "px-3 py-1.5 rounded-t text-xs font-bold bg-[#0B3C68] text-white";
+        btnSec.className = "px-3 py-1.5 rounded-t text-xs font-bold bg-gray-100 text-gray-700 hover:bg-gray-200 flex items-center gap-1.5";
+      } else {
+        cfgTab?.classList.add('hidden');
+        secTab?.classList.remove('hidden');
+        btnSec.className = "px-3 py-1.5 rounded-t text-xs font-bold bg-[#0B3C68] text-white flex items-center gap-1.5";
+        btnCfg.className = "px-3 py-1.5 rounded-t text-xs font-bold bg-gray-100 text-gray-700 hover:bg-gray-200";
+        fetchAdminSecurityLogs();
+      }
+    }
+
+    async function fetchAdminSecurityLogs() {
+      if (!adminTokenPassword) return;
+      const container = document.getElementById('adminSecurityLogContainer');
+      const badge = document.getElementById('adminSecurityBadge');
+
+      try {
+        const res = await fetch('/api/admin/security-logs', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ password: adminTokenPassword })
+        });
+        const data = await res.json();
+        if (data.status === 'success') {
+          const logs = data.logs || [];
+          if (badge) badge.innerText = logs.length;
+          if (!container) return;
+
+          if (logs.length === 0) {
+            container.innerHTML = `
+              <div class="text-center py-6 text-gray-500 text-xs">
+                <span class="material-symbols-outlined text-emerald-600 text-[28px] mb-1">verified_user</span>
+                <p class="font-bold text-gray-700">कोई सुरक्षा उल्लंघन दर्ज नहीं है</p>
+                <p class="text-[11px]">सिस्टम पूरी तरह सुरक्षित है। अब तक कोई प्रॉम्प्ट इंजेक्शन नहीं पकड़ा गया।</p>
+              </div>
+            `;
+          } else {
+            container.innerHTML = logs.map(l => `
+              <div class="p-2.5 rounded bg-white border border-red-200 shadow-2xs space-y-1">
+                <div class="flex justify-between items-start gap-1">
+                  <span class="px-1.5 py-0.2 rounded bg-red-100 text-red-800 font-bold text-[10px]">${escapeHtml(l.category)}</span>
+                  <span class="text-[10px] text-gray-500 font-mono">${escapeHtml(l.timestamp)}</span>
+                </div>
+                <p class="text-xs text-gray-800 font-medium font-mono bg-gray-50 p-1.5 rounded border border-gray-100 break-words">
+                  ${escapeHtml(l.snippet)}
+                </p>
+                <div class="text-[10px] text-gray-500">भाषा: <span class="font-semibold text-gray-700">${escapeHtml(l.language || 'English')}</span></div>
+              </div>
+            `).join('');
+          }
+        }
+      } catch (err) {
+        if (container) container.innerHTML = `<p class="text-red-500 text-xs">त्रुटि: ${err.message}</p>`;
+      }
+    }
+
+    async function clearAdminSecurityLogs() {
+      if (!adminTokenPassword) return;
+      if (!confirm("क्या आप सभी सुरक्षा ऑडिट लॉग साफ़ करना चाहते हैं?")) return;
+
+      try {
+        const res = await fetch('/api/admin/clear-security-logs', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ password: adminTokenPassword })
+        });
+        if (res.ok) {
+          fetchAdminSecurityLogs();
+        }
+      } catch (err) {
+        alert("Error clearing security logs: " + err.message);
+      }
+    }
+
     async function authenticateAdmin() {
       const pwd = document.getElementById('adminPasswordInput').value.trim();
       try {
@@ -2777,6 +2891,8 @@
           adminTokenPassword = pwd;
           document.getElementById('adminLoginForm').classList.add('hidden');
           document.getElementById('adminControlPanel').classList.remove('hidden');
+          switchAdminTab('config');
+          fetchAdminSecurityLogs();
         } else {
           document.getElementById('adminLoginError').classList.remove('hidden');
         }

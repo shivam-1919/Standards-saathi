@@ -164,6 +164,7 @@ class StandardsRAGEngine:
         self.chunks: List[Dict[str, Any]] = []
         self.chunk_embeddings: Optional[np.ndarray] = None
         self.is_initialized = False
+        self.security_logs: List[Dict[str, Any]] = []
         
         self.initialize_engine()
 
@@ -201,6 +202,14 @@ class StandardsRAGEngine:
     def set_groq_api_key(self, api_key: str):
         """Updates the Groq API key dynamically."""
         self.groq_api_key = api_key
+
+    def get_security_logs(self) -> List[Dict[str, Any]]:
+        """Returns the most recent security and prompt injection audit events."""
+        return list(reversed(self.security_logs[-100:]))
+
+    def clear_security_logs(self):
+        """Clears the security audit log history."""
+        self.security_logs.clear()
 
     def rebuild_index(self):
         """Computes embeddings for all chunks and builds/refreshes the FAISS index."""
@@ -439,10 +448,8 @@ class StandardsRAGEngine:
                         chunk_data = dict(self.chunks[idx])
                         chunk_data["similarity_score"] = float(score)
                         dense_results.append(chunk_data)
-                
+
                 dense_top_score = dense_results[0].get("similarity_score", 0.0) if dense_results else 0.0
-                
-                # If dense search is confident, return dense search, else return fallback results
                 if dense_top_score >= 0.45 or (dense_top_score >= fb_top_score and dense_top_score >= 0.30):
                     return dense_results
             except Exception:
@@ -450,32 +457,166 @@ class StandardsRAGEngine:
 
         return fallback_results
 
-    def _detect_prompt_injection(self, query: str) -> Optional[str]:
-        """Detects prompt injection attempts, system prompt exfiltration, and jailbreak patterns."""
-        injection_patterns = [
-            r"ignore\s+(all\s+)?(previous|prior|above)\s+instructions",
-            r"disregard\s+(all\s+)?(previous|prior|above)",
-            r"forget\s+(all\s+)?(previous|prior|your)\s+instructions",
-            r"system\s*prompt",
-            r"reveal\s+(your\s+)?(system|initial)\s+prompt",
-            r"print\s+(your\s+)?(system|initial)\s+prompt",
-            r"you\s+are\s+now\s+(in\s+)?(dan|developer|jailbreak|unrestricted)\s+mode",
-            r"bypass\s+(all\s+)?(safety|security|rules|guardrails)",
-            r"<\|im_start\|>",
-            r"<\|system\|>",
-            r"```\s*system",
-            r"act\s+as\s+(an?\s+)?unfiltered",
+    def _sanitize_indirect_input(self, text: str) -> str:
+        """
+        Sanitize user-provided clauses, tenders, or unstructured inputs against
+        indirect prompt injection, hidden delimiters, and unicode obfuscation.
+        """
+        if not text:
+            return ""
+        # 1. Strip zero-width and invisible unicode characters used for prompt obfuscation
+        text = re.sub(r'[\u200B-\u200D\uFEFF\u00A0\u202A-\u202E]', ' ', text)
+        # 2. Sanitize adversarial delimiters that mimic system instructions
+        text = re.sub(r'(?i)<\|im_start\|>|<\|system\|>|<\|endoftext\|>|\[INST\]|\[/INST\]|<<SYS>>|```\s*system', ' [FILTERED_DELIMITER] ', text)
+        return text.strip()
+
+    def _detect_prompt_injection(self, query: str, language: str = "English") -> Optional[str]:
+        """
+        Multilingual, multi-category Prompt Injection & Jailbreak Defense Guardrail.
+        Detects:
+        - Direct instruction override & jailbreak attempts (English, Hindi, Tamil, Bengali, Marathi)
+        - System prompt & API key exfiltration attempts
+        - Delimiter and role-play subversion (DAN, Developer Mode, unfiltered persona)
+        - Regulatory fraud & fake license requests
+        """
+        if not query:
+            return None
+
+        # Clean zero-width and invisible obfuscation characters
+        clean_q = re.sub(r'[\u200B-\u200D\uFEFF]', '', query)
+        q_lower = clean_q.lower().strip()
+        detected_category = None
+
+        # Category 1: Direct Instruction Overrides & Jailbreaks (English & Multilingual)
+        override_patterns = [
+            r"ignore\s+(all\s+)?(previous|prior|above|past|rules|safety)\s+(instructions|directives|rules|guidelines)",
+            r"disregard\s+(all\s+)?(previous|prior|above|past|rules|directives|safety|guidelines)",
+            r"forget\s+(all\s+)?(previous|prior|your)\s+(instructions|directives|rules)",
+            r"bypass\s+(all\s+)?(safety|security|rules|guardrails|filters)",
             r"override\s+(all\s+)?(safety|system)\s+directives",
-            r"grant\s+me\s+(a\s+)?legal\s+(license|exemption|ruling)"
+            r"do\s+not\s+follow\s+any\s+(rules|instructions)",
+            r"you\s+are\s+now\s+(in\s+)?(dan|developer|jailbreak|unrestricted|god)\s+mode",
+            r"act\s+as\s+(an?\s+)?(unfiltered|unrestricted|adversarial|jailbroken)",
+            r"pretend\s+you\s+have\s+no\s+(rules|limits|safety)",
+            # Hindi
+            r"(सभी\s+|सारे\s+)?(पिछले|पूर्व|पुराने)\s+(निर्देश|नियम|आदेश)\s*(भूल\s+जाओ|रद्द\s+करो|अनदेखा\s+करो|हटाओ)",
+            r"(सभी|सारे)\s+(निर्देश|नियम|आदेश)\s*(भूल\s+जाओ|रद्द\s+करो|अनदेखा\s+करो|हटाओ)",
+            r"सुरक्षा\s+नियम\s*(बायपास|तोड़ो|हटाओ)",
+            # Tamil
+            r"(அனைத்து\s+)?(முந்தைய|பழைய)\s+(விதிகளை(யும்)?|கட்டளைகளை)\s*(மறந்துவிடு|புறக்கணிக்கவும்|நீக்கு)",
+            r"அனைத்து\s+(விதிகளை(யும்)?|கட்டளைகளை)\s*(மறந்துவிடு|புறக்கணிக்கவும்|நீக்கு)",
+            r"பாதுகாப்பு\s+விதிகளை\s*மீறு",
+            # Bengali
+            r"(সব\s+|সমস্ত\s+)?(আগের|পূর্বের)\s+(নির্দেশ|নিয়ম)\s*(ভুলে\s+যাও|উপেক্ষা\s+করো|বাতিল\s+করো)",
+            r"(সব|সমস্ত)\s+(নির্দেশ|নিয়ম)\s*(ভুলে\s+যাও|উপেক্ষা\s+করো|বাতিল\s+করো)",
+            r"নিরাপত্তা\s+নিয়ম\s*(বাইপাস|ভেঙে\s+ফেলো)",
+            # Marathi
+            r"(सर्व\s+)?(मागील|पूर्वीच्या)\s+(सूचना|नियम)\s*(विसरा|दुर्लक्षित\s+करा|रद्द\s+करा)",
+            r"सर्व\s+(सूचना|नियम)\s*(विसरा|दुर्लक्षित\s+करा|रद्द\s+करा)",
+            r"सुरक्षा\s+नियम\s*(बायपास\s+करा|तोडा)"
         ]
-        q_lower = query.lower()
-        for pat in injection_patterns:
+        for pat in override_patterns:
             if re.search(pat, q_lower):
+                detected_category = "Instruction Override / Jailbreak"
+                break
+
+        # Category 2: System Prompt & Secret Exfiltration
+        if not detected_category:
+            exfiltration_patterns = [
+                r"(reveal|print|output|show|display|tell|expose|leak|dump)\s+(me\s+)?(all\s+)?(your\s+)?(initial\s+|system\s+|base\s+|developer\s+|hidden\s+|secret\s+)*(prompt|instructions|rules|directives|context)",
+                r"(reveal|print|output|show|display|tell|give)\s+(me\s+)?(your\s+)?(api\s*key|api\s*keys|secret\s*key|credentials|gemini\s*key|groq\s*key)",
+                r"repeat\s+the\s+(text|words|instructions)\s+above",
+                r"(what\s+is|what\s+are)\s+(your\s+)?(system\s+prompt|initial\s+prompt|base\s+prompt|gemini\s+api\s+key|groq\s+api\s+key|api\s+key|developer\s+prompt)",
+                # Indic Exfiltration
+                r"(सिस्टम\s*प्रॉम्प्ट|गुप्त\s*नियम|निर्देश)\s*(दिखाओ|बताओ|प्रिंट\s*करो)",
+                r"एपीआई\s*(की|कुंजी)\s*(दिखाओ|बताओ)",
+                r"(சிஸ்டம்\s*ப்ராம்ப்ட்|ரகசிய\s*விதிகள்)\s*(காட்டு|சொல்)",
+                r"(সিস্টেম\s*প্রম্পট|গোপন\s*নিয়ম)\s*(দেখান|বলুন)",
+                r"(सिस्टम\s*प्रॉम्प्ट|गुप्त\s*नियम)\s*(दाखवा|सांगा)"
+            ]
+            for pat in exfiltration_patterns:
+                if re.search(pat, q_lower):
+                    detected_category = "System Prompt / Secret Exfiltration"
+                    break
+
+        # Category 3: Delimiter Hijacking & Format Spoofing
+        if not detected_category:
+            delimiter_patterns = [
+                r"<\|im_start\|>",
+                r"<\|system\|>",
+                r"<\|endoftext\|>",
+                r"\[INST\]",
+                r"\[/INST\]",
+                r"<<SYS>>",
+                r"```\s*system",
+                r"---BEGIN SYSTEM PROMPT---",
+                r"\[filtered_delimiter\]"
+            ]
+            for pat in delimiter_patterns:
+                if re.search(pat, q_lower):
+                    detected_category = "Control Token / Delimiter Injection"
+                    break
+
+        # Category 4: Regulatory Fraud & Fake Certification Claims
+        if not detected_category:
+            fraud_patterns = [
+                r"grant\s+me\s+(a\s+)?legal\s+(license|exemption|ruling)",
+                r"fake\s+(isi\s+mark|bis\s+certificate|huid)",
+                r"forge\s+(isi\s+license|hallmark)",
+                r"नक़ली\s*(isi|बीआईएस\s*लाइसेंस|हॉलमार्क)",
+                r"போலி\s*(isi|ஹால்மார்க்)"
+            ]
+            for pat in fraud_patterns:
+                if re.search(pat, q_lower):
+                    detected_category = "Statutory Fraud / Certification Forgery"
+                    break
+
+        if detected_category:
+            import datetime
+            # Log security event
+            log_entry = {
+                "timestamp": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                "category": detected_category,
+                "snippet": clean_q[:140],
+                "language": self._detect_language_name(language)
+            }
+            self.security_logs.append(log_entry)
+            if len(self.security_logs) > 200:
+                self.security_logs.pop(0)
+
+            lang = self._detect_language_name(language)
+            if lang == "Hindi":
                 return (
-                    "🛡️ **Safety & Security Advisory**: Unauthorized instruction override, prompt-injection pattern, "
-                    "or legal ruling request detected. Standards Saathi strictly adheres to official Bureau of Indian Standards (BIS) "
-                    "knowledge and safety guidelines. Please submit a valid technical inquiry regarding Indian Standards (IS Codes) or BIS certification procedures."
+                    "🛡️ **सुरक्षा चेतावनी (Security Advisory)**: अनधिकृत निर्देश ओवरराइड, प्रॉम्प्ट इंजेक्शन, अथवा सुरक्षा नियम उल्लंघन का प्रयास पहचाना गया है।\n\n"
+                    "मानक साथी भारतीय मानक ब्यूरो (BIS) के अधिकृत तकनीकी नियमों और सुरक्षा प्रोटोकॉल के अंतर्गत संचालित होता है। "
+                    "कृपया भारतीय मानक (IS Codes), गुणवत्ता नियंत्रण आदेश (QCOs), अथवा BIS सेवाओं से संबंधित वैध तकनीकी प्रश्न पूछें।"
                 )
+            elif lang == "Tamil":
+                return (
+                    "🛡️ **பாதுகாப்பு எச்சரிக்கை (Security Advisory)**: அங்கீகரிக்கப்படாத அறிவுறுத்தல் மீறல் அல்லது ப்ராம்ப்ட் இன்ஜெக்ஷன் முயற்சி கண்டறியப்பட்டது.\n\n"
+                    "ஸ்டாண்டர்ட்ஸ் சாதி இந்திய தரநிலைகள் பணியகத்தின் (BIS) உத்தியோகபூர்வ பாதுகாப்பு விதிகளுக்கு உட்பட்டு செயல்படுகிறது. "
+                    "தயவுசெய்து இந்திய தரநிலைகள் (IS Codes) அல்லது சான்றிதழ் நடைமுறைகள் தொடர்பான சரியான தொழில்நுட்பக் கேள்விகளை சமர்ப்பிக்கவும்."
+                )
+            elif lang == "Bengali":
+                return (
+                    "🛡️ **নিরাপত্তা সতর্কতা (Security Advisory)**: অননুমোদিত নির্দেশ ওভাররাইড বা প্রম্পট ইনজেকশন প্রচেষ্টা শনাক্ত হয়েছে।\n\n"
+                    "স্ট্যান্ডার্ডস সাথি ভারতীয় মানক ব্যুরো (BIS)-এর সরকারি নিরাপত্তা প্রোটোকল কঠোরভাবে অনুসরণ করে। "
+                    "অনুগ্রহ করে ভারতীয় মানক (IS Codes) বা সার্টিফিকেশন পদ্ধতি সম্পর্কিত বৈধ প্রশ্ন জিজ্ঞাসা করুন।"
+                )
+            elif lang == "Marathi":
+                return (
+                    "🛡️ **सुरक्षा सूचना (Security Advisory)**: अनधिकृत सूचना ओव्हरराइड किंवा प्रॉम्प्ट इंजेक्शनचा प्रयत्न आढळला आहे.\n\n"
+                    "मानक साथी हे भारतीय मानक ब्युरोच्या (BIS) अधिकृत सुरक्षा प्रोटोकॉलनुसार कार्य करते. "
+                    "कृपया भारतीय मानके (IS Codes) किंवा बीआयएस प्रमाणपत्राशी संबंधित वैध तांत्रिक प्रश्न विचारा."
+                )
+
+            return (
+                f"🛡️ **Safety & Security Advisory**: Unauthorized prompt injection pattern, instruction override, "
+                f"or delimiter hijacking detected ({detected_category}).\n\n"
+                "Standards Saathi strictly enforces Bureau of Indian Standards (BIS) regulatory ground rules and AI safety guardrails. "
+                "Please submit a valid technical inquiry regarding Indian Standards (IS Codes), mandatory QCOs, or BIS certification procedures."
+            )
+
         return None
 
     def _detect_language_name(self, lang_input: str) -> str:
@@ -483,14 +624,14 @@ class StandardsRAGEngine:
         if not lang_input:
             return "English"
         l = lang_input.strip().lower()
-        if any(h in l for h in ["hi", "hin", "हिंदी", "hindi"]):
-            return "Hindi"
-        if any(t in l for t in ["ta", "tam", "தமிழ்", "tamil"]):
-            return "Tamil"
-        if any(b in l for b in ["bn", "ben", "বাংলা", "bengali", "bangla"]):
-            return "Bengali"
-        if any(m in l for m in ["mr", "mar", "मराठी", "marathi"]):
+        if l in ["mr", "mar", "marathi", "मराठी"] or "marathi" in l or "मराठी" in l:
             return "Marathi"
+        if l in ["ta", "tam", "tamil", "தமிழ்"] or "tamil" in l or "தமிழ்" in l:
+            return "Tamil"
+        if l in ["bn", "ben", "bengali", "bangla", "বাংলা"] or "bengali" in l or "bangla" in l or "বাংলা" in l:
+            return "Bengali"
+        if l in ["hi", "hin", "hindi", "हिंदी"] or "hindi" in l or "हिंदी" in l:
+            return "Hindi"
         return "English"
 
     def _get_statutory_disclaimer(self, language: str = "English") -> str:
@@ -588,7 +729,7 @@ class StandardsRAGEngine:
         Supports Saral Voice Saathi (Illiterate / Low-Literacy Assistant Mode).
         """
         # Guardrail 1: Prompt Injection Defense
-        injection_alert = self._detect_prompt_injection(query)
+        injection_alert = self._detect_prompt_injection(query, language=language)
         if injection_alert:
             return {
                 "answer": injection_alert,
@@ -597,7 +738,7 @@ class StandardsRAGEngine:
                 "sources_text": "",
                 "related_standards": [],
                 "is_fallback": True,
-                "model": "Guardrails Defense Filter"
+                "model": "Prompt Injection Defense Filter"
             }
 
         # Step 1: Retrieve context chunks
@@ -837,9 +978,23 @@ class StandardsRAGEngine:
 
     def analyze_tender_or_spec(self, tender_text: str, language: str = "English") -> Dict[str, Any]:
         """Feature 2: Analyzes tender/procurement/specification text, extracts IS codes, flags missing standards."""
+        sanitized = self._sanitize_indirect_input(tender_text)
+        injection_alert = self._detect_prompt_injection(sanitized, language=language)
+        if injection_alert:
+            return {
+                "analysis": injection_alert,
+                "answer": injection_alert,
+                "raw_answer": injection_alert,
+                "citations": [],
+                "sources_text": "",
+                "related_standards": [],
+                "is_fallback": True,
+                "model": "Indirect Prompt Injection Filter"
+            }
+
         prompt = (
             f"Analyze the following tender/specification text for Indian Standards (IS codes) compliance:\n\n"
-            f"TENDER/SPEC TEXT:\n\"\"\"\n{tender_text[:2500]}\n\"\"\"\n\n"
+            f"TENDER/SPEC TEXT:\n\"\"\"\n{sanitized[:2500]}\n\"\"\"\n\n"
             f"Provide:\n"
             f"1. Referenced IS Codes found in text\n"
             f"2. Missing or updated BIS Standard References commonly required for this scope\n"
@@ -847,16 +1002,34 @@ class StandardsRAGEngine:
             f"4. Actionable recommendations for the bidder/manufacturer to align with BIS norms.\n"
             f"Respond in {self._detect_language_name(language)}."
         )
-        return self.generate_response(query=prompt, language=language)
+        res = self.generate_response(query=prompt, language=language)
+        res["analysis"] = res.get("answer", "")
+        return res
 
     def explain_clause(self, clause_text: str, language: str = "English") -> Dict[str, Any]:
         """Feature 3: Explains a technical clause from an IS code or tender in simple spoken language with 1-2 examples."""
+        sanitized = self._sanitize_indirect_input(clause_text)
+        injection_alert = self._detect_prompt_injection(sanitized, language=language)
+        if injection_alert:
+            return {
+                "explanation": injection_alert,
+                "answer": injection_alert,
+                "raw_answer": injection_alert,
+                "citations": [],
+                "sources_text": "",
+                "related_standards": [],
+                "is_fallback": True,
+                "model": "Indirect Prompt Injection Filter"
+            }
+
         prompt = (
             f"Explain this Indian Standard (IS Code) or tender clause in very simple, plain language with 1-2 practical real-world examples:\n\n"
-            f"CLAUSE TEXT:\n\"\"\"\n{clause_text[:2000]}\n\"\"\"\n\n"
+            f"CLAUSE TEXT:\n\"\"\"\n{sanitized[:2000]}\n\"\"\"\n\n"
             f"Respond in {self._detect_language_name(language)} using easy spoken structure."
         )
-        return self.generate_response(query=prompt, language=language)
+        res = self.generate_response(query=prompt, language=language)
+        res["explanation"] = res.get("answer", "")
+        return res
 
     def evaluate_onboarding_interview(self, answers: Dict[str, str], language: str = "English") -> Dict[str, Any]:
         """Feature 5: Evaluates 3-4 onboarding questions to produce a tailored roadmap."""
