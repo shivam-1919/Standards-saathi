@@ -13,16 +13,22 @@ from dotenv import load_dotenv
 # Load environment variables
 load_dotenv()
 
-# Sentence Transformers & FAISS
+# Sentence Transformers & FAISS (Optional; defaults to ultra-fast 15MB in-memory semantic TF-IDF matcher on 512MB RAM cloud hosts)
 try:
-    from sentence_transformers import SentenceTransformer
-    HAS_SENTENCE_TRANSFORMERS = True
+    if os.getenv("DISABLE_HEAVY_EMBEDDINGS", "0").lower() in ["1", "true", "yes"]:
+        HAS_SENTENCE_TRANSFORMERS = False
+    else:
+        from sentence_transformers import SentenceTransformer
+        HAS_SENTENCE_TRANSFORMERS = True
 except Exception:
     HAS_SENTENCE_TRANSFORMERS = False
 
 try:
-    import faiss
-    HAS_FAISS = True
+    if os.getenv("DISABLE_HEAVY_EMBEDDINGS", "0").lower() in ["1", "true", "yes"]:
+        HAS_FAISS = False
+    else:
+        import faiss
+        HAS_FAISS = True
 except Exception:
     HAS_FAISS = False
 
