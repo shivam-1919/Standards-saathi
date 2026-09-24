@@ -772,6 +772,291 @@ SAMPLE_STANDARDS = [
                     "3. Covers: Smartphones, laptops, LED lighting, smart TVs, adapters, lithium batteries, power banks (Granted R-number, e.g. R-41000000)."
                 ),
                 "keywords": ["CRS", "Compulsory Registration Scheme", "MeitY", "electronics", "R-number", "laptop", "mobile", "LED", "BIS"]
+            },
+            {
+                "clause_id": "Scheme IV / Hallmarking",
+                "clause_title": "Hallmarking Scheme for Gold & Silver Artefacts",
+                "page_number": 10,
+                "section_number": "Section 4.1",
+                "content": (
+                    "1. Mandatory registration for all jewellers selling gold jewellery in notified districts.\n"
+                    "2. Gold articles must bear 3 marks: BIS Triangular Logo, Purity (22K916, 18K750, 14K585), and 6-digit laser HUID.\n"
+                    "3. Verified testing conducted at BIS-recognized Assaying and Hallmarking Centres (AHC)."
+                ),
+                "keywords": ["hallmarking scheme", "gold registration", "HUID", "AHC", "jewellery compliance"]
+            },
+            {
+                "clause_id": "Scheme X / FMCS",
+                "clause_title": "Foreign Manufacturers Certification Scheme (FMCS Scheme-X)",
+                "page_number": 12,
+                "section_number": "Section 5.1",
+                "content": (
+                    "1. FMCS allows foreign manufacturers to use the standard ISI Mark on products exported to India.\n"
+                    "2. Requires an Authorized Indian Representative (AIR) residing in India.\n"
+                    "3. Factory audit conducted by BIS technical delegation in the foreign factory with sample drawing.\n"
+                    "4. Validity: Initially granted for 1 to 2 years, renewable upon continuous surveillance and performance testing."
+                ),
+                "keywords": ["FMCS", "foreign manufacturer", "AIR", "Authorized Indian Representative", "Scheme X", "export to India"]
+            }
+        ]
+    },
+    {
+        "id": "IS-3589",
+        "standard_number": "IS 3589:2001",
+        "title": "Steel Pipes for Water and Sewage (168.3 mm to 2540 mm Outside Diameter) — Specification (Third Revision)",
+        "category": "Mechanical & Civil Engineering",
+        "department": "Metallurgical Engineering Department (MTD 19)",
+        "status": "Mandatory Quality Control Order (QCO)",
+        "filename": "IS_3589_2001.pdf",
+        "purchase_url": "https://www.standardsbis.in/gemini/detail/IS_3589_2001",
+        "related_standards": ["IS 1239 (Part 1):2004", "IS 2062:2011", "IS 554:1999"],
+        "summary": "Prescribes requirements for seamless and electrically welded steel pipes (submerged arc welded and electric resistance welded) of nominal size 168.3 mm to 2540 mm OD for water and sewage applications.",
+        "clauses": [
+            {
+                "clause_id": "Clause 4 & 5 / Materials & Grades",
+                "clause_title": "Steel Grades (Fe 330, Fe 410, Fe 450) and Manufacturing Methods (ERW, SAW, HSAW)",
+                "page_number": 3,
+                "section_number": "Section 4.0 & 5.0",
+                "content": (
+                    "Manufacturing and material requirements under IS 3589:\n"
+                    "1. Steel Grades: Fe 330 (Tensile >= 330 MPa, Yield >= 195 MPa), Fe 410 (Tensile >= 410 MPa, Yield >= 235 MPa), Fe 450 (Tensile >= 450 MPa, Yield >= 275 MPa).\n"
+                    "2. Pipe Manufacturing: Electric Resistance Welded (ERW), High Frequency Induction Welded (HFIW), Longitudinal Submerged Arc Welded (LSAW), or Helical/Spiral Submerged Arc Welded (HSAW).\n"
+                    "3. Chemical Composition: Carbon <= 0.25%, Manganese <= 1.30%, Sulphur <= 0.045%, Phosphorus <= 0.045%."
+                ),
+                "keywords": ["IS 3589", "water pipe", "sewage pipe", "large diameter pipe", "Fe 410", "Fe 330", "HSAW", "ERW pipe", "large steel tube"]
+            },
+            {
+                "clause_id": "Clause 8 & 9 / Hydrostatic Test",
+                "clause_title": "Hydrostatic Test Pressure Formula & Non-Destructive Testing",
+                "page_number": 6,
+                "section_number": "Section 8.0 & 9.0",
+                "content": (
+                    "1. Hydrostatic Test: Each pipe tested at pressure P = (2 * S * t) / D, where S is 60% of specified minimum yield strength, t is nominal thickness, and D is outside diameter. Pressure held for >= 5 seconds without leak or sweat.\n"
+                    "2. Non-Destructive Examination: 100% weld length examined by ultrasonic or radiographic testing for submerged arc welded pipes."
+                ),
+                "keywords": ["hydrostatic pressure formula", "P = 2St/D", "ultrasonic test", "radiography", "IS 3589", "pipe testing"]
+            }
+        ]
+    },
+    {
+        "id": "IS-14543",
+        "standard_number": "IS 14543:2004",
+        "title": "Packaged Drinking Water (Other than Packaged Natural Mineral Water) — Specification (Second Revision)",
+        "category": "Food & Water Quality",
+        "department": "Food and Agriculture Department (FAD 14)",
+        "status": "Mandatory ISI Certification (Ministry of Health / FSSAI Mandate)",
+        "filename": "IS_14543_2004.pdf",
+        "purchase_url": "https://www.standardsbis.in/gemini/detail/IS_14543_2004",
+        "related_standards": ["IS 10500:2012", "IS 13428:2005", "IS 3025:2014"],
+        "summary": "Mandates strict physical, chemical, microbiological, packaging, and hygienic requirements for packaged drinking water sold in bottles, jars, and pouches. Requires mandatory BIS ISI certification before production and sale.",
+        "clauses": [
+            {
+                "clause_id": "Clause 4 & Table 1 / 2",
+                "clause_title": "Water Treatment Processes, Physical and Chemical Parameters",
+                "page_number": 3,
+                "section_number": "Section 4.0 & 5.0",
+                "content": (
+                    "Key requirements for Packaged Drinking Water under IS 14543:\n"
+                    "1. Treatment: Shall be subjected to treatments including filtration (sand, carbon, micron), demineralization/reverse osmosis, and mandatory disinfection (ozonation, UV, or membrane filtration) without altering natural mineral balance beyond limits.\n"
+                    "2. TDS: Acceptable limit 75 to 500 mg/L.\n"
+                    "3. pH: 6.5 to 8.5.\n"
+                    "4. Toxic Substances: Lead <= 0.01 mg/L, Arsenic <= 0.01 mg/L, Mercury <= 0.001 mg/L, Cadmium <= 0.003 mg/L, Bromates <= 0.01 mg/L (10 ppb).\n"
+                    "5. Mandatory ISI Mark: Compulsory ISI license (Scheme-I) with in-house microbiological and chemical testing laboratory."
+                ),
+                "keywords": ["packaged drinking water", "IS 14543", "RO water", "bottled water", "bromate limit", "TDS 75-500", "mandatory ISI mark", "FSSAI"]
+            },
+            {
+                "clause_id": "Table 3 / Microbiological Criteria",
+                "clause_title": "Zero Pathogen Mandate: E. coli, Coliforms, Faecal Streptococci, Pseudomonas aeruginosa",
+                "page_number": 5,
+                "section_number": "Section 5.3",
+                "content": (
+                    "Microbiological safety limits (Zero Tolerance):\n"
+                    "1. E. coli or thermotolerant coliforms: Absent in 250 mL.\n"
+                    "2. Coliform bacteria: Absent in 250 mL.\n"
+                    "3. Faecal streptococci and Staphylococcus aureus: Absent in 250 mL.\n"
+                    "4. Pseudomonas aeruginosa: Absent in 250 mL.\n"
+                    "5. Yeast and mould: Absent in 250 mL.\n"
+                    "6. Total viable colony count at 37°C/24h: Not exceeding 20 CFU/mL."
+                ),
+                "keywords": ["pseudomonas aeruginosa", "e coli zero", "microbiological testing", "packaged water lab", "IS 14543"]
+            }
+        ]
+    },
+    {
+        "id": "IS-1489",
+        "standard_number": "IS 1489 (Part 1):2015 & IS 269:2015",
+        "title": "Portland Pozzolana Cement (Fly Ash Based) & Ordinary Portland Cement (OPC 33/43/53)",
+        "category": "Civil & Construction Materials",
+        "department": "Civil Engineering Department (CED 2)",
+        "status": "Mandatory Quality Control Order (QCO)",
+        "filename": "IS_1489_Part_1_2015.pdf",
+        "purchase_url": "https://www.standardsbis.in/gemini/detail/IS_1489_Part_1",
+        "related_standards": ["IS 269:2015", "IS 456:2000", "IS 4031:1988", "IS 4032:1985"],
+        "summary": "Prescribes requirements for Portland Pozzolana Cement (PPC fly ash based) and Ordinary Portland Cement (OPC 33, 43, and 53 grades). Mandates compressive strength, setting times, soundess, and fly ash percentage.",
+        "clauses": [
+            {
+                "clause_id": "Clause 5 & 6 / PPC & OPC Criteria",
+                "clause_title": "Fly Ash Content (15%–35%), Setting Time & Compressive Strength",
+                "page_number": 4,
+                "section_number": "Section 5.0 & 6.0",
+                "content": (
+                    "Physical and chemical stipulations for PPC (IS 1489 Part 1) and OPC (IS 269):\n"
+                    "1. Fly Ash Content in PPC: 15% to 35% by mass of cement conforming to IS 3812 (Part 1).\n"
+                    "2. Setting Time (Both PPC & OPC): Initial setting time >= 30 minutes; Final setting time <= 600 minutes (10 hours).\n"
+                    "3. Compressive Strength of Standard Mortar (1:3):\n"
+                    "   - PPC: 3 days >= 16 MPa, 7 days >= 22 MPa, 28 days >= 33 MPa.\n"
+                    "   - OPC 43: 3 days >= 23 MPa, 7 days >= 33 MPa, 28 days >= 43 MPa (up to 58 MPa max).\n"
+                    "   - OPC 53: 3 days >= 27 MPa, 7 days >= 37 MPa, 28 days >= 53 MPa.\n"
+                    "4. Soundness: Le-Chatelier expansion <= 10 mm; Autoclave expansion <= 0.8%.\n"
+                    "5. Fineness (Blaine's Specific Surface): PPC >= 300 m²/kg; OPC >= 225 m²/kg.\n"
+                    "6. Mandatory QCO: Mandatory ISI mark; non-ISI cement cannot be manufactured, packed, or sold in India."
+                ),
+                "keywords": ["cement IS 1489", "OPC 53", "OPC 43", "PPC cement", "fly ash 15-35%", "initial setting time 30 min", "final setting time 600 min", "compressive strength", "mandatory cement QCO"]
+            }
+        ]
+    },
+    {
+        "id": "IS-9873",
+        "standard_number": "IS 9873 (Part 1):2019 / IS 15644:2006",
+        "title": "Safety of Toys — Part 1: Mechanical and Physical Properties & Electric Toy Safety",
+        "category": "Consumer & Child Safety",
+        "department": "Mechanical Engineering Department (MED 28)",
+        "status": "Mandatory Toys Quality Control Order (Toys QCO)",
+        "filename": "IS_9873_Part_1_2019.pdf",
+        "purchase_url": "https://www.standardsbis.in/gemini/detail/IS_9873_Part_1",
+        "related_standards": ["IS 9873 (Part 2):2017", "IS 9873 (Part 3):2020", "IS 15644:2006"],
+        "summary": "Mandatory safety requirements for toys intended for children under 14 years. Prescribes tests for sharp edges, small parts (choking hazard), drop impact, tensile strength, flammability, and heavy metals migration.",
+        "clauses": [
+            {
+                "clause_id": "Clause 4 & 5 / Mechanical Safety",
+                "clause_title": "Small Parts (Choking Cylinder), Sharp Edges, Drop Test and Heavy Metals",
+                "page_number": 8,
+                "section_number": "Section 4.1 & 5.0",
+                "content": (
+                    "Mandatory safety tests under Toys QCO (Scheme-I ISI Mark):\n"
+                    "1. Small Parts Test (Cl 4.4): For children under 36 months, no part or detached fragment shall fit entirely inside the standard small parts test cylinder (diameter 31.7 mm, truncated depth 57.1 mm).\n"
+                    "2. Sharp Edges & Points (Cl 4.7 & 4.8): Tested on sharp edge tester (PTFE tape wrap) and sharp point indicator.\n"
+                    "3. Drop Test (Cl 5.24): 5 drops from 850 mm ± 50 mm onto 4 mm steel plate over 2 mm vinyl tile.\n"
+                    "4. Heavy Metal Migration (IS 9873 Part 3): Lead <= 90 mg/kg, Cadmium <= 75 mg/kg, Mercury <= 60 mg/kg, Arsenic <= 25 mg/kg.\n"
+                    "5. Electric Toys (IS 15644): Maximum operating voltage 24V DC/AC RMS.\n"
+                    "6. Mandatory ISI Mark: Domestic manufacturers & foreign importers must have valid BIS License before selling toys in India."
+                ),
+                "keywords": ["toys safety", "IS 9873", "choking hazard", "small parts cylinder", "sharp edge", "drop test", "electric toys IS 15644", "toys QCO"]
+            }
+        ]
+    },
+    {
+        "id": "IS-4151",
+        "standard_number": "IS 4151:2020",
+        "title": "Protective Helmets for Two-Wheeler Riders — Specification (Fourth Revision)",
+        "category": "Automotive & Road Safety",
+        "department": "Transport Engineering Department (TED 8)",
+        "status": "Mandatory Quality Control Order (Ministry of Road Transport & Highways)",
+        "filename": "IS_4151_2020.pdf",
+        "purchase_url": "https://www.standardsbis.in/gemini/detail/IS_4151_2020",
+        "related_standards": ["IS 7692:2018", "CMVR 1989 Rule 138(4)(f)"],
+        "summary": "Mandates construction, impact absorption, retention system, and visor requirements for protective helmets for motorcyclists and pillion riders across India. Sale of non-ISI helmets is illegal.",
+        "clauses": [
+            {
+                "clause_id": "Clause 4 & 9 / Impact & Retention",
+                "clause_title": "Impact Attenuation Test (2.5m/s Drop), Chin Strap Retention & Visor Optical Quality",
+                "page_number": 6,
+                "section_number": "Section 4.0 & 9.0",
+                "content": (
+                    "Helmets safety standards per IS 4151:2020:\n"
+                    "1. Maximum Helmet Mass: Shall not exceed 1.20 kg (1200 grams) to prevent neck fatigue.\n"
+                    "2. Impact Attenuation: Headform dropped onto flat and hemispherical steel anvils at 7.5 m/s (27 km/h); peak acceleration shall not exceed 300 g.\n"
+                    "3. Retention System (Chin Strap): Under 1 kN dynamic load, strap extension shall not exceed 35 mm and residual extension <= 25 mm.\n"
+                    "4. Visor (Cl 9.8): Luminous transmittance >= 85% for clear visors; scratch and shatter resistant.\n"
+                    "5. Mandatory ISI Mark: All two-wheeler helmets sold in India must bear BIS ISI Mark (Scheme-I)."
+                ),
+                "keywords": ["helmet standard", "IS 4151", "two wheeler helmet", "impact absorption", "chin strap retention", "helmet weight 1.2 kg", "ISI helmet", "MoRTH"]
+            }
+        ]
+    },
+    {
+        "id": "IS-16102",
+        "standard_number": "IS 16102 (Part 1 & 2):2012",
+        "title": "Self-Ballasted LED Lamps for General Lighting Services — Part 1: Safety & Part 2: Performance",
+        "category": "Electronics & Electrical Appliances",
+        "department": "Electrotechnical Department (ETD 23)",
+        "status": "Mandatory Compulsory Registration Scheme (CRS) Mandate",
+        "filename": "IS_16102_Part_1_2012.pdf",
+        "purchase_url": "https://www.standardsbis.in/gemini/detail/IS_16102_Part_1",
+        "related_standards": ["IS 15885 (Part 2/Sec 13):2012", "IS 16103:2012", "IS 16107:2014"],
+        "summary": "Prescribes safety and performance requirements for self-ballasted LED lamps (bulbs, batten lights, downlights) rated up to 60W and 250V AC.",
+        "clauses": [
+            {
+                "clause_id": "Clause 8 & 14 / Safety & Luminous Flux",
+                "clause_title": "Insulation Resistance, Electric Strength (4kV), Luminous Efficacy (>= 90 lm/W) & CRS Registration",
+                "page_number": 7,
+                "section_number": "Section 8.0 & 14.0",
+                "content": (
+                    "LED lamp regulations under BIS CRS Scheme-II:\n"
+                    "1. Safety (Part 1): Insulation resistance >= 4 MOhm at 500V DC; High voltage breakdown test withstands 4000V (4 kV) test voltage for 1 minute.\n"
+                    "2. Thermal & Fire: Cap temperature rise <= 120°C; Glow-wire flammability at 650°C.\n"
+                    "3. Performance (Part 2): Initial luminous flux >= 90% of rated value; Luminous efficacy >= 90 lumens/watt; Power factor >= 0.90 for > 5W lamps.\n"
+                    "4. Mandatory CRS: All LED lamp manufacturers and importers must register on e-BIS CRS portal and obtain an 8-digit R-number (e.g., R-41001234)."
+                ),
+                "keywords": ["LED bulb", "IS 16102", "lumens per watt", "CRS registration", "R-number", "high voltage test 4kV", "LED safety", "lighting QCO"]
+            }
+        ]
+    },
+    {
+        "id": "IS-303",
+        "standard_number": "IS 303:1989 & IS 710:2010",
+        "title": "Plywood for General Purposes (MR/BWR Grade) & Marine Plywood (BWP Grade)",
+        "category": "Forest Products & Wood Panels",
+        "department": "Civil Engineering Department (CED 9)",
+        "status": "Mandatory Wood and Plywood Quality Control Order",
+        "filename": "IS_303_1989.pdf",
+        "purchase_url": "https://www.standardsbis.in/gemini/detail/IS_303_1989",
+        "related_standards": ["IS 710:2010", "IS 1734:1983", "IS 2202:1999"],
+        "summary": "Specifies requirements for moisture resistant (MR), boiling water resistant (BWR), and boiling water proof (BWP Marine) plywood grades.",
+        "clauses": [
+            {
+                "clause_id": "Clause 6 & 11 / Grades & Water Resistance",
+                "clause_title": "MR, BWR and BWP Marine Grades, Glue Shear Strength & Mycological Test",
+                "page_number": 5,
+                "section_number": "Section 6.0 & 11.0",
+                "content": (
+                    "Plywood classification and mandatory tests under Wood QCO:\n"
+                    "1. MR Grade (IS 303): Moisture Resistant (Commercial) using Urea Formaldehyde resin. Passes 3-cycle cold water immersion (60°C for 3 hours).\n"
+                    "2. BWR Grade (IS 303): Boiling Water Resistant using Phenol Formaldehyde resin. Withstands 3 cycles of boiling water (8 hours at 100°C followed by drying at 65°C for 16 hours).\n"
+                    "3. BWP Grade (IS 710 Marine Plywood): Boiling Water Proof with un-extended phenolic resin. Withstands 72 hours continuous boiling in water without delamination; glue shear strength >= 1350 N.\n"
+                    "4. Mandatory ISI Mark: All plywood factories in India and imports must be certified with BIS ISI Mark (Scheme-I)."
+                ),
+                "keywords": ["plywood standard", "IS 303", "IS 710", "marine plywood", "BWR plywood", "MR grade", "boiling water proof", "glue shear strength", "wood QCO"]
+            }
+        ]
+    },
+    {
+        "id": "IS-15844",
+        "standard_number": "IS 15844 (Part 1 & 2):2021",
+        "title": "Footwear Made from All-Rubber and All-Polymeric Materials & Leather Footwear",
+        "category": "Consumer & Footwear Products",
+        "department": "Chemical Department (CHD 17)",
+        "status": "Mandatory Footwear Quality Control Order (Footwear QCO)",
+        "filename": "IS_15844_2021.pdf",
+        "purchase_url": "https://www.standardsbis.in/gemini/detail/IS_15844_2021",
+        "related_standards": ["IS 3771:2021", "IS 17043:2018"],
+        "summary": "Mandates quality, upper leather thickness, sole abrasion resistance, flexing resistance, and adhesion strength for sports, casual, and leather footwear. Mandatory ISI mark required under DPIIT Footwear QCO.",
+        "clauses": [
+            {
+                "clause_id": "Clause 5 & 6 / Physical Tests",
+                "clause_title": "Sole Abrasion Resistance, Flexing Resistance (30,000 cycles) & Bond Strength",
+                "page_number": 4,
+                "section_number": "Section 5.0 & 6.0",
+                "content": (
+                    "Mandatory testing criteria under DPIIT Footwear QCO:\n"
+                    "1. Upper-to-Sole Bond Strength: Minimum 4.0 N/mm for rubber soles; 3.0 N/mm for polyurethane soles.\n"
+                    "2. Flexing Resistance (BATA / SATRA Flex): No cut growth exceeding 4 mm after 30,000 cycles for sports shoes.\n"
+                    "3. Sole Abrasion Resistance: Relative volume loss not exceeding 150 mm³ on rotating drum abrasive machine.\n"
+                    "4. MSME Exemption/Concession: Micro & Small enterprises get special transition timelines and 80% fee concessions on BIS certification.\n"
+                    "5. Mandatory ISI Mark: ISI mark is compulsory on sole, insole, and packaging box."
+                ),
+                "keywords": ["footwear QCO", "IS 15844", "shoes BIS certification", "sole bond strength", "flexing resistance", "abrasion resistance", "DPIIT footwear mandate"]
             }
         ]
     }

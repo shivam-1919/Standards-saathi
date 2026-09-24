@@ -31,28 +31,36 @@ Whether determining permissible heavy metal limits in drinking water (*IS 10500*
 
 ## 🚀 Key Features
 
-### 1. 🌐 Full Bilingual Experience (English & हिंदी)
-* **One-Click Real-Time Language Switch (`EN | हिं`)**: Seamlessly toggles all UI labels, action cards, chips, modal text, and placeholders between English and Hindi (Devanagari script).
-* **Bilingual LLM Synthesis**: Contextual prompt conditioning ensures the LLM synthesizes technical responses in fluent English or natural Hindi (हिंदी / Hinglish) tailored for technical and non-technical stakeholders alike.
+### 1. 🎙️ ElevenLabs Multilingual Voice AI & Browser STT/TTS
+* **Ultra-Realistic ElevenLabs Speech Synthesis**: Integrated `/api/tts/elevenlabs` endpoint powered by **ElevenLabs Multilingual v2** (`eleven_multilingual_v2`), supporting high-fidelity voice output across Indian languages with animated equalizer wave visualizer.
+* **Curated Multilingual Voices**: Instant support for Rachel, Bella, Antoni, Adam, Michael, and user account voices.
+* **Dual Voice Assistant (STT & TTS)**: Browser Speech-to-Text (`webkitSpeechRecognition`) with dynamic locale switching (`en-IN`, `hi-IN`, `ta-IN`, `bn-IN`, `mr-IN`) and WebSpeech fallback if API key is not configured.
+* **Spoken-Friendly Voice Formatting**: Direct answer in 1–2 sentences, 2–4 concise points, ~120–150 words per voice turn, without visual jargon like "click here" or "as seen on screen".
 
-### 2. 🎙️ Dual Voice Assistant (STT & TTS)
-* **Voice Input (Speech-to-Text)**: Powered by the Web Speech API (`webkitSpeechRecognition`) with dynamic locale switching (`hi-IN` / `en-IN`), visual pulsing indicator, and continuous listening safeguards.
-* **Audio Read Aloud (Text-to-Speech)**: Integrated browser speech synthesis (`window.speechSynthesis`) allows users to listen to any technical response aloud in Hindi or English with a single click.
+### 2. 🌐 5 Indian Languages Support (English, हिंदी, தமிழ், বাংলা, मराठी)
+* **Real-Time Language Switcher**: Seamless toggle between **English**, **Hindi (हिंदी)**, **Tamil (தமிழ்)**, **Bengali (বাংলা)**, and **Marathi (मराठी)** across UI labels, chat responses, and voice synthesis.
+* **Native Multilingual Grounding**: Contextual prompt conditioning guarantees that technical standard clauses and mandatory QCOs are accurately explained in the user's chosen language.
 
-### 3. 📄 Clause-Level Citations & Direct Purchase Links
+### 3. ⚡ 5 Proactive Technical Tools
+1. **📋 Compliance Checklist Generator**: Generates concise, numbered checklists for any product or material covering applicable IS codes, mandatory QCOs, in-house SIT lab equipment, documents, and application steps.
+2. **📄 Tender & Specification Analyzer**: Ingests tender clauses / procurement scopes, extracts referenced IS codes, identifies missing mandatory standards, and suggests compliance alignment.
+3. **💡 Explain This Clause**: Translates complex, dense technical clauses from Indian Standards into plain, spoken-friendly language with 1–2 real-world practical examples.
+4. **🏢 MSME Mode Toggle**: Special simplified mode designed for micro & small enterprises, highlighting **80% fee concessions**, **50% testing subsidies**, and low-cost compliance roadmaps.
+5. **🎙️ Voice Onboarding Interview**: 4-question interactive wizard (product type, material, market/scale, current certifications) that produces a personalized BIS certification roadmap.
+
+### 4. 📄 Clause-Level Citations & Direct Purchase Links
 * Every generated response provides exact source attribution:
   ```markdown
-  📄 IS_1239_Part_1_2004.pdf, Page 5, Section 8.0 | 🔗 Purchase: https://www.standardsbis.in
+  📄 IS_1239_Part_1_2004.pdf (Active National Standard), Page 5, Section 8.0 | 🔗 Official Link: https://www.standardsbis.in
   ```
-* Expandable accordion cards reveal retrieved clause text, section numbers, and vector similarity match percentages (up to 100%).
+* Expandable accordion cards reveal retrieved clause text, section numbers, and vector similarity match percentages.
 
-### 4. 🛡️ BIS License & Hallmark Verification Portal
+### 5. 🛡️ BIS License & Hallmark Verification Portal
 * **ISI License (CM/L)**: Validates 7-to-8 digit manufacturer license numbers against BIS standard schemas.
 * **Gold HUID Code**: Verifies 6-digit alphanumeric hallmark identifiers to protect consumers against counterfeit jewellery.
 * **Electronics CRS (R-Number)**: Validates Compulsory Registration Scheme 8-digit registrations for lithium batteries, power banks, adapters, and smart devices under MeitY regulations.
-* Direct integration hooks to official **BIS Care App** verification flows.
 
-### 5. 📋 Interactive 7-Step BIS Certification Guide
+### 6. 📋 Interactive 7-Step BIS Certification Roadmap
 * Comprehensive end-to-end certification roadmap:
   1. **Standard & Scheme Identification** (Scheme-I ISI vs Scheme-II CRS, QCO check)
   2. **In-House SIT Testing Laboratory Setup** (Calibrated equipment & QC staffing)
@@ -62,27 +70,13 @@ Whether determining permissible heavy metal limits in drinking water (*IS 10500*
   6. **Grant of BIS License (CM/L Number)** (Legal authorization to affix ISI Mark)
   7. **Market Surveillance & Annual Renewal** (Periodic audits and license renewal)
 * **Cost Estimates & Timelines**: Detailed breakdown (₹20,000–₹80,000 net; 30–60 days).
-* Direct links to **e-BIS Manakonline**, **BIS Lab Directory (LIMS)**, **Fee Structure**, and **QCO Tracker**.
-
-### 6. 🏢 MSME 80% Concession & Compliance Hub
-* Explains statutory concessions granted by the Ministry of Consumer Affairs & MSME Ministry:
-  * **80% Concession** on BIS Application and Annual Marking/License fees for Micro Enterprises.
-  * **50% Concession** for Small Enterprises and Startups.
-  * **50% Testing Subsidy** for product testing in BIS-recognized labs.
-  * **30-Day Fast-Track** approval path under the Simplified Conformity Assessment Scheme.
 
 ### 7. 📚 Searchable Indian Standards Catalog
-* Interactive catalog with category-based filtering (**Civil & Structural**, **Mechanical & Metallurgy**, **Electrotechnical**, **Chemical & Water Quality**, **Fire & Life Safety**, **Precious Metals & Hallmarking**).
-* View full standard summaries, departments, revision history, and direct purchase links.
+* Interactive catalog with category-based filtering (**Civil & Structural**, **Mechanical & Metallurgy**, **Electrotechnical**, **Chemical & Water Quality**, **Fire & Life Safety**, **Precious Metals & Hallmarking**, **Food & Consumer Products**).
 
 ### 8. 🔐 Admin Portal & Dynamic Standard Ingestion
-* Password-protected administration panel.
-* **Runtime Vector Ingestion**: Ingest new custom Indian Standards (*Standard Number, Title, Category, Summary, Clauses*) directly into the live FAISS index with immediate vector rebuilding—zero server restarts required.
-* Dynamic Groq API Key management with live status feedback.
-
-### 9. 📊 Dual Frontend Experience
-* **Modern Web Application (FastAPI + Tailwind CSS + Vanilla JS)**: Sleek, responsive, mobile-first Material 3 UI with Indian tricolor palette accents.
-* **Streamlit Analytics Dashboard (`app.py`)**: Standalone data exploration dashboard featuring live vector index telemetry, session counters, query history download (`.txt`/Markdown), and parameter sliders (Top-K, Temperature, Model override).
+* **Runtime Vector Ingestion**: Ingest new custom Indian Standards (*Standard Number, Title, Category, Summary, Clauses*) directly into the live FAISS index with immediate vector rebuilding.
+* Dynamic Groq API Key and ElevenLabs Voice API Key management.
 
 ---
 
@@ -90,13 +84,14 @@ Whether determining permissible heavy metal limits in drinking water (*IS 10500*
 
 | Layer | Technology | Description |
 | :--- | :--- | :--- |
+| **Voice AI Engine** | **ElevenLabs Multilingual V2** | High-fidelity neural voice synthesis supporting Indian languages |
 | **Backend Framework** | **FastAPI & Uvicorn** | Asynchronous high-throughput REST API server with Pydantic validation |
 | **Secondary Dashboard** | **Streamlit (v1.40+)** | Multi-tab analytics UI with session state, sidebar telemetry, and dynamic widgets |
 | **Vector Database** | **FAISS (`faiss-cpu` v1.8+)** | Dense vector index with `IndexFlatIP` and L2 normalized cosine similarity search |
 | **Embeddings** | **Sentence Transformers (v3.0+)** | `all-MiniLM-L6-v2` generating 384-dimensional dense semantic embeddings |
-| **LLM Inference** | **Groq Cloud API** | Ultra-low latency inference running `llama-3.1-8b-instant`, `groq/compound-mini`, `openai/gpt-oss-20b` |
-| **Frontend UI** | **Tailwind CSS + Material Symbols** | Responsive Material 3 design, custom color tokens, glassmorphism, Devanagari typography |
-| **Voice Processing** | **Web Speech API** | Client-side SpeechRecognition (STT) and SpeechSynthesis (TTS) |
+| **LLM Inference** | **Groq Cloud API** | Ultra-low latency inference running `llama-3.3-70b-versatile`, `llama-3.1-8b-instant`, `groq/compound-mini` |
+| **Frontend UI** | **Tailwind CSS + Material Symbols** | Responsive Material 3 design, custom color tokens, glassmorphism, Devanagari/Tamil/Bengali typography |
+| **Voice Processing** | **Web Speech API & ElevenLabs** | Client-side SpeechRecognition (STT) and server-side ElevenLabs / WebSpeech (TTS) |
 | **Markdown Parsing** | **Marked.js** | Client-side Markdown rendering with tables, code blocks, and blockquotes |
 | **Environment / Config** | **python-dotenv & Pydantic** | Secure secret management for API keys and administrator credentials |
 

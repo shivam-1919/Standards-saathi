@@ -622,19 +622,47 @@ with st.sidebar:
         st.image(LOGO_DATA_URI, width=44)
     st.title("🇮🇳 Standards Saathi")
 
-    # Language Selector in Sidebar
+    # 5-Language Selector in Sidebar
+    lang_options = ["English", "Hindi (हिंदी)", "Tamil (தமிழ்)", "Bengali (বাংলা)", "Marathi (मराठी)"]
+    current_lang_idx = 0
+    for idx, opt in enumerate(lang_options):
+        if st.session_state.selected_language in opt:
+            current_lang_idx = idx
+            break
+
     lang_choice = st.selectbox(
         "🌐 Language / भाषा",
-        options=["English", "हिंदी"],
-        index=0 if st.session_state.selected_language == "English" else 1,
+        options=lang_options,
+        index=current_lang_idx,
         key="sidebar_lang_selector",
-        help="Select language for UI labels, prompts, and AI synthesis."
+        help="Select language for UI labels, voice outputs, and AI synthesis (English, Hindi, Tamil, Bengali, Marathi)."
     )
-    if lang_choice != st.session_state.selected_language:
-        st.session_state.selected_language = lang_choice
+    selected_clean_lang = lang_choice.split(" ")[0]
+    if selected_clean_lang != st.session_state.selected_language:
+        st.session_state.selected_language = selected_clean_lang
         st.rerun()
 
-    is_hindi = st.session_state.selected_language == "हिंदी"
+    is_hindi = st.session_state.selected_language == "Hindi"
+
+    # MSME Mode Toggle in Sidebar
+    msme_active = st.toggle("🏢 MSME Mode (80% Subsidy)", value=False, help="Activates simplified language, low-cost compliance roadmaps, and 80% fee subsidy guidance.")
+    st.session_state.msme_mode = msme_active
+
+    st.markdown("---")
+
+    # ElevenLabs Voice AI Settings
+    with st.expander("🎙️ ElevenLabs Voice AI Settings", expanded=False):
+        eleven_key_input = st.text_input("ElevenLabs API Key", value=os.getenv("ELEVENLABS_API_KEY", ""), type="password", help="Enter your ElevenLabs API key for ultra-realistic speech synthesis.")
+        if eleven_key_input:
+            os.environ["ELEVENLABS_API_KEY"] = eleven_key_input
+
+        eleven_voice = st.selectbox(
+            "AI Voice",
+            options=["21m00Tcm4TlvDq8ikWAM (Rachel)", "EXAVITQu4vr4xnSDxMaL (Bella)", "ErXwobaYiN019PkySvjV (Antoni)", "pNInz6obpgDQGcFmaJgB (Adam)", "flq6f7yk4E4fJM5XTYuZ (Michael)"],
+            index=0
+        )
+        st.session_state.elevenlabs_voice_id = eleven_voice.split(" ")[0]
+        st.caption("Multilingual V2 supports English, Hindi, Tamil, Bengali, and Marathi.")
 
     st.markdown("---")
 
@@ -648,17 +676,17 @@ with st.sidebar:
     </div>
     <div class="stat-card">
         <div class="stat-label">{"शामिल भारतीय मानक" if is_hindi else "Standards Covered"}</div>
-        <div class="stat-value">📚 {len(get_all_standards())} Standards (45+ Clauses)</div>
+        <div class="stat-value">📚 {len(get_all_standards())} Standards (60+ Clauses)</div>
     </div>
     <div class="stat-card">
-        <div class="stat-label">{"वेक्टर सर्च इंजन" if is_hindi else "Vector Engine"}</div>
-        <div class="stat-value">🟢 FAISS &amp; Semantic RAG</div>
+        <div class="stat-label">{"वॉयस इंजन" if is_hindi else "Voice AI Engine"}</div>
+        <div class="stat-value">🎙️ ElevenLabs Multilingual V2</div>
     </div>
     """, unsafe_allow_html=True)
 
-    # 14 Standards Showcase in Sidebar for Judges & Technical Evaluation
-    with st.expander("🏛️ " + ("14 भारतीय मानक शोकेस (जज पैनल)" if is_hindi else "14 Official Indian Standards (Judges Showcase)"), expanded=False):
-        st.caption("Inspect any of the 14 loaded Indian Standards, their technical committees, scopes, and key clauses:")
+    # 14+ Standards Showcase in Sidebar for Judges & Technical Evaluation
+    with st.expander("🏛️ " + ("भारतीय मानक शोकेस (जज पैनल)" if is_hindi else "Official Indian Standards (Judges Showcase)"), expanded=False):
+        st.caption("Inspect loaded Indian Standards, their technical committees, scopes, and key clauses:")
         all_14_stds = get_all_standards()
         std_options = ["-- Select Standard to View --"] + [f"{s['standard_number'].split(':')[0]} - {s['title'][:22]}..." for s in all_14_stds]
         
@@ -700,13 +728,13 @@ with st.sidebar:
         st.rerun()
 
     st.markdown("---")
-    st.caption("BIS Citizen Advisory • Manakonline Live Connected")
+    st.caption("BIS Citizen Advisory • ElevenLabs Voice AI Active")
 
 
 # UI Translation Dictionary
 T = {
     "welcome_title": "नमस्ते! I am Standards Saathi" if not is_hindi else "नमस्ते! मैं मानक साथी हूँ",
-    "welcome_sub": "Your bilingual AI guide for Indian Standards (IS Codes), ISI License verification, Gold HUID, and MSME fee concessions." if not is_hindi else "भारतीय मानकों (IS Codes), ISI लाइसेंस, गोल्ड हॉलमार्किंग और MSME सब्सिडी के लिए आपका AI सलाहकार।",
+    "welcome_sub": "Your AI guide for Indian Standards (IS Codes), ISI License verification, Gold HUID, and MSME fee concessions." if not is_hindi else "भारतीय मानकों (IS Codes), ISI लाइसेंस, गोल्ड हॉलमार्किंग और MSME सब्सिडी के लिए आपका AI सलाहकार।",
     "chip_pipe": "Steel pipe ke liye kaunsa standard?" if not is_hindi else "स्टील पाइप के लिए कौन सा मानक है?",
     "chip_cert": "BIS certification kaise milega?" if not is_hindi else "BIS प्रमाणन कैसे प्राप्त करें?",
     "chip_2062": "What is IS 2062 structural steel?" if not is_hindi else "IS 2062 स्ट्रक्चरल स्टील मानक क्या है?",
@@ -715,7 +743,7 @@ T = {
     "chip_battery": "Lithium battery safety tests (IS 16046)?" if not is_hindi else "लिथियम बैटरी सुरक्षा परीक्षण (IS 16046)?",
     "search_spinner": "🔍 Searching BIS standards & clauses..." if not is_hindi else "🔍 बीआईएस मानकों में क्लॉज खोज जारी है...",
     "gen_spinner": "🤖 Synthesizing source-backed answer..." if not is_hindi else "🤖 आधिकारिक उत्तर तैयार किया जा रहा है...",
-    "chat_placeholder": "Ask about Indian Standards in Hindi or English (e.g. drinking water lead limits, IS 1239 pipe thickness)..." if not is_hindi else "भारतीय मानकों, IS कोड या प्रमाणन के बारे में पूछें...",
+    "chat_placeholder": "Ask about Indian Standards in English, Hindi, Tamil, Bengali, Marathi..." if not is_hindi else "भारतीय मानकों, IS कोड या प्रमाणन के बारे में पूछें...",
     "download_btn": "📥 Download (.txt)" if not is_hindi else "📥 डाउनलोड (.txt)",
     "speak_btn": "🔊 Read Aloud" if not is_hindi else "🔊 बोलकर सुनाएं",
     "helpful": "👍 Helpful" if not is_hindi else "👍 उपयोगी",
@@ -968,7 +996,8 @@ with tab_chat:
                 chat_history=st.session_state.messages[:-1],
                 top_k=3,
                 temperature=0.2,
-                language=st.session_state.selected_language
+                language=st.session_state.selected_language,
+                msme_mode=st.session_state.get("msme_mode", False)
             )
 
         citations = resp.get("citations", []) if isinstance(resp, dict) else []
