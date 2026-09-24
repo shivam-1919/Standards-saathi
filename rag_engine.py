@@ -640,6 +640,49 @@ class StandardsRAGEngine:
             return "Hindi"
         return "English"
 
+    def _detect_effective_language(self, query: str, requested_language: Optional[str] = "English") -> str:
+        """
+        Intelligently determines the effective language for generation:
+        1. If query contains Indic scripts (Tamil, Bengali, Devanagari), auto-detect language!
+        2. If query contains strong Romanized Indic keywords (e.g. 'paani ke liye', 'kivabe'), auto-detect language.
+        3. Otherwise defaults to the user's selected language.
+        """
+        if not query:
+            return self._detect_language_name(requested_language or "English")
+
+        # Tamil script (\u0B80-\u0BFF)
+        if re.search(r'[\u0B80-\u0BFF]', query):
+            return "Tamil"
+
+        # Bengali script (\u0980-\u09FF)
+        if re.search(r'[\u0980-\u09FF]', query):
+            return "Bengali"
+
+        # Devanagari script (\u0900-\u097F)
+        if re.search(r'[\u0900-\u097F]', query):
+            marathi_markers = ["आहे", "नाही", "काय", "कसे", "कसा", "सांगा", "पाईप", "मानके", "सवलत", "मिळेल", "करावे", "कोणते", "दागिने"]
+            if any(m in query for m in marathi_markers) or requested_language == "Marathi":
+                return "Marathi"
+            return "Hindi"
+
+        # Romanized Indic keywords
+        q_low = query.lower()
+        hindi_words = ["kaunsa", "konsa", "kya hai", "kaise", "chahiye", "batao", "paani", "loha", "sariya", "soona", "chandi", "milega", "karein", "niyam", "manak"]
+        tamil_words = ["enna", "eppadi", "thanni", "kuzhai", "thangam", "thevai", "solunga"]
+        bengali_words = ["kivabe", "ki", "dorkar", "bolun", "pabo", "ispat", "manak"]
+        marathi_words = ["kasa", "kay", "pahije", "sangaa", "ahe", "nahi", "milnar", "konte"]
+
+        if any(w in q_low for w in marathi_words):
+            return "Marathi"
+        if any(w in q_low for w in tamil_words):
+            return "Tamil"
+        if any(w in q_low for w in bengali_words):
+            return "Bengali"
+        if any(w in q_low for w in hindi_words):
+            return "Hindi"
+
+        return self._detect_language_name(requested_language or "English")
+
     def _get_statutory_disclaimer(self, language: str = "English") -> str:
         """Returns statutory disclaimer in the selected language."""
         lang = self._detect_language_name(language)
@@ -802,20 +845,21 @@ class StandardsRAGEngine:
         # Step 3: Check Groq / Gemini API Availability
         statutory_disclaimer = self._get_statutory_disclaimer(language=language)
 
-        # Step 4: Construct System Prompt & Messages for LLM with Strict Multilingual & Voice Rules
-        normalized_lang = self._detect_language_name(language)
+        # Step 4: Auto-detect Effective Language & Construct System Prompt
+        effective_lang = self._detect_effective_language(query, requested_language=language)
+        statutory_disclaimer = self._get_statutory_disclaimer(language=effective_lang)
         
         lang_directives = {
-            "English": "Respond strictly in clear, spoken-friendly, authoritative English.",
-            "Hindi": "Respond strictly in natural, professional Hindi (हिंदी / Hinglish) using Devanagari script for official clarity.",
-            "Tamil": "Respond strictly in fluent, spoken-friendly Tamil (தமிழ்). Translate technical terms into accessible Tamil explanations.",
-            "Bengali": "Respond strictly in fluent, natural Bengali (বাংলা). Provide clear, accessible Bengali technical explanations.",
-            "Marathi": "Respond strictly in fluent, spoken-friendly Marathi (मराठी) using Devanagari script with clear explanations."
+            "English": "Respond STRICTLY in clear, professional, authoritative English. Use attractive formatting with bold highlights, emoji icons, and clean Markdown structure.",
+            "Hindi": "Respond STRICTLY in natural, fluent, and professional Hindi (हिंदी) in Devanagari script. Do NOT respond in English. Explain all technical terms, standards, and certification steps clearly in Hindi (e.g. 'भारतीय मानक ब्यूरो (BIS)', 'अनिवार्य गुणवत्ता नियंत्रण आदेश (QCO)', '80% सरकारी छूट').",
+            "Tamil": "Respond STRICTLY in fluent, natural, and professional Tamil (தமிழ்). Do NOT respond in English. Explain all technical concepts, IS standards, and testing norms clearly in Tamil (e.g. 'இந்திய தரநிலைகள் பணியகம் (BIS)', 'கட்டாய QCO உத்தரவு', '80% கட்டணச் சலுகை').",
+            "Bengali": "Respond STRICTLY in fluent, natural, and professional Bengali (বাংলা). Do NOT respond in English. Explain all technical concepts, IS standards, and certification norms clearly in Bengali (e.g. 'ভারতীয় মানক ব্যুরো (BIS)', 'বাধ্যতামূলক QCO নির্দেশিকা', '৮০% সরকারি ফি ছাড়').",
+            "Marathi": "Respond STRICTLY in fluent, natural, and professional Marathi (मराठी) in Devanagari script. Do NOT respond in English. Explain all technical concepts, IS standards, and testing norms clearly in Marathi (e.g. 'भारतीय मानक ब्युरो (BIS)', 'अनिवार्य QCO आदेश', '80% सरकारी सवलत')."
         }
-        lang_instruction = lang_directives.get(normalized_lang, lang_directives["English"])
+        lang_instruction = lang_directives.get(effective_lang, lang_directives["English"])
 
         msme_directive = (
-            "MSME MODE IS ACTIVE: Use extra simple language, highlight 80% fee concessions for micro enterprises (50% for small), 50% lab testing subsidies, simplified 30-day conformity assessment roadmap, and low-cost compliance options."
+            "MSME MODE IS ACTIVE: Highlight 80% fee concessions for micro enterprises (50% for small), 50% lab testing subsidies, simplified conformity assessment roadmap, and low-cost compliance options."
             if (msme_mode or saral_mode) else
             "Mention MSME 80% fee concessions or 50% lab testing subsidy where applicable to certification."
         )
@@ -823,30 +867,96 @@ class StandardsRAGEngine:
         if saral_mode:
             voice_length_directive = (
                 "SARAL VOICE SAATHI / ILLITERATE & LOW-LITERACY ASSISTANT MODE (CRITICAL):\n"
-                f"You are speaking directly over voice to an illiterate or low-literacy Indian artisan, micro worker, or shopkeeper in {normalized_lang}.\n"
+                f"You are speaking directly over voice to an illiterate or low-literacy Indian artisan, micro worker, or shopkeeper in {effective_lang}.\n"
                 "CRITICAL RULES FOR SARAL MODE:\n"
                 "1. TONE & MANNER: Speak with extreme warmth, respect, and simple conversational phrasing ('नमस्ते भाई/बहन...', 'வணக்கம் நண்பரே...', 'নমস্কার...', 'नमस्कार मित्रा...').\n"
                 "2. ZERO TECHNICAL JARGON: Do NOT mention clause numbers, tensile strength values, legal acts, or confusing technical formulas.\n"
                 "3. GIVE 3 PLAIN SPOKEN STEPS:\n"
-                "   - Step 1 (कहाँ जाना है / Where to go): Nearest Jan Seva Kendra / CSC or BIS office / www.manakonline.in for online application.\n"
-                "   - Step 2 (80% सरकारी छूट / 80% Subsidy): Small artisans and micro workers get 80% discount on government application fees and 50% discount on lab test fees!\n"
-                "   - Step 3 (सैंपल जाँच और ISI का ठप्पा / Testing & ISI Mark): Product sample is tested in lab, and once approved, you get the official ISI license to stamp on your product.\n"
+                "   - Step 1: Where to go (Nearest Jan Seva Kendra / CSC or www.manakonline.in for online application).\n"
+                "   - Step 2: 80% Government Subsidy (Small artisans and micro workers get 80% discount on government application fees and 50% discount on lab test fees!).\n"
+                "   - Step 3: Testing & ISI Mark (Product sample is tested in lab, and once approved, you get the official ISI license).\n"
                 "4. LENGTH: Keep between 75 to 100 words total. Clean, flowing spoken sentences suitable for instant voice readout."
             )
         elif voice_mode:
             voice_length_directive = (
-                "VOICE ASSISTANT MODE (CRITICAL): Keep the total response between 100 to 130 words. Use natural spoken lists ('Pehla kadam...', 'First step...'). Do NOT say 'click here', 'see table above', or 'as shown on screen'. End with a single short, proactive follow-up offer."
+                f"VOICE ASSISTANT MODE (CRITICAL): Respond in {effective_lang}. Keep the total response between 100 to 130 words. Use natural spoken lists ('Pehla kadam...', 'First step...'). Do NOT say 'click here', 'see table above', or 'as shown on screen'. End with a single short, proactive follow-up offer."
             )
         else:
-            voice_length_directive = (
-                "STRUCTURED FORMATTING MANDATE:\n"
-                "Always format your response with clean, scannable Markdown sections:\n"
-                "1. **🎯 Direct Summary (संक्षिप्त उत्तर)**: 1-2 clear, direct sentences answering the core question.\n"
-                "2. **📜 Applicable Standards & QCO Mandate (लागू भारतीय मानक)**: Bullet points listing the exact IS codes, title, and mandatory government QCO order.\n"
-                "3. **🛠️ Key Technical & Testing Requirements (मुख्य तकनीकी आवश्यकताएं)**: Key parameters (e.g. pressure test, chemical tolerances, marking requirements).\n"
-                "4. **📋 Step-by-Step BIS Certification Roadmap (प्रमाणीकरण प्रक्रिया)**: 3-4 numbered actionable steps to obtain the license via e-Manakonline.\n"
-                "5. **💰 MSME 80% Fee Concessions (सरकारी छूट)**: Note 80% application fee discount and 50% lab testing subsidy for micro enterprises."
-            )
+            if effective_lang == "Hindi":
+                voice_length_directive = (
+                    "STRUCTURED & ATTRACTIVE FORMATTING MANDATE (हिंदी):\n"
+                    "Always format your response using clean, scannable Markdown sections with these exact Hindi headings:\n"
+                    "### 🎯 संक्षिप्त मुख्य उत्तर (Direct Summary)\n"
+                    "1-2 स्पष्ट व सटीक वाक्यों में मुख्य उत्तर दें।\n\n"
+                    "### 📜 लागू भारतीय मानक एवं QCO आदेश (Applicable Standards & Mandatory QCO)\n"
+                    "लागू IS कोड (जैसे IS 1239 / IS 10500), पूरा शीर्षक और क्या यह केंद्र सरकार के QCO के तहत अनिवार्य है या स्वैच्छिक, बुलेट पॉइंट्स में लिखें।\n\n"
+                    "### 🛠️ मुख्य तकनीकी एवं परीक्षण आवश्यकताएं (Key Technical & Testing Norms)\n"
+                    "उत्पाद की गुणवत्ता, सामग्री, रासायनिक/भौतिक परीक्षण व अनिवार्य मार्किंग नियम स्पष्ट करें।\n\n"
+                    "### 📋 चरण-दर-चरण बीआईएस प्रमाणन प्रक्रिया (Step-by-Step BIS Certification Roadmap)\n"
+                    "e-BIS मानकऑनलाइन (www.manakonline.in) के माध्यम से लाइसेंस प्राप्त करने के 3-4 स्पष्ट चरणबद्ध कदम।\n\n"
+                    "### 💰 सूक्ष्म व लघु उद्योग छूट (MSME 80% Fee Concessions)\n"
+                    "माइक्रो उद्यमों के लिए 80% आवेदन शुल्क छूट, 50% वार्षिक लाइसेंस शुल्क छूट एवं 50% लैब परीक्षण सब्सिडी की स्पष्ट जानकारी दें।"
+                )
+            elif effective_lang == "Tamil":
+                voice_length_directive = (
+                    "STRUCTURED & ATTRACTIVE FORMATTING MANDATE (தமிழ்):\n"
+                    "Always format your response using clean, scannable Markdown sections with these exact Tamil headings:\n"
+                    "### 🎯 சுருக்கமான நேரடி பதில் (Direct Summary)\n"
+                    "1-2 தெளிவான வாக்கியங்களில் நேரடிப் பதில்.\n\n"
+                    "### 📜 பொருந்தக்கூடிய இந்திய தரநிலைகள் மற்றும் QCO உத்தரவு (Applicable IS Codes & QCO)\n"
+                    "பொருந்தக்கூடிய IS குறியீடுகள், தலைப்பு மற்றும் கட்டாய QCO விவரங்கள்.\n\n"
+                    "### 🛠️ முக்கிய தொழில்நுட்ப மற்றும் ஆய்வக தேவைகள் (Technical & Testing Requirements)\n"
+                    "தயாரிப்பு தரம், இயந்திரவியல் சோதனைகள் மற்றும் தேவையான ஆய்வக அளவீடுகள்.\n\n"
+                    "### 📋 BIS சான்றிதழ் பெறுவதற்கான படிநிலைகள் (Step-by-Step BIS Certification Roadmap)\n"
+                    "e-BIS Manakonline (www.manakonline.in) மூலம் சான்றிதழ் பெற 3-4 செயல்முறை படிகள்.\n\n"
+                    "### 💰 MSME 80% கட்டணச் சலுகை மற்றும் மானியம் (MSME Fee Concessions & Subsidies)\n"
+                    "மைக்ரோ நிறுவனங்களுக்கான 80% கட்டணக் குறைப்பு மற்றும் 50% ஆய்வகப் பரிசோதனை மானியம்."
+                )
+            elif effective_lang == "Bengali":
+                voice_length_directive = (
+                    "STRUCTURED & ATTRACTIVE FORMATTING MANDATE (বাংলা):\n"
+                    "Always format your response using clean, scannable Markdown sections with these exact Bengali headings:\n"
+                    "### 🎯 সংক্ষিপ্ত সরাসরি উত্তর (Direct Summary)\n"
+                    "১-২টি স্পষ্ট বাক্যে প্রধান উত্তর দিন।\n\n"
+                    "### 📜 প্রযোজ্য ভারতীয় মানক ও বাধ্যতামূলক QCO নির্দেশ (Applicable Standards & QCO)\n"
+                    "প্রযোজ্য IS কোড, নাম এবং বাধ্যতামূলক QCO স্ট্যাটাস বুলেটে লিখুন।\n\n"
+                    "### 🛠️ মূল প্রযুক্তিগত ও ল্যাব পরীক্ষার প্রয়োজনীয়তা (Technical & Testing Requirements)\n"
+                    "পণ্যের গুণমান, ল্যাবরেটরি টেস্ট এবং প্যাকিং/মার্কিং সংক্রান্ত মূল শর্তাবলী।\n\n"
+                    "### 📋 BIS লাইসেন্স প্রাপ্তির ধাপে ধাপে নির্দেশিকা (Step-by-Step Roadmap)\n"
+                    "e-BIS Manakonline (www.manakonline.in) থেকে আইএসআই লাইসেন্স পাওয়ার ৩-৪টি পদক্ষেপ।\n\n"
+                    "### 💰 MSME ৮০% ফি ছাড় ও সরকারি ভর্তুকি (MSME 80% Concessions & Subsidies)\n"
+                    "মাইক্রো এন্টারপ্রাইজের জন্য ৮০% আবেদন ফি ছাড় ও ৫০% ল্যাব টেস্ট ভর্তুকির সুবিধা।"
+                )
+            elif effective_lang == "Marathi":
+                voice_length_directive = (
+                    "STRUCTURED & ATTRACTIVE FORMATTING MANDATE (मराठी):\n"
+                    "Always format your response using clean, scannable Markdown sections with these exact Marathi headings:\n"
+                    "### 🎯 थेट संक्षिप्त उत्तर (Direct Summary)\n"
+                    "१-२ स्पष्ट वाक्यांमध्ये थेट उत्तर द्या.\n\n"
+                    "### 📜 लागू भारतीय मानके व अनिवार्य QCO आदेश (Applicable Standards & QCO)\n"
+                    "लागू असलेले IS कोड, शीर्षक आणि अनिवार्य QCO स्थिती.\n\n"
+                    "### 🛠️ मुख्य तांत्रिक व प्रयोगशाळा चाचणी निकष (Technical & Testing Requirements)\n"
+                    "उत्पादनाची गुणवत्ता, तांत्रिक निकष आणि आवश्यक लॅब चाचण्या.\n\n"
+                    "### 📋 तपशीलवार बीआयएस परवाना प्रक्रिया (Step-by-Step Certification Roadmap)\n"
+                    "e-BIS Manakonline (www.manakonline.in) द्वारे ISI परवाना मिळवण्याचे ३-४ टप्पे.\n\n"
+                    "### 💰 सूक्ष्म व लघु उद्योग सवलती (MSME 80% Fee Concessions)\n"
+                    "मायक्रो उद्योगांसाठी ८०% अर्ज शुल्क सवलत आणि ५०% लॅब टेस्टिंग सबसिडीची माहिती."
+                )
+            else:
+                voice_length_directive = (
+                    "STRUCTURED & ATTRACTIVE FORMATTING MANDATE (English):\n"
+                    "Always format your response with clean, scannable Markdown sections:\n"
+                    "### 🎯 Direct Summary\n"
+                    "1-2 clear, direct sentences answering the core inquiry.\n\n"
+                    "### 📜 Applicable Standards & Mandatory QCO Status\n"
+                    "Bullet points listing the exact IS codes, title, and mandatory government QCO status.\n\n"
+                    "### 🛠️ Key Technical & Testing Requirements\n"
+                    "Key technical parameters, required laboratory tests, and marking obligations.\n\n"
+                    "### 📋 Step-by-Step BIS Certification Roadmap\n"
+                    "3-4 numbered actionable steps to obtain the ISI license via e-Manakonline (www.manakonline.in).\n\n"
+                    "### 💰 MSME 80% Fee Concessions & Lab Subsidies\n"
+                    "Highlight 80% application fee discount and 50% lab testing subsidy for micro enterprises."
+                )
 
         system_prompt = (
             "You are 'Standards Saathi' (मानक साथी), the official-grade AI technical advisor for Indian Standards (IS Codes), "
@@ -855,10 +965,11 @@ class StandardsRAGEngine:
             f"{msme_directive}\n"
             f"{voice_length_directive}\n\n"
             "SAFETY & RELIABILITY GUARDRAILS (CRITICAL RULES):\n"
-            "1. STRICT GROUNDING: Base your entire answer ONLY on the provided Indian Standards context. Do NOT extrapolate or guess IS numbers or procedures.\n"
-            "2. REGULATORY BOUNDARIES: You provide technical and procedural guidance; always cite official BIS channels (www.manakonline.in / www.bis.gov.in).\n"
-            "3. CITATIONS & MANDATORY STATUS: Clearly state exact IS codes (e.g. IS 1239 Part 1, IS 10500:2012) and whether mandatory under government QCO vs voluntary.\n"
-            "4. PROACTIVE OFFER: Naturally offer AT MOST ONE of these 5 features when relevant:\n"
+            f"1. LANGUAGE PURITY: You MUST write your ENTIRE final output in {effective_lang}. Do NOT reply in English when answering in Hindi, Tamil, Bengali, or Marathi.\n"
+            "2. STRICT GROUNDING: Base your entire answer ONLY on the provided Indian Standards context. Do NOT extrapolate or guess IS numbers or procedures.\n"
+            "3. REGULATORY BOUNDARIES: You provide technical and procedural guidance; cite official BIS channels (www.manakonline.in / www.bis.gov.in).\n"
+            "4. CITATIONS & MANDATORY STATUS: Clearly state exact IS codes (e.g. IS 1239 Part 1, IS 10500:2012) and whether mandatory under government QCO vs voluntary.\n"
+            "5. PROACTIVE OFFER: Naturally offer AT MOST ONE of these 5 features when relevant:\n"
             "   - Compliance Checklist\n"
             "   - Tender / Specification Analyzer\n"
             "   - Explain This Clause\n"
@@ -870,7 +981,7 @@ class StandardsRAGEngine:
             f"USER QUESTION / QUERY:\n{query}\n\n"
             f"RETRIEVED INDIAN STANDARDS CONTEXT (AUTHORIZED EVIDENCE):\n"
             f"{context_str}\n\n"
-            f"Please provide an accurate, strictly grounded response in {normalized_lang}."
+            f"CRITICAL: Write your entire structured technical response in {effective_lang} following the exact section format."
         )
 
         messages = [{"role": "system", "content": system_prompt}]
@@ -944,7 +1055,7 @@ class StandardsRAGEngine:
                     pass
 
         if not raw_answer:
-            raw_answer = self._generate_offline_fallback(query, retrieved_chunks, source_citations)
+            raw_answer = self._generate_offline_fallback(query, retrieved_chunks, source_citations, language=effective_lang)
 
         # Format Final Answer with Required Citations Block and Statutory Disclaimer
         if len(source_citations) == 1:
@@ -970,6 +1081,7 @@ class StandardsRAGEngine:
 
     def generate_compliance_checklist(self, product: str, language: str = "English", is_msme: bool = True) -> Dict[str, Any]:
         """Feature 1: Generates a tailored, numbered compliance checklist for any product."""
+        effective_lang = self._detect_effective_language(product, requested_language=language)
         prompt = (
             f"Generate a concise, numbered Compliance Checklist for product/service: '{product}'.\n"
             f"Include:\n"
@@ -978,14 +1090,15 @@ class StandardsRAGEngine:
             f"3. Key Laboratory Tests & In-House SIT Equipment needed\n"
             f"4. Essential Documents & e-BIS Manakonline process\n"
             f"{'5. MSME 80% fee concession & 50% lab testing subsidy steps' if is_msme else ''}\n"
-            f"Respond in {self._detect_language_name(language)}."
+            f"Respond strictly in {effective_lang}."
         )
-        return self.generate_response(query=prompt, language=language, msme_mode=is_msme)
+        return self.generate_response(query=prompt, language=effective_lang, msme_mode=is_msme)
 
     def analyze_tender_or_spec(self, tender_text: str, language: str = "English") -> Dict[str, Any]:
         """Feature 2: Analyzes tender/procurement/specification text, extracts IS codes, flags missing standards."""
         sanitized = self._sanitize_indirect_input(tender_text)
-        injection_alert = self._detect_prompt_injection(sanitized, language=language)
+        effective_lang = self._detect_effective_language(sanitized, requested_language=language)
+        injection_alert = self._detect_prompt_injection(sanitized, language=effective_lang)
         if injection_alert:
             return {
                 "analysis": injection_alert,
@@ -1006,16 +1119,17 @@ class StandardsRAGEngine:
             f"2. Missing or updated BIS Standard References commonly required for this scope\n"
             f"3. Mandatory QCO obligations\n"
             f"4. Actionable recommendations for the bidder/manufacturer to align with BIS norms.\n"
-            f"Respond in {self._detect_language_name(language)}."
+            f"Respond strictly in {effective_lang}."
         )
-        res = self.generate_response(query=prompt, language=language)
+        res = self.generate_response(query=prompt, language=effective_lang)
         res["analysis"] = res.get("answer", "")
         return res
 
     def explain_clause(self, clause_text: str, language: str = "English") -> Dict[str, Any]:
         """Feature 3: Explains a technical clause from an IS code or tender in simple spoken language with 1-2 examples."""
         sanitized = self._sanitize_indirect_input(clause_text)
-        injection_alert = self._detect_prompt_injection(sanitized, language=language)
+        effective_lang = self._detect_effective_language(clause_text, requested_language=language)
+        injection_alert = self._detect_prompt_injection(sanitized, language=effective_lang)
         if injection_alert:
             return {
                 "explanation": injection_alert,
@@ -1031,9 +1145,9 @@ class StandardsRAGEngine:
         prompt = (
             f"Explain this Indian Standard (IS Code) or tender clause in very simple, plain language with 1-2 practical real-world examples:\n\n"
             f"CLAUSE TEXT:\n\"\"\"\n{sanitized[:2000]}\n\"\"\"\n\n"
-            f"Respond in {self._detect_language_name(language)} using easy spoken structure."
+            f"Respond strictly in {effective_lang} using easy spoken structure."
         )
-        res = self.generate_response(query=prompt, language=language)
+        res = self.generate_response(query=prompt, language=effective_lang)
         res["explanation"] = res.get("answer", "")
         return res
 
@@ -1043,6 +1157,7 @@ class StandardsRAGEngine:
         material = answers.get("material", "Standard materials")
         market = answers.get("market", "Domestic Indian Market")
         current_status = answers.get("current_certifications", "New manufacturer")
+        effective_lang = self._detect_effective_language(f"{prod_type} {material} {market}", requested_language=language)
 
         prompt = (
             f"Generate a customized BIS Certification Roadmap based on this new manufacturer onboarding profile:\n"
@@ -1051,30 +1166,119 @@ class StandardsRAGEngine:
             f"- Target Market & Scale: {market}\n"
             f"- Current Certification / Testing: {current_status}\n\n"
             f"Give a clear, 4-step actionable roadmap with applicable IS codes, mandatory QCO status, in-house lab setup requirements, and MSME fee subsidies.\n"
-            f"Respond in {self._detect_language_name(language)}."
+            f"Respond strictly in {effective_lang}."
         )
-        return self.generate_response(query=prompt, language=language, msme_mode=True)
+        return self.generate_response(query=prompt, language=effective_lang, msme_mode=True)
 
-    def _generate_offline_fallback(self, query: str, retrieved_chunks: List[Dict[str, Any]], source_citations: Optional[List[str]] = None) -> str:
-        """Generates a structured answer directly from retrieved chunks when LLM API is unavailable."""
+    def _generate_offline_fallback(self, query: str, retrieved_chunks: List[Dict[str, Any]], source_citations: Optional[List[str]] = None, language: str = "English") -> str:
+        """Generates a structured answer directly from retrieved chunks when LLM API is unavailable in the requested language."""
+        lang = self._detect_language_name(language)
         if not retrieved_chunks:
-            return "No matching Indian Standards were found in the current knowledge base."
+            return self._generate_no_evidence_response(query, language=lang)
 
-        res = [
-            "### Relevant Indian Standards Found:\n",
-            "Here is the verified technical information retrieved from the Indian Standards database:\n"
-        ]
-        for idx, chunk in enumerate(retrieved_chunks, 1):
-            score_pct = max(0.0, min(1.0, chunk.get("similarity_score", 0.0))) * 100
+        if lang == "Hindi":
+            res = [
+                "### 🎯 संक्षिप्त मुख्य उत्तर (Direct Summary)\n"
+                f"आपके प्रश्न के लिए भारतीय मानक डेटाबेस से सत्यापित तकनीकी जानकारी और मानक विवरण नीचे दिए गए हैं।\n",
+                "### 📜 संबंधित भारतीय मानक एवं क्लॉज विवरण (Applicable Standards)\n"
+            ]
+            for idx, chunk in enumerate(retrieved_chunks, 1):
+                score_pct = max(0.0, min(1.0, chunk.get("similarity_score", 0.0))) * 100
+                res.append(
+                    f"#### {idx}. 🔹 **{chunk['standard_number']}** — *{chunk['title']}*\n"
+                    f"- **क्लॉज / अनुभाग:** `{chunk['clause_id']}` ({chunk.get('section_number', chunk['clause_title'])})\n"
+                    f"- **प्रासंगिकता स्कोर:** `{score_pct:.1f}%`\n\n"
+                    f"{chunk['full_content']}\n"
+                )
             res.append(
-                f"#### {idx}. {chunk['standard_number']} — {chunk['title']}\n"
-                f"**Clause / Section:** `{chunk['clause_id']}` ({chunk.get('section_number', chunk['clause_title'])})  \n"
-                f"**Match Relevance:** `{score_pct:.1f}%`  \n"
-                f"{chunk['full_content']}\n"
+                "### 📋 अनुशंसित प्रमाणन कदम (Actionable Steps)\n"
+                "1. **मानक अध्ययन**: [www.standardsbis.in](https://www.standardsbis.in) पर जाकर क्लॉज की पुष्टि करें।\n"
+                "2. **e-BIS आवेदन**: [www.manakonline.in](https://www.manakonline.in) पर ISI मार्क हेतु ऑनलाइन आवेदन करें।\n"
+                "3. **80% MSME छूट**: सूक्ष्म उद्यमों हेतु 80% आवेदन शुल्क छूट और 50% प्रयोगशाला सब्सिडी का लाभ उठाएं।\n"
             )
-        
+        elif lang == "Tamil":
+            res = [
+                "### 🎯 சுருக்கமான நேரடி பதில் (Direct Summary)\n"
+                f"உங்கள் கேள்விக்கு இந்திய தரநிலைகள் தரவுத்தளத்திலிருந்து பெறப்பட்ட சரிபார்க்கப்பட்ட தொழில்நுட்பத் தகவல்கள் கீழே தரப்பட்டுள்ளன.\n",
+                "### 📜 பொருந்தக்கூடிய இந்திய தரநிலைகள் (Applicable Standards)\n"
+            ]
+            for idx, chunk in enumerate(retrieved_chunks, 1):
+                score_pct = max(0.0, min(1.0, chunk.get("similarity_score", 0.0))) * 100
+                res.append(
+                    f"#### {idx}. 🔹 **{chunk['standard_number']}** — *{chunk['title']}*\n"
+                    f"- **பிரிவு / விதி:** `{chunk['clause_id']}` ({chunk.get('section_number', chunk['clause_title'])})\n"
+                    f"- **பொருத்தம்:** `{score_pct:.1f}%`\n\n"
+                    f"{chunk['full_content']}\n"
+                )
+            res.append(
+                "### 📋 பரிந்துரைக்கப்பட்ட நடைமுறைகள் (Actionable Steps)\n"
+                "1. **தரநிலைகள் விவரம்**: [www.standardsbis.in](https://www.standardsbis.in) தளத்தில் சரிபார்க்கவும்.\n"
+                "2. **e-BIS பதிவு**: [www.manakonline.in](https://www.manakonline.in) மூலம் ISI உரிமத்திற்கு விண்ணப்பிக்கவும்.\n"
+                "3. **MSME சலுகை**: மைக்ரோ நிறுவனங்களுக்கு 80% கட்டணச் சலுகை உண்டு.\n"
+            )
+        elif lang == "Bengali":
+            res = [
+                "### 🎯 সংক্ষিপ্ত সরাসরি উত্তর (Direct Summary)\n"
+                f"আপনার প্রশ্নের জন্য ভারতীয় মানক ডেটাবেস থেকে সংগৃহীত যাচাইকৃত কারিগরি তথ্য নিচে দেওয়া হলো।\n",
+                "### 📜 প্রযোজ্য ভারতীয় মানক ও ধারা (Applicable Standards)\n"
+            ]
+            for idx, chunk in enumerate(retrieved_chunks, 1):
+                score_pct = max(0.0, min(1.0, chunk.get("similarity_score", 0.0))) * 100
+                res.append(
+                    f"#### {idx}. 🔹 **{chunk['standard_number']}** — *{chunk['title']}*\n"
+                    f"- **ধারা / অনুচ্ছেদ:** `{chunk['clause_id']}` ({chunk.get('section_number', chunk['clause_title'])})\n"
+                    f"- **প্রাসঙ্গিকতা:** `{score_pct:.1f}%`\n\n"
+                    f"{chunk['full_content']}\n"
+                )
+            res.append(
+                "### 📋 প্রয়োজনীয় পদক্ষেপ (Actionable Steps)\n"
+                "1. **মানক যাচাই**: [www.standardsbis.in](https://www.standardsbis.in) দেখুন।\n"
+                "2. **অনলাইন আবেদন**: [www.manakonline.in](https://www.manakonline.in) পোর্টালের মাধ্যমে আবেদন করুন।\n"
+                "3. **MSME ছাড়**: ক্ষুদ্র উদ্যোগের জন্য ৮০% ফি ছাড়ের সুবিধা গ্রহণ করুন।\n"
+            )
+        elif lang == "Marathi":
+            res = [
+                "### 🎯 थेट संक्षिप्त उत्तर (Direct Summary)\n"
+                f"आपल्या प्रश्नासाठी भारतीय मानक डेटाबेसमधून अधिकृत तांत्रिक माहिती खाली दिली आहे.\n",
+                "### 📜 लागू भारतीय मानके व क्लॉज तपशील (Applicable Standards)\n"
+            ]
+            for idx, chunk in enumerate(retrieved_chunks, 1):
+                score_pct = max(0.0, min(1.0, chunk.get("similarity_score", 0.0))) * 100
+                res.append(
+                    f"#### {idx}. 🔹 **{chunk['standard_number']}** — *{chunk['title']}*\n"
+                    f"- **क्लॉज / विभाग:** `{chunk['clause_id']}` ({chunk.get('section_number', chunk['clause_title'])})\n"
+                    f"- **अचूकता गुण:** `{score_pct:.1f}%`\n\n"
+                    f"{chunk['full_content']}\n"
+                )
+            res.append(
+                "### 📋 पुढील कृती टप्पे (Actionable Steps)\n"
+                "1. **मानक तपासणी**: [www.standardsbis.in](https://www.standardsbis.in) ला भेट द्या.\n"
+                "2. **e-BIS नोंदणी**: [www.manakonline.in](https://www.manakonline.in) वर ISI परवान्यासाठी अर्ज करा.\n"
+                "3. **MSME सवलत**: सूक्ष्म उद्योगांसाठी ८०% अर्ज शुल्क सवलतीचा लाभ घ्या.\n"
+            )
+        else:
+            res = [
+                "### 🎯 Direct Summary\n"
+                f"Verified technical specifications and clauses retrieved from the Indian Standards database for your inquiry:\n",
+                "### 📜 Relevant Indian Standards & Clauses\n"
+            ]
+            for idx, chunk in enumerate(retrieved_chunks, 1):
+                score_pct = max(0.0, min(1.0, chunk.get("similarity_score", 0.0))) * 100
+                res.append(
+                    f"#### {idx}. 🔹 **{chunk['standard_number']}** — *{chunk['title']}*\n"
+                    f"- **Clause / Section:** `{chunk['clause_id']}` ({chunk.get('section_number', chunk['clause_title'])})\n"
+                    f"- **Match Relevance:** `{score_pct:.1f}%`\n\n"
+                    f"{chunk['full_content']}\n"
+                )
+            res.append(
+                "### 📋 Actionable Next Steps\n"
+                "1. **Verify Clause Details**: Access official standards on [www.standardsbis.in](https://www.standardsbis.in).\n"
+                "2. **Apply via e-BIS**: Submit ISI license application on [e-Manakonline](https://www.manakonline.in).\n"
+                "3. **Avail MSME Benefits**: Micro enterprises receive 80% application fee concession and 50% lab testing subsidy.\n"
+            )
+
         if source_citations:
-            res.append("\n**Sources:**\n" + "\n".join([f"- {s}" for s in source_citations]))
+            res.append("\n**Sources & Document Attribution:**\n" + "\n".join([f"- {s}" for s in source_citations]))
             
         return "\n".join(res)
 
