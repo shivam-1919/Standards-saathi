@@ -309,8 +309,8 @@
         <div class="flex items-center gap-1 font-semibold text-[#0B3C68]">
           <span class="material-symbols-outlined text-[15px] text-gray-500">translate</span>
           <select id="languageSelector" onchange="onLanguageChange(this.value)" class="bg-white border border-gray-300 text-xs font-semibold py-0.5 px-1.5 rounded text-gray-800 focus:outline-none cursor-pointer">
+            <option value="Hindi" selected>हिन्दी (Hindi)</option>
             <option value="English">English</option>
-            <option value="Hindi">हिन्दी (Hindi)</option>
             <option value="Tamil">தமிழ் (Tamil)</option>
             <option value="Bengali">বাংলা (Bengali)</option>
             <option value="Marathi">मराठी (Marathi)</option>
@@ -2054,6 +2054,11 @@
     function onLanguageChange(lang) {
       currentLanguage = lang;
       const dict = I18N[lang] || I18N.Hindi;
+      
+      const langSel = document.getElementById('languageSelector');
+      if (langSel && langSel.value !== lang) {
+        langSel.value = lang;
+      }
 
       // Top Strip & Header
       const topGovEl = document.getElementById('topGovTitle');
@@ -3001,10 +3006,10 @@
       return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
     }
 
-    // Initialize
+    // Initialize (Default: Hindi with instant auto-switching based on query language)
     window.addEventListener('DOMContentLoaded', () => {
       fetchStandards();
-      onLanguageChange("English");
+      onLanguageChange("Hindi");
       calculateMsmeSavings();
     });
   </script>
