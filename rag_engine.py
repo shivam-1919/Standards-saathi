@@ -660,17 +660,14 @@ class StandardsRAGEngine:
     def _detect_effective_language(self, query: str, requested_language: Optional[str] = "English") -> str:
         """
         Intelligently determines the effective language for generation:
-        1. Native Script Detection:
-           - Tamil script (\\u0B80-\\u0BFF) -> Tamil
-           - Bengali script (\\u0980-\\u09FF) -> Bengali
-           - Devanagari script (\\u0900-\\u097F) -> Marathi (if Marathi markers present) else Hindi
-        2. Romanized Indic keyword detection (e.g. 'kya hai', 'kaise', 'thanni', 'kivabe', 'ahe')
-        3. English Language Detection:
-           - If Latin text contains English query words (e.g. 'what', 'how', 'which', 'is', 'are', 'standard', 'for', 'the', 'explain', 'tell', 'requirement') -> English
-        4. If short / numeric / ambiguous -> defaults to requested_language or English.
+        1. If user explicitly provided requested_language (e.g. English, Hindi, Tamil, Bengali, Marathi), STRICTLY honor it.
+        2. If requested_language is omitted or set to 'auto', detect from script and query tokens.
         """
+        if requested_language and str(requested_language).strip().lower() not in ["", "auto", "detect", "default", "none"]:
+            return self._detect_language_name(requested_language)
+
         if not query:
-            return self._detect_language_name(requested_language or "English")
+            return "English"
 
         # 1. Tamil script (\u0B80-\u0BFF)
         if re.search(r'[\u0B80-\u0BFF]', query):
@@ -683,7 +680,7 @@ class StandardsRAGEngine:
         # 3. Devanagari script (\u0900-\u097F)
         if re.search(r'[\u0900-\u097F]', query):
             marathi_markers = ["आहे", "नाही", "काय", "कसे", "कसा", "सांगा", "पाईप", "मानके", "सवलत", "मिळेल", "करावे", "कोणते", "दागिने", "तपशील", "माहिती"]
-            if any(m in query for m in marathi_markers) or requested_language == "Marathi":
+            if any(m in query for m in marathi_markers):
                 return "Marathi"
             return "Hindi"
 
@@ -719,26 +716,6 @@ class StandardsRAGEngine:
         for p in hindi_patterns:
             if re.search(p, q_low):
                 return "Hindi"
-
-        # 5. English Language Word Overlap Check
-        english_indicators = {
-            "what", "is", "are", "how", "to", "for", "the", "in", "of", "and", "a", "an",
-            "which", "standard", "standards", "code", "codes", "specification", "specifications",
-            "explain", "tell", "give", "detail", "details", "mandatory", "qco", "requirement",
-            "requirements", "test", "testing", "laboratory", "license", "licensing", "certification",
-            "apply", "process", "procedure", "msme", "subsidy", "concession", "water", "steel",
-            "pipe", "pipes", "gold", "hallmarking", "cement", "concrete", "toy", "toys", "battery",
-            "cable", "wire", "helmet", "shoe", "footwear", "compliance", "checklist", "analyzer",
-            "tender", "clause", "verify", "can", "does", "do", "should", "must", "please", "help"
-        }
-        query_words = set(re.findall(r'[a-z]+', q_low))
-        english_overlap = len(query_words.intersection(english_indicators))
-
-        if english_overlap >= 2 or any(w in query_words for w in ["what", "how", "which", "explain", "tell", "why", "where", "when", "does", "do", "is", "are"]):
-            return "English"
-
-        if requested_language:
-            return self._detect_language_name(requested_language)
 
         return "English"
 
@@ -984,7 +961,7 @@ class StandardsRAGEngine:
             status_ver = chunk.get("status", "Active National Standard")
             
             source_citations.append(
-                f"📄 {filename} ({status_ver}), Page {page_num}, {section_num} | 🔗 Official Link: {purchase_url}"
+                f"📄 **{chunk.get('standard_number', '')}** — *{filename}* ({status_ver}), Page {page_num}, Section {section_num} | 🔗 [Official Portal Link ({purchase_url})]({purchase_url})"
             )
             for rel in chunk.get("related_standards", []):
                 related_standards_set.add(rel)
