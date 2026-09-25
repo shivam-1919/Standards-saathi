@@ -885,11 +885,17 @@
 
           <!-- Text Input -->
           <div class="relative flex-1">
-            <input id="chatInput" type="text" autocomplete="off" class="w-full h-11 pl-4 pr-10 rounded-lg bg-[#F8F9FA] border border-gray-300 text-xs sm:text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-[#0B3C68] focus:bg-white transition" placeholder="अपनी भाषा में पूछें... (उदा. मेरे उत्पाद पर कौन सा भारतीय मानक लागू होता है?)" />
+            <input id="chatInput" type="text" autocomplete="off" oninput="stopSpeaking()" class="w-full h-11 pl-4 pr-10 rounded-lg bg-[#F8F9FA] border border-gray-300 text-xs sm:text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-[#0B3C68] focus:bg-white transition" placeholder="अपनी भाषा में पूछें... (उदा. मेरे उत्पाद पर कौन सा भारतीय मानक लागू होता है?)" />
             <button type="button" onclick="clearInput()" id="clearInputBtn" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 hidden">
               <span class="material-symbols-outlined text-[18px]">cancel</span>
             </button>
           </div>
+
+          <!-- Active Voice Stop Button inside Chat Dock -->
+          <button type="button" id="chatDockStopVoiceBtn" onclick="stopSpeaking()" class="hidden h-11 px-3.5 bg-red-600 hover:bg-red-700 text-white font-bold rounded-lg text-xs items-center gap-1.5 shadow-sm animate-pulse flex-shrink-0 cursor-pointer" title="बोलना रोकें (Stop Voice)">
+            <span class="material-symbols-outlined text-[18px]">stop_circle</span>
+            <span class="hidden sm:inline" id="chatDockStopVoiceLabel">आवाज रोकें</span>
+          </button>
 
           <!-- Send Button -->
           <button type="submit" id="sendBtn" class="btn-primary bg-[#0B3C68] hover:bg-[#072d50] h-11 px-6 rounded-lg text-white">
@@ -2120,6 +2126,7 @@
 
     // Navigation Tab Switcher
     function switchTab(tab) {
+      stopSpeaking();
       const tabs = ['home', 'chat', 'checklist', 'tender', 'clause', 'msme', 'standards', 'verify'];
       tabs.forEach(t => {
         const view = document.getElementById(`view-${t}`);
@@ -2156,6 +2163,7 @@
 
     // Dynamic Language Switcher - Updates ALL Text in Current UI Safely
     function onLanguageChange(lang) {
+      stopSpeaking();
       currentLanguage = lang;
       const dict = I18N[lang] || I18N.Hindi;
       
@@ -2260,6 +2268,7 @@
       safeSetText('floatingVoiceSub', dict.floatingVoiceSub);
       safeSetText('floatingVoiceStopBtn', dict.floatingVoiceStopBtn);
       safeSetText('headerStopVoiceLabel', dict.headerStopVoiceLabel);
+      safeSetText('chatDockStopVoiceLabel', dict.floatingVoiceStopBtn);
 
       // Checklist Tool
       safeSetHtml('chkHeading', `<span class="material-symbols-outlined text-[#FF671F]">fact_check</span> ${dict.chkHeading}`);
@@ -2404,14 +2413,21 @@
       }
 
       if ('speechSynthesis' in window) {
-        window.speechSynthesis.cancel();
+        try {
+          window.speechSynthesis.cancel();
+        } catch (e) {}
       }
 
-      // Hide floating voice controller & header button
+      // Hide all stop voice UI indicators
       const floatingCtrl = document.getElementById('floatingVoiceController');
       if (floatingCtrl) floatingCtrl.classList.add('hidden');
       const headerStopBtn = document.getElementById('headerStopVoiceBtn');
       if (headerStopBtn) headerStopBtn.classList.add('hidden');
+      const dockStopBtn = document.getElementById('chatDockStopVoiceBtn');
+      if (dockStopBtn) {
+        dockStopBtn.classList.add('hidden');
+        dockStopBtn.classList.remove('flex');
+      }
 
       // Reset card button state
       if (currentPlayingBtn) {
@@ -2454,11 +2470,19 @@
 
       const dict = I18N[currentLanguage] || I18N.Hindi;
 
-      // Show floating controller and header stop button
+      // Show floating controller, header button, and chat dock stop button
       const floatingCtrl = document.getElementById('floatingVoiceController');
       if (floatingCtrl) floatingCtrl.classList.remove('hidden');
       const headerStopBtn = document.getElementById('headerStopVoiceBtn');
-      if (headerStopBtn) headerStopBtn.classList.remove('hidden');
+      if (headerStopBtn) {
+        headerStopBtn.classList.remove('hidden');
+        headerStopBtn.classList.add('flex');
+      }
+      const dockStopBtn = document.getElementById('chatDockStopVoiceBtn');
+      if (dockStopBtn) {
+        dockStopBtn.classList.remove('hidden');
+        dockStopBtn.classList.add('flex');
+      }
 
       if (btn) {
         currentPlayingBtn = btn;
@@ -2610,6 +2634,9 @@
     }
 
     function toggleSpeechRecognition() {
+      // Immediately stop any active voice when opening mic
+      stopSpeaking();
+
       if (!recognition) initSpeechRecognition();
       if (!recognition) {
         alert("Speech recognition is supported on Google Chrome, Edge, and Safari.");
@@ -2632,6 +2659,9 @@
     // Chat Engine - PREPENDS latest interaction cards to TOP so user never needs to scroll
     async function handleChatSubmit(e) {
       if (e) e.preventDefault();
+      // Instantly stop any currently playing voice advisory
+      stopSpeaking();
+
       const input = document.getElementById('chatInput');
       const query = input.value.trim();
       if (!query) return;
@@ -2751,6 +2781,7 @@
     }
 
     function sendQuickPrompt(text) {
+      stopSpeaking();
       switchTab('chat');
       const input = document.getElementById('chatInput');
       if (input) {
@@ -2760,6 +2791,7 @@
     }
 
     function executeHomeSearch() {
+      stopSpeaking();
       const q = document.getElementById('homeSearchInput').value.trim();
       if (q) {
         sendQuickPrompt(q);
