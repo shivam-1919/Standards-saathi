@@ -47,6 +47,7 @@ except Exception:
     HAS_GROQ = False
 
 from sample_data import get_flattened_chunks, SAMPLE_STANDARDS
+from bhashini_client import bhashini_client
 
 
 # Multilingual Cross-Lingual Concept Bridge for Indian Standards & BIS Services
@@ -289,22 +290,38 @@ class StandardsRAGEngine:
 
     def _expand_multilingual_query(self, query: str) -> Tuple[str, bool]:
         """
-        Translates and expands Indic queries (Hindi, Tamil, Bengali, Marathi) into domain
-        concepts and IS codes to ensure 100% accurate retrieval without false refusals.
+        Translates and expands Indic queries (Hindi, Tamil, Bengali, Marathi) into English
+        using fast domain keyword mapping and optional Bhashini NMT.
         """
+        if not query or not query.strip():
+            return query, False
+
+        # 1. Instant sub-millisecond keyword expansion via in-memory cross-lingual bridge
         q_lower = query.lower()
         expanded_terms = []
-        matched = False
         
         for keywords, eng_expansion in INDIC_CROSS_LINGUAL_MAP:
             for kw in keywords:
                 if kw in q_lower:
                     expanded_terms.append(eng_expansion)
-                    matched = True
                     break
                     
         if expanded_terms:
             return f"{query} {' '.join(expanded_terms)}", True
+
+        # 2. If no keywords matched, try Bhashini NMT as fallback
+        eff_lang = self._detect_effective_language(query)
+        lang_code_map = {"Hindi": "hi", "Tamil": "ta", "Bengali": "bn", "Marathi": "mr"}
+
+        if eff_lang in lang_code_map and bhashini_client.is_configured:
+            try:
+                src_code = lang_code_map[eff_lang]
+                translated_en = bhashini_client.translate(query, source_lang=src_code, target_lang="en")
+                if translated_en and translated_en.strip() and translated_en.lower() != query.lower():
+                    return f"{query} {translated_en}", True
+            except Exception:
+                pass
+
         return query, False
 
     def _fallback_retrieve(self, query: str, top_k: int = 3) -> List[Dict[str, Any]]:
@@ -801,6 +818,91 @@ class StandardsRAGEngine:
             "- 🏢 **Contact BIS Directorate**: Reach out to your nearest [BIS Regional or Branch Office](https://www.bis.gov.in/about-bis/branch-offices/)."
         )
 
+    def _is_conversational_query(self, query: str) -> bool:
+        """Detects greetings, pleasantries, or general intro questions that don't need technical standard citations."""
+        if not query:
+            return False
+        q = query.strip().lower()
+        q_clean = re.sub(r'[^\w\s]', '', q).strip()
+        
+        greetings = {
+            "hi", "hello", "hey", "namaste", "namaskar", "vanakkam", "nomoshkar", "pranam", "kasa kay", "radhe radhe", "ram ram", "salaam",
+            "how are you", "who are you", "what is your name", "what can you do", "who made you",
+            "thank you", "thanks", "dhanyawad", "shukriya", "nandri", "dhonnobad", "bye", "goodbye",
+            "good morning", "good evening", "good afternoon", "help", "kya haal hai", "kaise ho",
+            "aap kaun ho", "tum kaun ho", "neengal yaar", "tumi ke", "tumhi kon aahat", "what is standards saathi",
+            "what is bis", "bis kya hai", "standards saathi kya hai", "who created you"
+        }
+        if q_clean in greetings:
+            return True
+        
+        words = q_clean.split()
+        if len(words) <= 5:
+            if any(g in q_clean for g in ["who are you", "what can you do", "what is standards saathi", "who made you", "namaste", "vanakkam", "nomoshkar", "how are you", "kaise ho", "aap kaun ho"]):
+                return True
+        return False
+
+    def _generate_conversational_response(self, query: str, language: str = "English") -> str:
+        """Generates a warm, professional intro/greeting response tailored to Standards Saathi."""
+        lang = self._detect_language_name(language)
+        if lang == "Hindi":
+            return (
+                "🙏 **नमस्ते! मैं मानक साथी (Standards Saathi) हूँ।**\n\n"
+                "मैं भारतीय मानक ब्यूरो (**BIS**), भारतीय मानकों (**IS Codes**), अनिवार्य **QCO नियमों**, "
+                "**ISI मार्क प्रमाणन** और **MSME 80% सरकारी छूट** के लिए आपका आधिकारिक AI तकनीकी सलाहकार हूँ।\n\n"
+                "💡 **आप मुझसे क्या पूछ सकते हैं?**\n"
+                "- 🏭 *\"स्टील पाइप या लोहे पर ISI मार्क कैसे लें? (IS 1239 / IS 3589)\"*\n"
+                "- 🚰 *\"पीने के पानी और बोतलबंद पानी के परीक्षण मानक क्या हैं? (IS 10500 / IS 14543)\"*\n"
+                "- 👑 *\"सोने के गहनों पर 6-अंकीय HUID हॉलमार्क कैसे चेक करें? (IS 1417)\"*\n"
+                "- 💰 *\"छोटे कारीगरों व नए उद्योगों को 80% फीस छूट कैसे मिलेगी?\"*\n\n"
+                "कृपया अपना तकनीकी प्रश्न पूछें या माइक दबाकर बोलें!"
+            )
+        elif lang == "Tamil":
+            return (
+                "🙏 **வணக்கம்! நான் 'Standards Saathi' (மானக சாதி) AI வழிகாட்டி.**\n\n"
+                "இந்திய தரநிலைகள் பணியகம் (**BIS**), **IS குறியீடுகள்**, கட்டாய **QCO உத்தரவுகள்**, "
+                "மற்றும் **MSME 80% கட்டணச் சலுகைகள்** குறித்த உத்தியோகபூர்வ AI தொழில்நுட்ப ஆலோசகர்.\n\n"
+                "💡 **நீங்கள் என்ன கேட்கலாம்?**\n"
+                "- 🚰 *குடிநீர் மற்றும் பேக்கேஜ் செய்யப்பட்ட தண்ணீருக்கான IS 10500 / 14543 விதிகள்*\n"
+                "- 👑 *தங்க நகைகளுக்கான 6-இலக்க HUID ஹால்மார்க் (IS 1417) சரிபார்ப்பு*\n"
+                "- 🏭 *எஃகு குழாய்கள் மற்றும் கட்டுமானப் பொருட்களுக்கான ISI உரிம நடைமுறைகள்*\n"
+                "- 💰 *சிறு குறு நிறுவனங்களுக்கான (MSME) 80% கட்டணச் சலுகை விவரங்கள்*"
+            )
+        elif lang == "Bengali":
+            return (
+                "🙏 **নমস্কার! আমি স্ট্যান্ডার্ডস সাথি (Standards Saathi) AI প্রযুক্তিগত উপদেষ্টা।**\n\n"
+                "ভারতীয় মানক ব্যুরো (**BIS**), **IS কোড**, বাধ্যতামূলক **QCO নির্দেশিকা**, "
+                "**ISI মার্ক লাইসেন্স** এবং **MSME ৮০% সরকারি ফি ছাড়** সংক্রান্ত সহায়তার জন্য আমি সর্বদা প্রস্তুত।\n\n"
+                "💡 **আপনি কী জিজ্ঞাসা করতে পারেন?**\n"
+                "- 🚰 *পানীয় জলের গুণমান এবং বোতলজাত জলের নিয়ম (IS 10500 / IS 14543)*\n"
+                "- 👑 *সোনার গহনায় ৬-সংখ্যার HUID হলমার্ক যাচাই পদ্ধতি (IS 1417)*\n"
+                "- 🏭 *ইস্পাত পাইপ ও বিল্ডিং কনস্ট্রাকশন সামগ্রীর ISI লাইসেন্স*\n"
+                "- 💰 *ক্ষুদ্র ও কুটির শিল্পের জন্য ৮০% সরকারি ফি ছাড় ও ৫০% ল্যাব সাবসিডি*"
+            )
+        elif lang == "Marathi":
+            return (
+                "🙏 **नमस्कार! मी मानक साथी (Standards Saathi) AI तांत्रिक सल्लागार आहे.**\n\n"
+                "भारतीय मानक ब्युरो (**BIS**), **IS कोड**, अनिवार्य **QCO आदेश**, "
+                "**ISI मार्क परवाना** आणि **MSME ८०% सरकारी सवलतींसाठी** मी मार्गदर्शन करतो.\n\n"
+                "💡 **तुम्ही काय विचारू शकता?**\n"
+                "- 🚰 *पिण्याच्या पाण्याचे निकष व पॅकेज्ड वॉटर नियम (IS 10500 / IS 14543)*\n"
+                "- 👑 *सोन्याच्या दागिन्यांवरील ६-अंकी HUID हॉलमार्क पडताळणी (IS 1417)*\n"
+                "- 🏭 *स्टील पाईप व सिमेंट उत्पादनांसाठी ISI मार्क कसा मिळवावा?*\n"
+                "- 💰 *लहान उद्योजक व कारागिरांसाठी ८०% शुल्क सवलतीची माहिती*"
+            )
+        return (
+            "🙏 **Welcome to Standards Saathi (मानक साथी)!**\n\n"
+            "I am your official AI Technical Advisor for the **Bureau of Indian Standards (BIS)**, "
+            "**Indian Standards (IS Codes)**, mandatory **Quality Control Orders (QCOs)**, **ISI / CRS Certification**, "
+            "and statutory **MSME 80% fee concessions**.\n\n"
+            "💡 **How can I assist you today?**\n"
+            "- 🏭 *\"What are the mandatory standards for Steel Pipes & Tubes? (IS 1239 / IS 3589)\"*\n"
+            "- 🚰 *\"How to get an ISI license for Packaged Drinking Water? (IS 14543 / IS 10500)\"*\n"
+            "- 👑 *\"How to verify 6-digit HUID Gold Hallmarking? (IS 1417 / IS 15820)\"*\n"
+            "- 💰 *\"How do micro enterprises get 80% application fee subsidy & 50% lab discount?\"*\n\n"
+            "Feel free to type your technical question or use the microphone to speak in your native language!"
+        )
+
     def generate_response(
         self,
         query: str,
@@ -833,6 +935,19 @@ class StandardsRAGEngine:
                 "related_standards": [],
                 "is_fallback": True,
                 "model": "Prompt Injection Defense Filter"
+            }
+
+        # Step 0.5: Conversational Greeting / General Help Check (Zero Fake Citations)
+        if self._is_conversational_query(query):
+            greeting_ans = self._generate_conversational_response(query, language=effective_lang)
+            return {
+                "answer": greeting_ans,
+                "raw_answer": greeting_ans,
+                "citations": [],
+                "sources_text": "",
+                "related_standards": [],
+                "is_fallback": False,
+                "model": "Standards Saathi Assistant"
             }
 
         # Step 1: Retrieve context chunks
@@ -1051,7 +1166,7 @@ class StandardsRAGEngine:
                     history_str = "\n".join([f"{h['role'].upper()}: {h['content']}" for h in chat_history[-4:]])
                     full_gemini_content = f"{system_prompt}\n\nCONVERSATION HISTORY:\n{history_str}\n\n{user_content}"
 
-                for g_model in ["gemini-2.5-flash", "gemini-3.7-flash", "gemini-2.5-pro"]:
+                for g_model in ["gemini-2.5-flash", "gemini-2.0-flash", "gemini-1.5-flash"]:
                     try:
                         g_resp = client.models.generate_content(
                             model=g_model,
@@ -1075,7 +1190,7 @@ class StandardsRAGEngine:
                 candidate_models = []
                 if model_override:
                     candidate_models.append(model_override)
-                candidate_models.extend(["llama-3.3-70b-versatile", "llama-3.1-8b-instant", "groq/compound-mini", "openai/gpt-oss-20b"])
+                candidate_models.extend(["openai/gpt-oss-120b", "openai/gpt-oss-20b", "qwen/qwen3.8-27b", "allam-2-7b"])
                 candidate_models = list(dict.fromkeys(candidate_models))
 
                 try:
@@ -1102,23 +1217,27 @@ class StandardsRAGEngine:
         if not raw_answer:
             raw_answer = self._generate_offline_fallback(query, retrieved_chunks, source_citations, language=effective_lang)
 
-        # Format Final Answer with Required Citations Block and Statutory Disclaimer
-        if len(source_citations) == 1:
-            sources_block = f"\n\n**Sources & Document Attribution:** {source_citations[0]}"
+        # Format Final Answer with Required Citations Block (only for high-relevance technical evidence) and Statutory Disclaimer
+        has_valid_sources = bool(source_citations and max_score >= 0.20)
+        if has_valid_sources:
+            if len(source_citations) == 1:
+                sources_block = f"\n\n**Sources & Document Attribution:** {source_citations[0]}"
+            else:
+                sources_block = "\n\n**Sources & Document Attribution:**\n" + "\n".join([f"- {s}" for s in source_citations])
+            full_formatted_answer = f"{raw_answer}\n{sources_block}{statutory_disclaimer}"
         else:
-            sources_block = "\n\n**Sources & Document Attribution:**\n" + "\n".join([f"- {s}" for s in source_citations])
-            
-        full_formatted_answer = f"{raw_answer}\n{sources_block}{statutory_disclaimer}"
+            full_formatted_answer = f"{raw_answer}{statutory_disclaimer}"
 
         return {
             "answer": full_formatted_answer,
             "raw_answer": raw_answer,
-            "citations": retrieved_chunks,
-            "sources_text": "\n".join(source_citations),
-            "related_standards": related_standards_list,
+            "citations": retrieved_chunks if has_valid_sources else [],
+            "sources_text": "\n".join(source_citations) if has_valid_sources else "",
+            "related_standards": related_standards_list if has_valid_sources else [],
             "is_fallback": successful_model is None,
-            "model": f"{successful_model} (Groq)" if successful_model else "Local RAG Retriever"
+            "model": successful_model if successful_model else "Local RAG Retriever"
         }
+
 
     # =========================================================================
     # 5 PROACTIVE TOOLS HELPER METHODS
@@ -1137,7 +1256,9 @@ class StandardsRAGEngine:
             f"{'5. MSME 80% fee concession & 50% lab testing subsidy steps' if is_msme else ''}\n"
             f"Respond strictly in {effective_lang}."
         )
-        return self.generate_response(query=prompt, language=effective_lang, msme_mode=is_msme)
+        res = self.generate_response(query=prompt, language=effective_lang, msme_mode=is_msme)
+        res["checklist"] = res.get("answer", "")
+        return res
 
     def analyze_tender_or_spec(self, tender_text: str, language: str = "English") -> Dict[str, Any]:
         """Feature 2: Analyzes tender/procurement/specification text, extracts IS codes, flags missing standards."""
@@ -1213,7 +1334,9 @@ class StandardsRAGEngine:
             f"Give a clear, 4-step actionable roadmap with applicable IS codes, mandatory QCO status, in-house lab setup requirements, and MSME fee subsidies.\n"
             f"Respond strictly in {effective_lang}."
         )
-        return self.generate_response(query=prompt, language=effective_lang, msme_mode=True)
+        res = self.generate_response(query=prompt, language=effective_lang, msme_mode=True)
+        res["roadmap"] = res.get("answer", "")
+        return res
 
     def _generate_offline_fallback(self, query: str, retrieved_chunks: List[Dict[str, Any]], source_citations: Optional[List[str]] = None, language: str = "English") -> str:
         """Generates a structured answer directly from retrieved chunks when LLM API is unavailable in the requested language."""

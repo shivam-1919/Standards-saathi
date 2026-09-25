@@ -8,8 +8,9 @@ import os
 import sys
 import re
 import json
+import base64
 from typing import Dict, Any, List, Optional
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Response
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse, JSONResponse
 from pydantic import BaseModel
@@ -27,15 +28,31 @@ if hasattr(sys.stderr, "reconfigure"):
     except Exception:
         pass
 
+from contextlib import asynccontextmanager
 from rag_engine import get_rag_engine
 from sample_data import get_all_standards
+from bhashini_client import bhashini_client
 
 load_dotenv(override=True)
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    print("\n" + "=" * 64)
+    print("  STANDARDS SAATHI AI SERVER STARTED")
+    print("=" * 64)
+    print("  - Vector Index: FAISS + SentenceTransformers Ready")
+    print("  - Language Models: Google Gemini + Groq Llama (5 Languages)")
+    print("  - Voice Engine: 5-Language Voice Assistant (EN, HI, TA, BN, MR)")
+    print("  - Web Application: http://localhost:8000")
+    print("  - Admin Portal: Accessible via UI Top Bar with password")
+    print("=" * 64 + "\n")
+    yield
 
 app = FastAPI(
     title="Standards Saathi API",
     description="Backend for Indian Standards & BIS Services AI Assistant with Google Gemini & Accessible Voice Integration",
-    version="3.5.0"
+    version="3.5.0",
+    lifespan=lifespan
 )
 
 # Request Models
@@ -85,13 +102,23 @@ class StandardIngestRequest(BaseModel):
 class AuthRequest(BaseModel):
     password: str
 
+class TTSRequest(BaseModel):
+    text: str
+    language: Optional[str] = "hi"
+    gender: Optional[str] = "female"
+
+class TranslateRequest(BaseModel):
+    text: str
+    source_language: Optional[str] = "en"
+    target_language: Optional[str] = "hi"
+
 # Mount static files
 static_dir = os.path.join(os.path.dirname(__file__), "static")
 if os.path.exists(static_dir):
     app.mount("/static", StaticFiles(directory=static_dir), name="static")
 
 @app.get("/")
-async def get_index():
+def get_index():
     """Serves the main Standards Saathi HTML frontend."""
     index_path = os.path.join(static_dir, "index.html")
     if os.path.exists(index_path):
@@ -107,7 +134,7 @@ async def get_index():
 @app.get("/api/health", status_code=200)
 @app.head("/health", status_code=200)
 @app.head("/healthz", status_code=200)
-async def health_check():
+def health_check():
     """Lightweight health check endpoint for UptimeRobot, Render, and external uptime monitors."""
     import datetime
     return {
@@ -123,7 +150,7 @@ async def health_check():
 # ---------------------------------------------------------------------------
 
 @app.post("/api/chat")
-async def chat_endpoint(req: ChatRequest):
+def chat_endpoint(req: ChatRequest):
     """Executes RAG search and multilingual LLM synthesis via Gemini / Groq."""
     engine = get_rag_engine()
     response = engine.generate_response(
@@ -139,13 +166,53 @@ async def chat_endpoint(req: ChatRequest):
     )
     return response
 
+@app.post("/api/tts")
+def bhashini_tts_endpoint(req: TTSRequest):
+    """Synthesizes high-fidelity Indian language voice audio using Bhashini IndicTTS."""
+    lang_code = req.language.lower().strip()
+    lang_map = {"hindi": "hi", "tamil": "ta", "bengali": "bn", "marathi": "mr", "english": "en"}
+    lang_code = lang_map.get(lang_code, lang_code)
+    
+    audio_bytes = bhashini_client.text_to_speech(req.text, lang=lang_code, gender=req.gender or "female")
+    if audio_bytes:
+        b64_audio = base64.b64encode(audio_bytes).decode("utf-8")
+        return {
+            "status": "success",
+            "audio": b64_audio,
+            "format": "wav",
+            "language": lang_code
+        }
+    return {
+        "status": "error",
+        "detail": "Unable to synthesize audio with Bhashini TTS"
+    }
+
+@app.post("/api/translate")
+def bhashini_translate_endpoint(req: TranslateRequest):
+    """Translates text across Indian languages using Bhashini IndicTrans2."""
+    src = req.source_language.lower().strip()
+    tgt = req.target_language.lower().strip()
+    lang_map = {"hindi": "hi", "tamil": "ta", "bengali": "bn", "marathi": "mr", "english": "en"}
+    src = lang_map.get(src, src)
+    tgt = lang_map.get(tgt, tgt)
+    
+    translated = bhashini_client.translate(req.text, source_lang=src, target_lang=tgt)
+    return {
+        "original_text": req.text,
+        "source_language": src,
+        "target_language": tgt,
+        "translated_text": translated,
+        "engine": "Bhashini IndicTrans2"
+    }
+
+
 @app.get("/api/standards")
-async def get_standards_endpoint():
+def get_standards_endpoint():
     """Returns all Indian Standards loaded in the system."""
     return get_all_standards()
 
 @app.post("/api/standards")
-async def ingest_standard_endpoint(req: StandardIngestRequest):
+def ingest_standard_endpoint(req: StandardIngestRequest):
     """Admin endpoint to dynamically ingest a new standard into the FAISS vector index."""
     current_admin_pwd = os.getenv("ADMIN_PASSWORD", "admin123")
     if req.admin_password != current_admin_pwd:
@@ -173,7 +240,7 @@ async def ingest_standard_endpoint(req: StandardIngestRequest):
 # ---------------------------------------------------------------------------
 
 @app.post("/api/tools/checklist")
-async def compliance_checklist_endpoint(req: ChecklistRequest):
+def compliance_checklist_endpoint(req: ChecklistRequest):
     """Feature 1: Generates a complete Compliance Checklist for any product/IS code."""
     engine = get_rag_engine()
     return engine.generate_compliance_checklist(
@@ -183,7 +250,7 @@ async def compliance_checklist_endpoint(req: ChecklistRequest):
     )
 
 @app.post("/api/tools/tender-analyzer")
-async def tender_analyzer_endpoint(req: TenderAnalyzerRequest):
+def tender_analyzer_endpoint(req: TenderAnalyzerRequest):
     """Feature 2: Analyzes tender/procurement specifications for IS code compliance."""
     engine = get_rag_engine()
     return engine.analyze_tender_or_spec(
@@ -192,7 +259,7 @@ async def tender_analyzer_endpoint(req: TenderAnalyzerRequest):
     )
 
 @app.post("/api/tools/explain-clause")
-async def explain_clause_endpoint(req: ExplainClauseRequest):
+def explain_clause_endpoint(req: ExplainClauseRequest):
     """Feature 3: Explains a technical standard clause in plain language with examples."""
     engine = get_rag_engine()
     return engine.explain_clause(
@@ -201,7 +268,7 @@ async def explain_clause_endpoint(req: ExplainClauseRequest):
     )
 
 @app.post("/api/tools/onboarding-interview")
-async def onboarding_interview_endpoint(req: OnboardingInterviewRequest):
+def onboarding_interview_endpoint(req: OnboardingInterviewRequest):
     """Feature 5: Evaluates onboarding questions to produce a custom roadmap."""
     engine = get_rag_engine()
     return engine.evaluate_onboarding_interview(
@@ -214,7 +281,7 @@ async def onboarding_interview_endpoint(req: OnboardingInterviewRequest):
 # ---------------------------------------------------------------------------
 
 @app.post("/api/admin/auth")
-async def admin_auth_endpoint(req: AuthRequest):
+def admin_auth_endpoint(req: AuthRequest):
     """Verifies admin credentials."""
     admin_pwd = os.getenv("ADMIN_PASSWORD", "admin123")
     if req.password == admin_pwd:
@@ -230,7 +297,7 @@ async def admin_auth_endpoint(req: AuthRequest):
     raise HTTPException(status_code=401, detail="Invalid admin password")
 
 @app.post("/api/admin/config")
-async def update_admin_config_endpoint(req: AdminConfigRequest):
+def update_admin_config_endpoint(req: AdminConfigRequest):
     """Allows authenticated admin to configure Gemini and Groq API keys securely."""
     current_admin_pwd = os.getenv("ADMIN_PASSWORD", "admin123")
     if req.admin_password != current_admin_pwd:
@@ -257,7 +324,7 @@ async def update_admin_config_endpoint(req: AdminConfigRequest):
     }
 
 @app.post("/api/admin/security-logs")
-async def get_admin_security_logs_endpoint(req: AuthRequest):
+def get_admin_security_logs_endpoint(req: AuthRequest):
     """Retrieves blocked prompt injection attempts and audit logs for authenticated admin."""
     current_admin_pwd = os.getenv("ADMIN_PASSWORD", "admin123")
     if req.password != current_admin_pwd:
@@ -272,7 +339,7 @@ async def get_admin_security_logs_endpoint(req: AuthRequest):
     }
 
 @app.post("/api/admin/clear-security-logs")
-async def clear_admin_security_logs_endpoint(req: AuthRequest):
+def clear_admin_security_logs_endpoint(req: AuthRequest):
     """Clears security audit logs for authenticated admin."""
     current_admin_pwd = os.getenv("ADMIN_PASSWORD", "admin123")
     if req.password != current_admin_pwd:
@@ -284,18 +351,6 @@ async def clear_admin_security_logs_endpoint(req: AuthRequest):
         "status": "success",
         "message": "Security logs cleared successfully."
     }
-
-@app.on_event("startup")
-async def startup_event():
-    print("\n" + "=" * 64)
-    print("  STANDARDS SAATHI AI SERVER STARTED")
-    print("=" * 64)
-    print("  - Vector Index: FAISS + SentenceTransformers Ready")
-    print("  - Language Models: Google Gemini + Groq Llama (5 Languages)")
-    print("  - Voice Engine: 5-Language Voice Assistant (EN, HI, TA, BN, MR)")
-    print("  - Web Application: http://localhost:8000")
-    print("  - Admin Portal: Accessible via UI Top Bar with password")
-    print("=" * 64 + "\n")
 
 if __name__ == "__main__":
     import uvicorn

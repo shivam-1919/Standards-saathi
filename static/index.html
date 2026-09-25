@@ -323,13 +323,92 @@
   <!-- ========================================================================= -->
   <!-- 2. MAIN BRANDING HEADER -->
   <!-- ========================================================================= -->
-  <header class="w-full bg-white border-b border-gray-200 shadow-xs py-3">
+  <header class="w-full bg-white border-b border-gray-200 shadow-xs py-2.5">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col md:flex-row items-center justify-between gap-4">
       
       <!-- Seal & Portal Title -->
       <div class="flex items-center gap-3.5 sm:gap-4 w-full md:w-auto">
-        <a href="javascript:switchTab('home')" class="inline-block hover:opacity-95 transition-opacity">
-          <img src="/static/logo.svg" alt="Standards Saathi Official Seal" class="h-14 w-14 sm:h-16 sm:w-16 object-contain rounded-full shadow-xs"/>
+        <a href="javascript:switchTab('home')" class="inline-block hover:opacity-95 transition-opacity flex-shrink-0" title="Standards Saathi National Emblem">
+          <!-- Inline Standards Saathi Official SVG Seal (logo.svg) -->
+          <svg class="h-14 w-14 sm:h-16 sm:w-16 rounded-full shadow-xs flex-shrink-0" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="hdrSaffronGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#FF671F"/>
+                <stop offset="100%" stop-color="#E65100"/>
+              </linearGradient>
+              <linearGradient id="hdrNavyGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#0B3C68"/>
+                <stop offset="100%" stop-color="#062744"/>
+              </linearGradient>
+              <linearGradient id="hdrGreenGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#046A38"/>
+                <stop offset="100%" stop-color="#024b27"/>
+              </linearGradient>
+              <filter id="hdrShadow" x="-10%" y="-10%" width="120%" height="120%">
+                <feDropShadow dx="0" dy="4" stdDeviation="4" flood-color="#000000" flood-opacity="0.15"/>
+              </filter>
+            </defs>
+
+            <!-- Outer Shadow & Ring -->
+            <circle cx="200" cy="200" r="190" fill="url(#hdrNavyGrad)" filter="url(#hdrShadow)" stroke="#FF671F" stroke-width="5"/>
+            <circle cx="200" cy="200" r="176" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-dasharray="6,4"/>
+            <circle cx="200" cy="200" r="142" fill="#FFFFFF" stroke="#0B3C68" stroke-width="4"/>
+
+            <!-- Tricolor Decorative Ring -->
+            <path d="M 58 200 A 142 142 0 0 1 342 200" fill="none" stroke="#FF671F" stroke-width="8"/>
+            <path d="M 58 200 A 142 142 0 0 0 342 200" fill="none" stroke="#046A38" stroke-width="8"/>
+
+            <!-- Top Curved Text Path -->
+            <path id="hdrTopTextPath" d="M 45 200 A 155 155 0 0 1 355 200" fill="none"/>
+            <text font-family="'Plus Jakarta Sans', 'Inter', sans-serif" font-size="15" font-weight="800" fill="#FFFFFF" letter-spacing="3.5">
+              <textPath href="#hdrTopTextPath" startOffset="50%" text-anchor="middle">
+                STANDARDS SAATHI • मानक साथी
+              </textPath>
+            </text>
+
+            <!-- Bottom Curved Text Path -->
+            <path id="hdrBottomTextPath" d="M 355 200 A 155 155 0 0 1 45 200" fill="none"/>
+            <text font-family="'Plus Jakarta Sans', 'Inter', sans-serif" font-size="13" font-weight="700" fill="#FFD54F" letter-spacing="2.5">
+              <textPath href="#hdrBottomTextPath" startOffset="50%" text-anchor="middle">
+                ★ GOVERNMENT OF INDIA • BIS AI ★
+              </textPath>
+            </text>
+
+            <!-- Central Emblem Elements -->
+            <!-- 24-Spoke Ashoka Chakra Ring -->
+            <circle cx="200" cy="200" r="95" fill="#F4F8FC" stroke="#0B3C68" stroke-width="3"/>
+            
+            <!-- 24 Spokes -->
+            <g stroke="#0B3C68" stroke-width="1.5" opacity="0.6">
+              <line x1="200" y1="108" x2="200" y2="292"/>
+              <line x1="108" y1="200" x2="292" y2="200"/>
+              <line x1="135" y1="135" x2="265" y2="265"/>
+              <line x1="135" y1="265" x2="265" y2="135"/>
+              <line x1="117" y1="165" x2="283" y2="235"/>
+              <line x1="117" y1="235" x2="283" y2="165"/>
+              <line x1="165" y1="117" x2="235" y2="283"/>
+              <line x1="235" y1="117" x2="165" y2="283"/>
+              <line x1="126" y1="148" x2="274" y2="252"/>
+              <line x1="148" y1="126" x2="252" y2="274"/>
+              <line x1="148" y1="274" x2="252" y2="126"/>
+              <line x1="126" y1="252" x2="274" y2="148"/>
+            </g>
+            <circle cx="200" cy="200" r="28" fill="#FFFFFF" stroke="#0B3C68" stroke-width="3"/>
+
+            <!-- Stylized ISI & Standards Icon -->
+            <path d="M 200 135 L 245 155 L 245 205 C 245 235 200 258 200 258 C 200 258 155 235 155 205 L 155 155 Z" fill="url(#hdrNavyGrad)" stroke="#FF671F" stroke-width="2.5" filter="url(#hdrShadow)"/>
+            
+            <!-- Saffron Inner Check & Diamond -->
+            <path d="M 180 195 L 194 210 L 222 175" fill="none" stroke="#FF671F" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+            
+            <!-- Tiny Central Star / Diamond -->
+            <circle cx="200" cy="200" r="5" fill="#FFD54F"/>
+
+            <!-- ISI Letters Inside Shield -->
+            <text x="200" y="235" font-family="'JetBrains Mono', 'Plus Jakarta Sans', monospace" font-size="14" font-weight="900" fill="#FFFFFF" text-anchor="middle" letter-spacing="1">
+              ISI • IS
+            </text>
+          </svg>
         </a>
         <div class="flex flex-col">
           <div class="flex items-center gap-2">
@@ -344,15 +423,25 @@
         </div>
       </div>
 
-      <!-- Badges: Make in India, Digital India, SIH 2026, Admin Lock -->
-      <div class="flex items-center gap-3 sm:gap-4 self-end md:self-center">
-        <div class="hidden sm:flex flex-col items-center border-r border-gray-300 pr-3">
-          <span class="text-[9px] font-bold uppercase tracking-wider text-gray-500" id="badgeMakeIndiaSub">Make In India</span>
-          <span class="text-xs font-bold text-[#046A38]" id="badgeMakeIndia">मेक इन इंडिया</span>
+      <!-- Badges: Make in India Image, Digital India Image, SIH 2026, Admin Lock -->
+      <div class="flex items-center gap-3 sm:gap-4 self-end md:self-center flex-wrap">
+        
+        <!-- Make in India Official Logo -->
+        <div class="flex items-center gap-2 bg-[#FAF8F5] border border-gray-200 px-2.5 py-1 rounded shadow-2xs">
+          <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRgrzmjuxS1TqyYTQNS2zH4x9jOBLgA9IfARQ91bw858A&s=10" alt="Make in India" class="h-8 w-auto object-contain rounded-xs" />
+          <div class="hidden sm:flex flex-col text-left">
+            <span class="text-[9px] font-bold uppercase tracking-wider text-gray-500" id="badgeMakeIndiaSub">Make In India</span>
+            <span class="text-xs font-bold text-[#046A38]" id="badgeMakeIndia">मेक इन इंडिया</span>
+          </div>
         </div>
-        <div class="hidden sm:flex flex-col items-center border-r border-gray-300 pr-3">
-          <span class="text-[9px] font-bold uppercase tracking-wider text-gray-500" id="badgeDigitalIndiaSub">Digital India</span>
-          <span class="text-xs font-bold text-[#0B3C68]" id="badgeDigitalIndia">डिजिटल भारत</span>
+
+        <!-- Digital India Official Logo -->
+        <div class="flex items-center gap-2 bg-[#F5F8FA] border border-gray-200 px-2.5 py-1 rounded shadow-2xs">
+          <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRg-n6yEAtV-ixzGpq1SdiHKnw9lcTP7VmTC5Zezy22VA&s=10" alt="Digital India" class="h-8 w-auto object-contain rounded-xs" />
+          <div class="hidden sm:flex flex-col text-left">
+            <span class="text-[9px] font-bold uppercase tracking-wider text-gray-500" id="badgeDigitalIndiaSub">Digital India</span>
+            <span class="text-xs font-bold text-[#0B3C68]" id="badgeDigitalIndia">डिजिटल भारत</span>
+          </div>
         </div>
 
         <!-- SIH Badge with Exact Official Indian Flag -->
@@ -385,7 +474,7 @@
         </div>
 
         <!-- Admin Portal Modal Button -->
-        <button onclick="openAdminModal()" class="px-2.5 py-1.5 rounded text-xs font-bold bg-[#F0F4F8] hover:bg-[#E2E8F0] text-[#0B3C68] border border-gray-300 flex items-center gap-1 transition" title="अधिकारी पोर्टल (Admin Controls)">
+        <button onclick="openAdminModal()" class="px-2.5 py-1.5 rounded text-xs font-bold bg-[#F0F4F8] hover:bg-[#E2E8F0] text-[#0B3C68] border border-gray-300 flex items-center gap-1 transition cursor-pointer" title="अधिकारी पोर्टल (Admin Controls)">
           <span class="material-symbols-outlined text-[16px] text-amber-600">admin_panel_settings</span>
           <span class="hidden lg:inline" id="adminPortalLabel">अधिकारी पोर्टल</span>
         </button>
@@ -746,9 +835,7 @@
         <!-- Welcome Prompt / Greeting in Chat -->
         <div id="welcomeCard" class="bg-[#F8FAFC] rounded-xl p-5 border border-gray-200 space-y-3">
           <div class="flex items-start gap-3">
-            <div class="w-10 h-10 rounded-lg bg-[#0B3C68] text-white flex items-center justify-center flex-shrink-0">
-              <span class="material-symbols-outlined text-[22px] text-[#FF9933]">verified</span>
-            </div>
+            <img src="/static/logo.svg" alt="Standards Saathi Official Seal" class="w-12 h-12 rounded-full object-contain shadow-xs flex-shrink-0" />
             <div>
               <h3 class="font-bold text-sm text-[#0B3C68]" id="chatWelcomeTitle">
                 मानक साथी AI तकनीकी सलाहकार में आपका स्वागत है
@@ -1168,7 +1255,7 @@
       <!-- Login Form -->
       <div id="adminLoginForm" class="space-y-3 text-xs">
         <p class="text-gray-600" id="adminLoginDesc">यह अनुभाग केवल अधिकृत प्रशासक के लिए है। कृपया मास्टर पासवर्ड दर्ज करें:</p>
-        <input id="adminPasswordInput" type="password" placeholder="एडमिन पासवर्ड दर्ज करें (default: admin123)..." class="w-full px-3 py-2 rounded border border-gray-300 text-xs focus:outline-none focus:border-[#0B3C68]" />
+        <input id="adminPasswordInput" type="password" placeholder="सुरक्षित एडमिन पासवर्ड दर्ज करें..." class="w-full px-3 py-2 rounded border border-gray-300 text-xs focus:outline-none focus:border-[#0B3C68]" />
         <p id="adminLoginError" class="text-red-600 text-xs hidden font-semibold">⚠️ अमान्य पासवर्ड! कृपया पुनः प्रयास करें।</p>
         <div class="flex justify-end gap-2 pt-2">
           <button onclick="closeAdminModal()" class="btn-secondary" id="adminCancelBtn">रद्द करें</button>
@@ -2050,7 +2137,24 @@
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    // Dynamic Language Switcher - Updates ALL Text in Current UI
+    // Safe DOM Setters to prevent unhandled JS exceptions during language switching
+    function safeSetText(id, text) {
+      if (text === undefined || text === null) return;
+      const el = document.getElementById(id);
+      if (el) el.innerText = text;
+    }
+    function safeSetHtml(id, html) {
+      if (html === undefined || html === null) return;
+      const el = document.getElementById(id);
+      if (el) el.innerHTML = html;
+    }
+    function safeSetPlaceholder(id, ph) {
+      if (ph === undefined || ph === null) return;
+      const el = document.getElementById(id);
+      if (el) el.placeholder = ph;
+    }
+
+    // Dynamic Language Switcher - Updates ALL Text in Current UI Safely
     function onLanguageChange(lang) {
       currentLanguage = lang;
       const dict = I18N[lang] || I18N.Hindi;
@@ -2061,178 +2165,174 @@
       }
 
       // Top Strip & Header
-      const topGovEl = document.getElementById('topGovTitle');
-      if (topGovEl) topGovEl.innerHTML = dict.topGov;
-      const topMinEl = document.getElementById('topMinistryTitle');
-      if (topMinEl) topMinEl.innerHTML = dict.topMinistry;
-      const topSkipEl = document.getElementById('topSkipLink');
-      if (topSkipEl) topSkipEl.innerText = dict.topSkip;
-
-      document.getElementById('headerTitle').innerHTML = `${dict.headerTitle} <span class="text-gray-500 font-normal text-base">| Standards Saathi</span>`;
-      document.getElementById('headerSubtitle').innerText = dict.headerSubtitle;
-      document.getElementById('badgeMakeIndia').innerText = dict.badgeMakeIndia;
-      document.getElementById('badgeDigitalIndia').innerText = dict.badgeDigitalIndia;
+      safeSetHtml('topGovTitle', dict.topGov);
+      safeSetHtml('topMinistryTitle', dict.topMinistry);
+      safeSetText('topSkipLink', dict.topSkip);
+      safeSetHtml('headerTitle', `${dict.headerTitle} <span class="text-gray-500 font-normal text-base">| Standards Saathi</span>`);
+      safeSetText('headerSubtitle', dict.headerSubtitle);
+      safeSetText('badgeMakeIndia', dict.badgeMakeIndia);
+      safeSetText('badgeDigitalIndia', dict.badgeDigitalIndia);
 
       // Nav Tabs
-      document.getElementById('navLabel-home').innerText = dict.navHome;
-      document.getElementById('navLabel-chat').innerText = dict.navChat;
-      document.getElementById('navLabel-checklist').innerText = dict.navChecklist;
-      document.getElementById('navLabel-tender').innerText = dict.navTender;
-      document.getElementById('navLabel-clause').innerText = dict.navClause;
-      document.getElementById('navLabel-msme').innerText = dict.navMsme;
-      document.getElementById('navMsmeTag').innerText = dict.navMsmeTag;
-      document.getElementById('navLabel-standards').innerText = dict.navStandards;
-      document.getElementById('navLabel-verify').innerText = dict.navVerify;
+      safeSetText('navLabel-home', dict.navHome);
+      safeSetText('navLabel-chat', dict.navChat);
+      safeSetText('navLabel-checklist', dict.navChecklist);
+      safeSetText('navLabel-tender', dict.navTender);
+      safeSetText('navLabel-clause', dict.navClause);
+      safeSetText('navLabel-msme', dict.navMsme);
+      safeSetText('navMsmeTag', dict.navMsmeTag);
+      safeSetText('navLabel-standards', dict.navStandards);
+      safeSetText('navLabel-verify', dict.navVerify);
 
       // Ticker
-      const tickerBadge = document.getElementById('tickerBadge');
-      if (tickerBadge) tickerBadge.innerHTML = `<span class="material-symbols-outlined text-[14px]">campaign</span> ${dict.tickerBadge}`;
-      document.getElementById('tickerText').innerText = dict.tickerText;
-      document.getElementById('tickerSaralLabel').innerText = dict.tickerSaralLabel;
+      safeSetHtml('tickerBadge', `<span class="material-symbols-outlined text-[14px]">campaign</span> ${dict.tickerBadge}`);
+      safeSetText('tickerText', dict.tickerText);
+      safeSetText('tickerSaralLabel', dict.tickerSaralLabel);
 
       // Home View
-      document.getElementById('homeHeroGreeting').innerText = dict.homeHeroGreeting;
-      document.getElementById('homeHeroHeading').innerText = dict.homeHeroHeading;
-      document.getElementById('homeHeroSub').innerText = dict.homeHeroSub;
-      document.getElementById('homeSearchLabel').innerText = dict.homeSearchLabel;
-      document.getElementById('homeSearchInput').placeholder = dict.homeSearchPlaceholder;
-      document.getElementById('homeSearchBtn').innerText = dict.homeSearchBtn;
-      document.getElementById('homePopularLabel').innerText = dict.homePopularLabel;
-      document.getElementById('homeChip1').innerText = dict.homeChip1;
-      document.getElementById('homeChip2').innerText = dict.homeChip2;
-      document.getElementById('homeChip3').innerText = dict.homeChip3;
-      document.getElementById('homeChip4').innerText = dict.homeChip4;
-      document.getElementById('homeChip5').innerText = dict.homeChip5;
+      safeSetText('homeHeroGreeting', dict.homeHeroGreeting);
+      safeSetText('homeHeroHeading', dict.homeHeroHeading);
+      safeSetText('homeHeroSub', dict.homeHeroSub);
+      safeSetText('homeSearchLabel', dict.homeSearchLabel);
+      safeSetPlaceholder('homeSearchInput', dict.homeSearchPlaceholder);
+      safeSetText('homeSearchBtn', dict.homeSearchBtn);
+      safeSetText('homePopularLabel', dict.homePopularLabel);
+      safeSetText('homeChip1', dict.homeChip1);
+      safeSetText('homeChip2', dict.homeChip2);
+      safeSetText('homeChip3', dict.homeChip3);
+      safeSetText('homeChip4', dict.homeChip4);
+      safeSetText('homeChip5', dict.homeChip5);
 
       // Saral Banner
-      document.getElementById('saralBannerTitle').innerHTML = `${dict.saralBannerTitle} <span class="px-2 py-0.5 rounded text-[10px] bg-amber-600 text-white font-bold">${dict.saralBannerBadge}</span>`;
-      document.getElementById('saralBannerSub').innerText = dict.saralBannerSub;
-      document.getElementById('saralBannerBtn').innerHTML = `<span class="material-symbols-outlined text-[18px]">mic</span> <span>${dict.saralBannerBtn}</span>`;
+      safeSetHtml('saralBannerTitle', `${dict.saralBannerTitle} <span class="px-2 py-0.5 rounded text-[10px] bg-amber-600 text-white font-bold">${dict.saralBannerBadge}</span>`);
+      safeSetText('saralBannerSub', dict.saralBannerSub);
+      safeSetHtml('saralBannerBtn', `<span class="material-symbols-outlined text-[18px]">mic</span> <span>${dict.saralBannerBtn}</span>`);
 
       // Core Services Grid
-      document.getElementById('coreModulesTitle').innerHTML = `<span class="material-symbols-outlined text-[#FF671F]">dashboard_customize</span> ${dict.coreModulesTitle}`;
-      document.getElementById('card1Title').innerText = dict.card1Title;
-      document.getElementById('card1Desc').innerText = dict.card1Desc;
-      document.getElementById('card1Action').innerText = dict.card1Action;
-      document.getElementById('card2Title').innerText = dict.card2Title;
-      document.getElementById('card2Desc').innerText = dict.card2Desc;
-      document.getElementById('card2Action').innerText = dict.card2Action;
-      document.getElementById('card3Title').innerText = dict.card3Title;
-      document.getElementById('card3Desc').innerText = dict.card3Desc;
-      document.getElementById('card3Action').innerText = dict.card3Action;
-      document.getElementById('card4Title').innerText = dict.card4Title;
-      document.getElementById('card4Desc').innerText = dict.card4Desc;
-      document.getElementById('card4Action').innerText = dict.card4Action;
-      document.getElementById('card5Title').innerText = dict.card5Title;
-      document.getElementById('card5Desc').innerText = dict.card5Desc;
-      document.getElementById('card5Action').innerText = dict.card5Action;
-      document.getElementById('card6Title').innerText = dict.card6Title;
-      document.getElementById('card6Desc').innerText = dict.card6Desc;
-      document.getElementById('card6Action').innerText = dict.card6Action;
+      safeSetHtml('coreModulesTitle', `<span class="material-symbols-outlined text-[#FF671F]">dashboard_customize</span> ${dict.coreModulesTitle}`);
+      safeSetText('card1Title', dict.card1Title);
+      safeSetText('card1Desc', dict.card1Desc);
+      safeSetText('card1Action', dict.card1Action);
+      safeSetText('card2Title', dict.card2Title);
+      safeSetText('card2Desc', dict.card2Desc);
+      safeSetText('card2Action', dict.card2Action);
+      safeSetText('card3Title', dict.card3Title);
+      safeSetText('card3Desc', dict.card3Desc);
+      safeSetText('card3Action', dict.card3Action);
+      safeSetText('card4Title', dict.card4Title);
+      safeSetText('card4Desc', dict.card4Desc);
+      safeSetText('card4Action', dict.card4Action);
+      safeSetText('card5Title', dict.card5Title);
+      safeSetText('card5Desc', dict.card5Desc);
+      safeSetText('card5Action', dict.card5Action);
+      safeSetText('card6Title', dict.card6Title);
+      safeSetText('card6Desc', dict.card6Desc);
+      safeSetText('card6Action', dict.card6Action);
 
       // Live Metric Stats
-      document.getElementById('stat1Label').innerText = dict.stat1Label;
-      document.getElementById('stat2Label').innerText = dict.stat2Label;
-      document.getElementById('stat3Label').innerText = dict.stat3Label;
-      document.getElementById('stat4Label').innerText = dict.stat4Label;
+      safeSetText('stat1Label', dict.stat1Label);
+      safeSetText('stat2Label', dict.stat2Label);
+      safeSetText('stat3Label', dict.stat3Label);
+      safeSetText('stat4Label', dict.stat4Label);
 
       // Chat View
-      document.getElementById('chatControlLabel').innerText = dict.chatControlLabel;
-      document.getElementById('adminPortalLabel').innerText = dict.adminLabel;
-      document.getElementById('saralVoiceLabel').innerText = isSaralMode ? dict.saralVoiceOn : dict.saralVoiceOff;
-      document.getElementById('autoVoiceLabel').innerText = autoVoiceEnabled ? dict.autoVoiceOn : dict.autoVoiceOff;
-      document.getElementById('toolLabel4').innerText = isMsmeActive ? dict.msmeOn : dict.msmeOff;
-      document.getElementById('chatClearBtn').innerText = dict.chatClearBtn;
-      document.getElementById('chatWelcomeTitle').innerText = dict.chatWelcomeTitle;
-      document.getElementById('chatWelcomeSub').innerText = dict.chatWelcomeSub;
-      document.getElementById('chatQuickPromptHeading').innerText = dict.chatQuickPromptHeading;
-      document.getElementById('chatQuick1').innerHTML = dict.chatQuick1;
-      document.getElementById('chatQuick2').innerHTML = dict.chatQuick2;
-      document.getElementById('chatQuick3').innerHTML = dict.chatQuick3;
-      document.getElementById('chatQuick4').innerHTML = dict.chatQuick4;
-      document.getElementById('chatQuick5').innerHTML = dict.chatQuick5;
-      document.getElementById('chatQuick6').innerHTML = dict.chatQuick6;
-      document.getElementById('chatInput').placeholder = dict.chatPlaceholder;
-      document.getElementById('sendBtnLabel').innerText = dict.sendBtn;
-      document.getElementById('footerDisclaimer').innerText = dict.footerDisclaimer;
+      safeSetText('chatControlLabel', dict.chatControlLabel);
+      safeSetText('adminPortalLabel', dict.adminLabel);
+      safeSetText('saralVoiceLabel', isSaralMode ? dict.saralVoiceOn : dict.saralVoiceOff);
+      safeSetText('autoVoiceLabel', autoVoiceEnabled ? dict.autoVoiceOn : dict.autoVoiceOff);
+      safeSetText('toolLabel4', isMsmeActive ? dict.msmeOn : dict.msmeOff);
+      safeSetText('chatClearBtn', dict.chatClearBtn);
+      safeSetText('chatWelcomeTitle', dict.chatWelcomeTitle);
+      safeSetText('chatWelcomeSub', dict.chatWelcomeSub);
+      safeSetText('chatQuickPromptHeading', dict.chatQuickPromptHeading);
+      safeSetHtml('chatQuick1', dict.chatQuick1);
+      safeSetHtml('chatQuick2', dict.chatQuick2);
+      safeSetHtml('chatQuick3', dict.chatQuick3);
+      safeSetHtml('chatQuick4', dict.chatQuick4);
+      safeSetHtml('chatQuick5', dict.chatQuick5);
+      safeSetHtml('chatQuick6', dict.chatQuick6);
+      safeSetPlaceholder('chatInput', dict.chatPlaceholder);
+      safeSetText('sendBtnLabel', dict.sendBtn);
+      safeSetText('footerDisclaimer', dict.footerDisclaimer);
 
       // Voice Floating & Header Controls
-      document.getElementById('floatingVoiceStatus').innerText = dict.floatingVoiceStatus;
-      document.getElementById('floatingVoiceSub').innerText = dict.floatingVoiceSub;
-      document.getElementById('floatingVoiceStopBtn').innerText = dict.floatingVoiceStopBtn;
-      document.getElementById('headerStopVoiceLabel').innerText = dict.headerStopVoiceLabel;
+      safeSetText('floatingVoiceStatus', dict.floatingVoiceStatus);
+      safeSetText('floatingVoiceSub', dict.floatingVoiceSub);
+      safeSetText('floatingVoiceStopBtn', dict.floatingVoiceStopBtn);
+      safeSetText('headerStopVoiceLabel', dict.headerStopVoiceLabel);
 
       // Checklist Tool
-      document.getElementById('chkHeading').innerHTML = `<span class="material-symbols-outlined text-[#FF671F]">fact_check</span> ${dict.chkHeading}`;
-      document.getElementById('chkSub').innerText = dict.chkSub;
-      document.getElementById('chkProductLabel').innerText = dict.chkProductLabel;
-      document.getElementById('toolChecklistProduct').placeholder = dict.chkProductPlaceholder;
-      document.getElementById('chkMsmeLabel').innerText = dict.chkMsmeLabel;
-      document.getElementById('chkBtnGenerate').innerText = dict.chkBtnGenerate;
-      document.getElementById('chkResultTitle').innerText = dict.chkResultTitle;
+      safeSetHtml('chkHeading', `<span class="material-symbols-outlined text-[#FF671F]">fact_check</span> ${dict.chkHeading}`);
+      safeSetText('chkSub', dict.chkSub);
+      safeSetText('chkProductLabel', dict.chkProductLabel);
+      safeSetPlaceholder('toolChecklistProduct', dict.chkProductPlaceholder);
+      safeSetText('chkMsmeLabel', dict.chkMsmeLabel);
+      safeSetText('chkBtnGenerate', dict.chkBtnGenerate);
+      safeSetText('chkResultTitle', dict.chkResultTitle);
 
       // Tender Tool
-      document.getElementById('tenderHeading').innerHTML = `<span class="material-symbols-outlined text-[#046A38]">assignment_turned_in</span> ${dict.tenderHeading}`;
-      document.getElementById('tenderSub').innerText = dict.tenderSub;
-      document.getElementById('tenderInputLabel').innerText = dict.tenderInputLabel;
-      document.getElementById('toolTenderText').placeholder = dict.tenderInputPlaceholder;
-      document.getElementById('tenderClearBtn').innerText = dict.tenderClearBtn;
-      document.getElementById('tenderAnalyzeBtn').innerText = dict.tenderAnalyzeBtn;
-      document.getElementById('tenderResultTitle').innerText = dict.tenderResultTitle;
+      safeSetHtml('tenderHeading', `<span class="material-symbols-outlined text-[#046A38]">assignment_turned_in</span> ${dict.tenderHeading}`);
+      safeSetText('tenderSub', dict.tenderSub);
+      safeSetText('tenderInputLabel', dict.tenderInputLabel);
+      safeSetPlaceholder('toolTenderText', dict.tenderInputPlaceholder);
+      safeSetText('tenderClearBtn', dict.tenderClearBtn);
+      safeSetText('tenderAnalyzeBtn', dict.tenderAnalyzeBtn);
+      safeSetText('tenderResultTitle', dict.tenderResultTitle);
 
       // Clause Tool
-      document.getElementById('clauseHeading').innerHTML = `<span class="material-symbols-outlined text-purple-700">menu_book</span> ${dict.clauseHeading}`;
-      document.getElementById('clauseSub').innerText = dict.clauseSub;
-      document.getElementById('clauseInputLabel').innerText = dict.clauseInputLabel;
-      document.getElementById('toolClauseText').placeholder = dict.clauseInputPlaceholder;
-      document.getElementById('clauseClearBtn').innerText = dict.clauseClearBtn;
-      document.getElementById('clauseExplainBtn').innerText = dict.clauseExplainBtn;
-      document.getElementById('clauseResultTitle').innerText = dict.clauseResultTitle;
+      safeSetHtml('clauseHeading', `<span class="material-symbols-outlined text-purple-700">menu_book</span> ${dict.clauseHeading}`);
+      safeSetText('clauseSub', dict.clauseSub);
+      safeSetText('clauseInputLabel', dict.clauseInputLabel);
+      safeSetPlaceholder('toolClauseText', dict.clauseInputPlaceholder);
+      safeSetText('clauseClearBtn', dict.clauseClearBtn);
+      safeSetText('clauseExplainBtn', dict.clauseExplainBtn);
+      safeSetText('clauseResultTitle', dict.clauseResultTitle);
 
       // MSME View
-      document.getElementById('msmeHeading').innerHTML = `<span class="material-symbols-outlined text-emerald-600">storefront</span> ${dict.msmeHeading}`;
-      document.getElementById('msmeBadge').innerText = dict.msmeBadge;
-      document.getElementById('msmeSub').innerText = dict.msmeSub;
-      document.getElementById('calcHeading').innerHTML = `<span class="material-symbols-outlined text-emerald-700">calculate</span> ${dict.calcHeading}`;
-      document.getElementById('calcTypeLabel').innerText = dict.calcTypeLabel;
-      document.getElementById('optMicro').innerText = dict.optMicro;
-      document.getElementById('optSmall').innerText = dict.optSmall;
-      document.getElementById('optStartup').innerText = dict.optStartup;
-      document.getElementById('optWomen').innerText = dict.optWomen;
-      document.getElementById('calcBaseFeeLabel').innerText = dict.calcBaseFeeLabel;
-      document.getElementById('calcMarkingFeeLabel').innerText = dict.calcMarkingFeeLabel;
-      document.getElementById('calcCardAppLabel').innerText = dict.calcCardAppLabel;
-      document.getElementById('calcCardMarkingLabel').innerText = dict.calcCardMarkingLabel;
-      document.getElementById('calcCardLabLabel').innerText = dict.calcCardLabLabel;
-      document.getElementById('calcCardTotalLabel').innerText = dict.calcCardTotalLabel;
-      document.getElementById('pathwayHeading').innerHTML = `<span class="material-symbols-outlined text-[#FF671F]">route</span> ${dict.pathwayHeading}`;
-      document.getElementById('step1Title').innerText = dict.step1Title;
-      document.getElementById('step1Desc').innerText = dict.step1Desc;
-      document.getElementById('step2Title').innerText = dict.step2Title;
-      document.getElementById('step2Desc').innerText = dict.step2Desc;
-      document.getElementById('step3Title').innerText = dict.step3Title;
-      document.getElementById('step3Desc').innerText = dict.step3Desc;
-      document.getElementById('step4Title').innerText = dict.step4Title;
-      document.getElementById('step4Desc').innerText = dict.step4Desc;
+      safeSetHtml('msmeHeading', `<span class="material-symbols-outlined text-emerald-600">storefront</span> ${dict.msmeHeading}`);
+      safeSetText('msmeBadge', dict.msmeBadge);
+      safeSetText('msmeSub', dict.msmeSub);
+      safeSetHtml('calcHeading', `<span class="material-symbols-outlined text-emerald-700">calculate</span> ${dict.calcHeading}`);
+      safeSetText('calcTypeLabel', dict.calcTypeLabel);
+      safeSetText('optMicro', dict.optMicro);
+      safeSetText('optSmall', dict.optSmall);
+      safeSetText('optStartup', dict.optStartup);
+      safeSetText('optWomen', dict.optWomen);
+      safeSetText('calcBaseFeeLabel', dict.calcBaseFeeLabel);
+      safeSetText('calcMarkingFeeLabel', dict.calcMarkingFeeLabel);
+      safeSetText('calcCardAppLabel', dict.calcCardAppLabel);
+      safeSetText('calcCardMarkingLabel', dict.calcCardMarkingLabel);
+      safeSetText('calcCardLabLabel', dict.calcCardLabLabel);
+      safeSetText('calcCardTotalLabel', dict.calcCardTotalLabel);
+      safeSetHtml('pathwayHeading', `<span class="material-symbols-outlined text-[#FF671F]">route</span> ${dict.pathwayHeading}`);
+      safeSetText('step1Title', dict.step1Title);
+      safeSetText('step1Desc', dict.step1Desc);
+      safeSetText('step2Title', dict.step2Title);
+      safeSetText('step2Desc', dict.step2Desc);
+      safeSetText('step3Title', dict.step3Title);
+      safeSetText('step3Desc', dict.step3Desc);
+      safeSetText('step4Title', dict.step4Title);
+      safeSetText('step4Desc', dict.step4Desc);
 
       // Catalog View
-      document.getElementById('catHeading').innerHTML = `<span class="material-symbols-outlined text-[#0B3C68]">library_books</span> ${dict.catHeading}`;
-      document.getElementById('catSub').innerText = dict.catSub;
-      document.getElementById('catalogSearchInput').placeholder = dict.catSearchPlaceholder;
+      safeSetHtml('catHeading', `<span class="material-symbols-outlined text-[#0B3C68]">library_books</span> ${dict.catHeading}`);
+      safeSetText('catSub', dict.catSub);
+      safeSetPlaceholder('catalogSearchInput', dict.catSearchPlaceholder);
 
       // Verify View
-      document.getElementById('verifyHeading').innerHTML = `<span class="material-symbols-outlined text-amber-600">verified_user</span> ${dict.verifyHeading}`;
-      document.getElementById('verifySub').innerText = dict.verifySub;
-      document.getElementById('vtype-cml').innerText = dict.vtypeCml;
-      document.getElementById('vtype-huid').innerText = dict.vtypeHuid;
-      document.getElementById('vtype-crs').innerText = dict.vtypeCrs;
-      document.getElementById('verifyInputLabel').innerText = dict.verifyInputLabel;
-      document.getElementById('verifyBtnLabel').innerText = dict.verifyBtn;
+      safeSetHtml('verifyHeading', `<span class="material-symbols-outlined text-amber-600">verified_user</span> ${dict.verifyHeading}`);
+      safeSetText('verifySub', dict.verifySub);
+      safeSetText('vtype-cml', dict.vtypeCml);
+      safeSetText('vtype-huid', dict.vtypeHuid);
+      safeSetText('vtype-crs', dict.vtypeCrs);
+      safeSetText('verifyInputLabel', dict.verifyInputLabel);
+      safeSetText('verifyBtnLabel', dict.verifyBtn);
 
       // Copy Buttons
       document.querySelectorAll('.btnCopyLabel').forEach(el => el.innerText = dict.btnCopy);
 
       setVerificationType(currentVerificationType);
+      renderStandardsCatalog();
     }
 
     // Saral Mode Toggle
@@ -2265,13 +2365,13 @@
       const label = document.getElementById('autoVoiceLabel');
       const icon = document.getElementById('autoVoiceIcon');
       if (autoVoiceEnabled) {
-        label.innerText = dict.autoVoiceOn;
-        icon.innerText = "volume_up";
-        btn.className = "px-2.5 py-1 rounded text-xs font-semibold border transition-all flex items-center gap-1.5 bg-secondary text-white border-secondary shadow-xs";
+        if (label) label.innerText = dict.autoVoiceOn;
+        if (icon) icon.innerText = "volume_up";
+        if (btn) btn.className = "px-2.5 py-1 rounded text-xs font-semibold border transition-all flex items-center gap-1.5 bg-secondary text-white border-secondary shadow-xs";
       } else {
-        label.innerText = dict.autoVoiceOff;
-        icon.innerText = "volume_off";
-        btn.className = "px-2.5 py-1 rounded text-xs font-semibold border transition-all flex items-center gap-1.5 bg-gray-100 border-gray-300 text-gray-700 hover:bg-gray-200";
+        if (label) label.innerText = dict.autoVoiceOff;
+        if (icon) icon.innerText = "volume_off";
+        if (btn) btn.className = "px-2.5 py-1 rounded text-xs font-semibold border transition-all flex items-center gap-1.5 bg-gray-100 border-gray-300 text-gray-700 hover:bg-gray-200";
       }
     }
 
@@ -2281,18 +2381,28 @@
       const chip = document.getElementById('msmeToggleChip');
       const label = document.getElementById('toolLabel4');
       if (isMsmeActive) {
-        label.innerText = dict.msmeOn;
-        chip.className = "px-2.5 py-1 rounded text-xs font-bold border transition-all flex items-center gap-1.5 border-emerald-500 bg-emerald-600 text-white shadow-xs";
+        if (label) label.innerText = dict.msmeOn;
+        if (chip) chip.className = "px-2.5 py-1 rounded text-xs font-bold border transition-all flex items-center gap-1.5 border-emerald-500 bg-emerald-600 text-white shadow-xs";
       } else {
-        label.innerText = dict.msmeOff;
-        chip.className = "px-2.5 py-1 rounded text-xs font-semibold border transition-all flex items-center gap-1.5 border-emerald-300 bg-emerald-50 text-emerald-900 hover:bg-emerald-100";
+        if (label) label.innerText = dict.msmeOff;
+        if (chip) chip.className = "px-2.5 py-1 rounded text-xs font-semibold border transition-all flex items-center gap-1.5 border-emerald-300 bg-emerald-50 text-emerald-900 hover:bg-emerald-100";
       }
     }
 
     // =========================================================================
-    // VOICE SYNTHESIS & REAL-TIME STOPPING CONTROL
+    // VOICE SYNTHESIS & REAL-TIME STOPPING CONTROL (BHASHINI IndicTTS + WebSpeech)
     // =========================================================================
+    let currentAudioElement = null;
+
     function stopSpeaking() {
+      if (currentAudioElement) {
+        try {
+          currentAudioElement.pause();
+          currentAudioElement.currentTime = 0;
+        } catch (e) {}
+        currentAudioElement = null;
+      }
+
       if ('speechSynthesis' in window) {
         window.speechSynthesis.cancel();
       }
@@ -2319,14 +2429,11 @@
       }
     }
 
-    function speakText(text, btn = null) {
-      if (!('speechSynthesis' in window)) return;
-
+    async function speakText(text, btn = null) {
       // If already playing, cancel immediately
-      if (window.speechSynthesis.speaking) {
-        window.speechSynthesis.cancel();
-        if (currentPlayingBtn === btn) {
-          stopSpeaking();
+      if ((currentAudioElement && !currentAudioElement.paused) || (window.speechSynthesis && window.speechSynthesis.speaking)) {
+        stopSpeaking();
+        if (currentPlayingBtn === btn && btn !== null) {
           return;
         }
       }
@@ -2334,7 +2441,7 @@
       let clean = text
         .replace(/---\s*\*?⚖️[\s\S]*$/g, '')
         .replace(/\*\*Sources[\s\S]*$/g, '')
-        .replace(/\|[^\n]+\|/g, ' ')
+        .replace(/\|[^\r\n]+\|/g, ' ')
         .replace(/https?:\/\/\S+/g, '')
         .replace(/[*#_`~\[\]\(\)>]/g, ' ')
         .replace(/\s+/g, ' ')
@@ -2342,9 +2449,8 @@
 
       if (!clean) return;
 
-      const utterance = new SpeechSynthesisUtterance(clean.slice(0, 1000));
-      utterance.lang = LANG_VOICE_MAP[currentLanguage] || "hi-IN";
-      utterance.rate = 1.0;
+      // Extract concise spoken advisory (first 400 chars) for responsive low-latency TTS
+      const speechExcerpt = clean.length > 400 ? clean.slice(0, 400) + "..." : clean;
 
       const dict = I18N[currentLanguage] || I18N.Hindi;
 
@@ -2368,14 +2474,90 @@
         btn.classList.remove('text-[#0B3C68]', 'hover:bg-blue-50');
       }
 
-      utterance.onend = () => {
-        stopSpeaking();
-      };
+      // Step 1: Attempt High-Fidelity Bhashini IndicTTS via backend API
+      try {
+        const res = await fetch('/api/tts', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ text: speechExcerpt, language: currentLanguage })
+        });
+        const data = await res.json();
+        if (data.status === 'success' && data.audio) {
+          currentAudioElement = new Audio('data:audio/wav;base64,' + data.audio);
+          currentAudioElement.onended = () => stopSpeaking();
+          currentAudioElement.onerror = () => playWebSpeech(speechExcerpt);
+          await currentAudioElement.play();
+          return;
+        }
+      } catch (err) {
+        console.log("IndicTTS fallback to WebSpeech:", err);
+      }
 
-      utterance.onerror = () => {
-        stopSpeaking();
-      };
+      // Step 2: Graceful Fallback to Browser Native WebSpeech
+      playWebSpeech(speechExcerpt);
+    }
 
+    let availableVoices = [];
+    function loadVoices() {
+      if ('speechSynthesis' in window) {
+        availableVoices = window.speechSynthesis.getVoices() || [];
+      }
+    }
+    if ('speechSynthesis' in window) {
+      loadVoices();
+      window.speechSynthesis.onvoiceschanged = loadVoices;
+    }
+
+    function getBestVoiceForLanguage(langName) {
+      if (!availableVoices.length) loadVoices();
+      const targetLang = (LANG_VOICE_MAP[langName] || 'hi-IN').toLowerCase();
+      const prefix = targetLang.split('-')[0];
+
+      if (langName === 'English') {
+        // 1. First priority: High-quality Natural/Neural English voices (India, UK, US)
+        const naturalEn = availableVoices.find(v => 
+          v.lang.toLowerCase().startsWith('en') && 
+          (v.name.includes('Natural') || v.name.includes('Neural') || v.name.includes('Google') || v.name.includes('Sonia') || v.name.includes('Heera') || v.name.includes('Aria') || v.name.includes('Jenny') || v.name.includes('Ravi') || v.name.includes('Guy'))
+        );
+        if (naturalEn) return naturalEn;
+
+        // 2. Second priority: Any Indian English voice
+        const enIn = availableVoices.find(v => v.lang.toLowerCase() === 'en-in' || v.lang.toLowerCase().startsWith('en_in'));
+        if (enIn) return enIn;
+
+        // 3. Third priority: Any standard English voice
+        const anyEn = availableVoices.find(v => v.lang.toLowerCase().startsWith('en'));
+        if (anyEn) return anyEn;
+      } else {
+        // Indic Voice matching
+        const exactMatch = availableVoices.find(v => v.lang.toLowerCase() === targetLang || v.lang.toLowerCase().replace('_', '-') === targetLang);
+        if (exactMatch) return exactMatch;
+
+        const prefixMatch = availableVoices.find(v => v.lang.toLowerCase().startsWith(prefix));
+        if (prefixMatch) return prefixMatch;
+      }
+      return null;
+    }
+
+    function playWebSpeech(cleanText) {
+      if (!('speechSynthesis' in window)) {
+        stopSpeaking();
+        return;
+      }
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(cleanText);
+      utterance.lang = LANG_VOICE_MAP[currentLanguage] || "hi-IN";
+      
+      const bestVoice = getBestVoiceForLanguage(currentLanguage);
+      if (bestVoice) {
+        utterance.voice = bestVoice;
+        utterance.lang = bestVoice.lang;
+      }
+
+      utterance.rate = (currentLanguage === 'English') ? 0.95 : 1.0;
+      utterance.pitch = 1.0;
+      utterance.onend = () => stopSpeaking();
+      utterance.onerror = () => stopSpeaking();
       window.speechSynthesis.speak(utterance);
     }
 
@@ -2447,7 +2629,7 @@
       }
     }
 
-    // Chat Engine
+    // Chat Engine - PREPENDS latest interaction cards to TOP so user never needs to scroll
     async function handleChatSubmit(e) {
       if (e) e.preventDefault();
       const input = document.getElementById('chatInput');
@@ -2457,8 +2639,36 @@
       input.value = '';
       document.getElementById('welcomeCard')?.classList.add('hidden');
 
-      appendUserMessage(query);
-      const loadingId = appendLoadingMessage();
+      const container = document.getElementById('chatMessages');
+      const turnId = "turn-" + Date.now();
+      const loadingId = "loading-" + Date.now();
+
+      // Create turn card container and PREPEND at top
+      const turnCard = document.createElement('div');
+      turnCard.id = turnId;
+      turnCard.className = "space-y-3 pb-5 mb-5 border-b border-gray-200 last:border-b-0";
+
+      turnCard.innerHTML = `
+        <!-- User Question Bubble (Right Aligned) -->
+        <div class="flex justify-end">
+          <div class="max-w-[85%] sm:max-w-[75%] bg-[#0B3C68] text-white p-3.5 sm:p-4 rounded-2xl rounded-tr-xs text-xs sm:text-sm leading-relaxed shadow-xs font-medium">
+            ${escapeHtml(query)}
+          </div>
+        </div>
+
+        <!-- Assistant Loading State -->
+        <div id="${loadingId}" class="flex items-start gap-3">
+          <div class="w-8 h-8 rounded-lg bg-orange-100 text-[#FF671F] flex items-center justify-center flex-shrink-0 mt-1">
+            <span class="material-symbols-outlined text-[18px] animate-spin">sync</span>
+          </div>
+          <div class="bg-gray-100 p-3.5 rounded-2xl border border-gray-200 text-xs text-gray-700 font-medium">
+            भारतीय मानकों एवं अनिवार्य QCO नियमों से प्रमाणित संरचित उत्तर तैयार किया जा रहा है...
+          </div>
+        </div>
+      `;
+
+      container.prepend(turnCard);
+      container.scrollTop = 0;
 
       try {
         const res = await fetch('/api/chat', {
@@ -2474,22 +2684,79 @@
         });
 
         const data = await res.json();
-        removeLoadingMessage(loadingId);
-        appendAssistantMessage(data.answer, data.model, query);
+        const loadingEl = document.getElementById(loadingId);
+        
+        if (loadingEl) {
+          const dict = I18N[currentLanguage] || I18N.Hindi;
+          const htmlContent = formatMarkdownToHtml(data.answer);
+          const encodedSpeechText = encodeURIComponent(data.answer);
 
+          loadingEl.outerHTML = `
+            <div class="flex items-start gap-3">
+              <img src="/static/logo.svg" alt="Standards Saathi" class="w-8 h-8 rounded-full object-contain shadow-xs flex-shrink-0 mt-1 border border-[#0B3C68]" />
+              <div class="flex-1 bg-white p-4 sm:p-5 rounded-2xl border border-gray-200 shadow-xs space-y-3">
+                
+                <!-- Structured Markdown Answer -->
+                <div class="prose prose-sm max-w-none text-xs sm:text-sm text-gray-900 leading-relaxed">
+                  ${htmlContent}
+                </div>
+
+                <!-- Action Toolbar: Listen Voice, Copy, Download -->
+                <div class="flex flex-wrap items-center justify-between gap-2 pt-3 border-t border-gray-100">
+                  <div class="flex items-center gap-2">
+                    <button onclick="playVoiceCard(this)" data-speech="${encodedSpeechText}" class="btn-secondary h-7 px-2.5 text-xs text-[#0B3C68] hover:bg-blue-50 flex items-center gap-1 transition">
+                      <span class="material-symbols-outlined text-[15px]">volume_up</span>
+                      <span class="play-btn-text font-bold">${dict.btnListen}</span>
+                    </button>
+
+                    <div class="audio-wave hidden items-center gap-0.5 ml-1">
+                      <div class="wave-bar"></div>
+                      <div class="wave-bar"></div>
+                      <div class="wave-bar"></div>
+                      <div class="wave-bar"></div>
+                    </div>
+                  </div>
+
+                  <div class="flex items-center gap-1.5">
+                    <button onclick="copyCardText(this)" class="p-1.5 text-gray-400 hover:text-gray-700 rounded" title="Copy Advisory">
+                      <span class="material-symbols-outlined text-[16px]">content_copy</span>
+                    </button>
+                    <button onclick="downloadCardText(this)" class="p-1.5 text-gray-400 hover:text-gray-700 rounded" title="Download Advisory">
+                      <span class="material-symbols-outlined text-[16px]">download</span>
+                    </button>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          `;
+        }
+
+        container.scrollTop = 0;
+
+        // Auto-voice playback
         if ((autoVoiceEnabled || isSaralMode) && data.answer) {
           speakText(data.answer);
         }
       } catch (err) {
-        removeLoadingMessage(loadingId);
-        appendAssistantMessage("⚠️ त्रुटि: Standards Saathi बैकएंड से कनेक्ट नहीं हो सका। कृपया जांचें कि सर्वर सक्रिय है।", "System Error", query);
+        const loadingEl = document.getElementById(loadingId);
+        if (loadingEl) {
+          loadingEl.outerHTML = `
+            <div class="bg-red-50 p-3.5 rounded-xl border border-red-200 text-xs text-red-700 font-medium">
+              ⚠️ त्रुटि: Standards Saathi बैकएंड से कनेक्ट नहीं हो सका। कृपया जांचें कि सर्वर सक्रिय है।
+            </div>
+          `;
+        }
       }
     }
 
     function sendQuickPrompt(text) {
       switchTab('chat');
-      document.getElementById('chatInput').value = text;
-      handleChatSubmit();
+      const input = document.getElementById('chatInput');
+      if (input) {
+        input.value = text;
+        handleChatSubmit();
+      }
     }
 
     function executeHomeSearch() {
@@ -2497,94 +2764,6 @@
       if (q) {
         sendQuickPrompt(q);
       }
-    }
-
-    function appendUserMessage(text) {
-      const container = document.getElementById('chatMessages');
-      const div = document.createElement('div');
-      div.className = "flex justify-end";
-      div.innerHTML = `
-        <div class="max-w-[85%] sm:max-w-[75%] bg-[#0B3C68] text-white p-3.5 sm:p-4 rounded-2xl rounded-br-xs text-xs sm:text-sm leading-relaxed shadow-xs">
-          ${escapeHtml(text)}
-        </div>
-      `;
-      container.appendChild(div);
-      container.scrollTop = container.scrollHeight;
-    }
-
-    function appendLoadingMessage() {
-      const container = document.getElementById('chatMessages');
-      const id = "loading-" + Date.now();
-      const div = document.createElement('div');
-      div.id = id;
-      div.className = "flex items-start gap-3";
-      div.innerHTML = `
-        <div class="w-8 h-8 rounded-lg bg-orange-100 text-[#FF671F] flex items-center justify-center flex-shrink-0">
-          <span class="material-symbols-outlined text-[18px] animate-spin">sync</span>
-        </div>
-        <div class="bg-gray-100 p-3.5 rounded-2xl border border-gray-200 text-xs text-gray-600 font-medium">
-          भारतीय मानकों एवं अनिवार्य QCO नियमों से प्रमाणित संरचित उत्तर तैयार किया जा रहा है...
-        </div>
-      `;
-      container.appendChild(div);
-      container.scrollTop = container.scrollHeight;
-      return id;
-    }
-
-    function removeLoadingMessage(id) {
-      const el = document.getElementById(id);
-      if (el) el.remove();
-    }
-
-    function appendAssistantMessage(markdownText, modelName, originalQuery) {
-      const container = document.getElementById('chatMessages');
-      const div = document.createElement('div');
-      const dict = I18N[currentLanguage] || I18N.Hindi;
-      const htmlContent = formatMarkdownToHtml(markdownText);
-      const encodedSpeechText = encodeURIComponent(markdownText);
-
-      div.className = "flex items-start gap-3";
-      div.innerHTML = `
-        <div class="w-8 h-8 rounded-lg bg-[#0B3C68] text-white flex items-center justify-center flex-shrink-0 mt-1 shadow-xs">
-          <span class="material-symbols-outlined text-[18px] text-[#FF9933]">verified</span>
-        </div>
-        <div class="flex-1 bg-white p-4 sm:p-5 rounded-2xl border border-gray-200 shadow-xs space-y-3">
-          
-          <!-- Message Body with Structured Layout -->
-          <div class="prose prose-sm max-w-none text-xs sm:text-sm text-gray-900 leading-relaxed">
-            ${htmlContent}
-          </div>
-
-          <!-- Actions -->
-          <div class="flex flex-wrap items-center justify-between gap-2 pt-3 border-t border-gray-100">
-            <div class="flex items-center gap-2">
-              <button onclick="playVoiceCard(this)" data-speech="${encodedSpeechText}" class="btn-secondary h-7 px-2.5 text-xs text-[#0B3C68] hover:bg-blue-50 flex items-center gap-1 transition">
-                <span class="material-symbols-outlined text-[15px]">volume_up</span>
-                <span class="play-btn-text font-bold">${dict.btnListen}</span>
-              </button>
-
-              <div class="audio-wave hidden items-center gap-0.5 ml-1">
-                <div class="wave-bar"></div>
-                <div class="wave-bar"></div>
-                <div class="wave-bar"></div>
-                <div class="wave-bar"></div>
-              </div>
-            </div>
-
-            <div class="flex items-center gap-1.5">
-              <button onclick="copyCardText(this)" class="p-1.5 text-gray-400 hover:text-gray-700 rounded" title="Copy Advisory">
-                <span class="material-symbols-outlined text-[16px]">content_copy</span>
-              </button>
-              <button onclick="downloadCardText(this)" class="p-1.5 text-gray-400 hover:text-gray-700 rounded" title="Download Advisory">
-                <span class="material-symbols-outlined text-[16px]">download</span>
-              </button>
-            </div>
-          </div>
-
-        </div>
-      `;
-      container.appendChild(div);
-      container.scrollTop = container.scrollHeight;
     }
 
     function playVoiceCard(btn) {
@@ -2615,14 +2794,15 @@
     function clearChatHistory() {
       if (confirm("क्या आप पूरी चैट इतिहास साफ़ करना चाहते हैं?")) {
         const container = document.getElementById('chatMessages');
-        container.innerHTML = '';
+        if (container) container.innerHTML = '';
         document.getElementById('welcomeCard')?.classList.remove('hidden');
         stopSpeaking();
       }
     }
 
     function clearInput() {
-      document.getElementById('chatInput').value = '';
+      const el = document.getElementById('chatInput');
+      if (el) el.value = '';
     }
 
     // =========================================================================
@@ -2716,9 +2896,9 @@
       const markFee = markingFee * (1 - discount);
       const totalSavings = (baseFee + markingFee) * discount;
 
-      document.getElementById('calcResultAppFee').innerText = `₹ ${appFee.toFixed(0)}`;
-      document.getElementById('calcResultMarkingFee').innerText = `₹ ${markFee.toFixed(0)}`;
-      document.getElementById('calcResultSavings').innerText = `₹ ${totalSavings.toFixed(0)} (${(discount*100).toFixed(0)}%)`;
+      safeSetText('calcResultAppFee', `₹ ${appFee.toFixed(0)}`);
+      safeSetText('calcResultMarkingFee', `₹ ${markFee.toFixed(0)}`);
+      safeSetText('calcResultSavings', `₹ ${totalSavings.toFixed(0)} (${(discount*100).toFixed(0)}%)`);
     }
 
     // =========================================================================
@@ -2736,7 +2916,13 @@
 
     function renderStandardsCatalog() {
       const container = document.getElementById('standardsCatalogList');
-      if (!container) return;
+      if (!container || !allStandardsCache || allStandardsCache.length === 0) return;
+      const dict = I18N[currentLanguage] || I18N.Hindi;
+      const understandBtnText = (currentLanguage === "English") ? "Explore with AI →" :
+                                (currentLanguage === "Tamil") ? "AI மூலம் அறிக →" :
+                                (currentLanguage === "Bengali") ? "AI দিয়ে বুঝুন →" :
+                                (currentLanguage === "Marathi") ? "AI सह समजून घ्या →" : "AI से समझें →";
+
       container.innerHTML = allStandardsCache.map(std => `
         <div class="bg-[#F8FAFC] p-4 rounded-lg border border-gray-200 shadow-xs hover:border-[#0B3C68] transition">
           <div class="flex justify-between items-start gap-2">
@@ -2747,7 +2933,7 @@
           <p class="text-xs text-gray-600 mt-1 leading-relaxed line-clamp-2">${escapeHtml(std.summary)}</p>
           <div class="mt-3 pt-2 border-t border-gray-200 flex justify-between items-center text-xs">
             <button onclick="sendQuickPrompt('Explain ${std.standard_number} ${std.title}')" class="text-[#0B3C68] font-bold hover:underline">
-              AI से समझें →
+              ${understandBtnText}
             </button>
             <span class="text-[10px] text-emerald-700 font-bold bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">QCO Mandatory</span>
           </div>
@@ -2765,6 +2951,11 @@
       );
       const container = document.getElementById('standardsCatalogList');
       if (!container) return;
+      const understandBtnText = (currentLanguage === "English") ? "Explore with AI →" :
+                                (currentLanguage === "Tamil") ? "AI மூலம் அறிக →" :
+                                (currentLanguage === "Bengali") ? "AI দিয়ে বুঝুন →" :
+                                (currentLanguage === "Marathi") ? "AI सह समजून घ्या →" : "AI से समझें →";
+
       container.innerHTML = filtered.map(std => `
         <div class="bg-[#F8FAFC] p-4 rounded-lg border border-gray-200 shadow-xs hover:border-[#0B3C68] transition">
           <div class="flex justify-between items-start gap-2">
@@ -2775,7 +2966,7 @@
           <p class="text-xs text-gray-600 mt-1 leading-relaxed line-clamp-2">${escapeHtml(std.summary)}</p>
           <div class="mt-3 pt-2 border-t border-gray-200 flex justify-between items-center text-xs">
             <button onclick="sendQuickPrompt('Explain ${std.standard_number} ${std.title}')" class="text-[#0B3C68] font-bold hover:underline">
-              AI से समझें →
+              ${understandBtnText}
             </button>
             <span class="text-[10px] text-emerald-700 font-bold bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">QCO Mandatory</span>
           </div>
@@ -2824,19 +3015,19 @@
     // ADMIN PORTAL CONTROLLER
     // =========================================================================
     function openAdminModal() {
-      document.getElementById('adminModal').classList.remove('hidden');
+      document.getElementById('adminModal')?.classList.remove('hidden');
       if (!adminTokenPassword) {
-        document.getElementById('adminLoginForm').classList.remove('hidden');
-        document.getElementById('adminControlPanel').classList.add('hidden');
-        document.getElementById('adminLoginError').classList.add('hidden');
+        document.getElementById('adminLoginForm')?.classList.remove('hidden');
+        document.getElementById('adminControlPanel')?.classList.add('hidden');
+        document.getElementById('adminLoginError')?.classList.add('hidden');
       } else {
-        document.getElementById('adminLoginForm').classList.add('hidden');
-        document.getElementById('adminControlPanel').classList.remove('hidden');
+        document.getElementById('adminLoginForm')?.classList.add('hidden');
+        document.getElementById('adminControlPanel')?.classList.remove('hidden');
       }
     }
 
     function closeAdminModal() {
-      document.getElementById('adminModal').classList.add('hidden');
+      document.getElementById('adminModal')?.classList.add('hidden');
     }
 
     function switchAdminTab(tab) {
@@ -2848,13 +3039,13 @@
       if (tab === 'config') {
         cfgTab?.classList.remove('hidden');
         secTab?.classList.add('hidden');
-        btnCfg.className = "px-3 py-1.5 rounded-t text-xs font-bold bg-[#0B3C68] text-white";
-        btnSec.className = "px-3 py-1.5 rounded-t text-xs font-bold bg-gray-100 text-gray-700 hover:bg-gray-200 flex items-center gap-1.5";
+        if (btnCfg) btnCfg.className = "px-3 py-1.5 rounded-t text-xs font-bold bg-[#0B3C68] text-white";
+        if (btnSec) btnSec.className = "px-3 py-1.5 rounded-t text-xs font-bold bg-gray-100 text-gray-700 hover:bg-gray-200 flex items-center gap-1.5";
       } else {
         cfgTab?.classList.add('hidden');
         secTab?.classList.remove('hidden');
-        btnSec.className = "px-3 py-1.5 rounded-t text-xs font-bold bg-[#0B3C68] text-white flex items-center gap-1.5";
-        btnCfg.className = "px-3 py-1.5 rounded-t text-xs font-bold bg-gray-100 text-gray-700 hover:bg-gray-200";
+        if (btnSec) btnSec.className = "px-3 py-1.5 rounded-t text-xs font-bold bg-[#0B3C68] text-white flex items-center gap-1.5";
+        if (btnCfg) btnCfg.className = "px-3 py-1.5 rounded-t text-xs font-bold bg-gray-100 text-gray-700 hover:bg-gray-200";
         fetchAdminSecurityLogs();
       }
     }
@@ -2932,12 +3123,12 @@
         });
         if (res.ok) {
           adminTokenPassword = pwd;
-          document.getElementById('adminLoginForm').classList.add('hidden');
-          document.getElementById('adminControlPanel').classList.remove('hidden');
+          document.getElementById('adminLoginForm')?.classList.add('hidden');
+          document.getElementById('adminControlPanel')?.classList.remove('hidden');
           switchAdminTab('config');
           fetchAdminSecurityLogs();
         } else {
-          document.getElementById('adminLoginError').classList.remove('hidden');
+          document.getElementById('adminLoginError')?.classList.remove('hidden');
         }
       } catch (err) {
         alert("Error connecting to admin authentication: " + err.message);
@@ -2975,9 +3166,10 @@
 
     function logoutAdmin() {
       adminTokenPassword = "";
-      document.getElementById('adminPasswordInput').value = "";
-      document.getElementById('adminLoginForm').classList.remove('hidden');
-      document.getElementById('adminControlPanel').classList.add('hidden');
+      const pwdInput = document.getElementById('adminPasswordInput');
+      if (pwdInput) pwdInput.value = "";
+      document.getElementById('adminLoginForm')?.classList.remove('hidden');
+      document.getElementById('adminControlPanel')?.classList.add('hidden');
     }
 
     // Accessibility & Text Scaling

@@ -16,5 +16,13 @@ services:
         value: "1"
       - key: GROQ_API_KEY
         sync: false
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: BHASHINI_USER_ID
+        sync: false
+      - key: BHASHINI_API_KEY
+        sync: false
+      - key: BHASHINI_INFERENCE_KEY
+        sync: false
       - key: ADMIN_PASSWORD
         value: admin123
