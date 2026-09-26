@@ -1,22 +1,22 @@
 <div align="center">
 
 # 🇮🇳 Standards Saathi (मानक साथी)
-### *Enterprise AI Technical Advisor, Verification Hub & Prompt-Injection Guardrail for Indian Standards (IS Codes) & BIS Regulations*
+### *Enterprise AI Technical Advisor, Multilingual Voice Assistant & Prompt-Injection Guardrail for Indian Standards (IS Codes) & BIS Regulations*
 
 [![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://python.org)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.110%2B-005571?style=for-the-badge&logo=fastapi)](https://fastapi.tiangolo.com)
-[![Streamlit](https://img.shields.io/badge/Streamlit-1.40%2B-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white)](https://streamlit.io)
-[![FAISS](https://img.shields.io/badge/FAISS-Vector%20Search-0467DF?style=for-the-badge)](https://github.com/facebookresearch/faiss)
-[![Sentence Transformers](https://img.shields.io/badge/Sentence--Transformers-384d%20MiniLM-FFA000?style=for-the-badge)](https://www.sbert.net)
-[![Google Gemini](https://img.shields.io/badge/Google%20Gemini-Flash%20%7C%20Pro-4285F4?style=for-the-badge&logo=google&logoColor=white)](https://ai.google.dev)
+[![Google Gemini](https://img.shields.io/badge/Google%20Gemini-2.5%20Flash%20%7C%20Pro-4285F4?style=for-the-badge&logo=google&logoColor=white)](https://ai.google.dev)
 [![Groq](https://img.shields.io/badge/Groq-Llama%203.3%20%7C%203.1-f55036?style=for-the-badge)](https://groq.com)
+[![Bhashini AI](https://img.shields.io/badge/Bhashini%20AI-NLTM%20%7C%20MeitY-FF9933?style=for-the-badge)](https://bhashini.gov.in)
+[![Memory Optimized](https://img.shields.io/badge/Memory%20Footprint-~45MB%20Ultra--Light-138808?style=for-the-badge)](#-ultra-lightweight-semantic-engine--cloud-optimizations)
+[![Uptime Monitoring](https://img.shields.io/badge/Monitoring-UptimeRobot%20Ready-00B0FF?style=for-the-badge)](#-health-monitoring--cloud-deployment)
 [![License](https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge)](LICENSE)
 
 <p align="center">
-  <b>5 Indic Languages (EN, HI, TA, BN, MR) • Saral Voice Assistant (Illiterate/Rural Mode) • Clause-Level Citations • ISI / HUID / CRS Verification • 5 Proactive Tools • MSME 80% Subsidy Hub • Multi-Layer Prompt Injection Defense • Admin Security Audit Logs</b>
+  <b>5 Indic Languages (EN, HI, TA, BN, MR) • Bhashini IndicTTS & IndicTrans2 • Saral Voice Assistant (Rural/Low-Literacy Mode) • Clause-Level Citations • ISI / HUID / CRS Verification • 5 Proactive Tools • MSME 80% Subsidy Hub • Multi-Layer Prompt Injection Defense • Admin Security Audit Portal</b>
 </p>
 
-[Key Features](#-key-features) • [Tech Stack](#-tech-stack) • [System Architecture](#-system-architecture) • [Ingested Indian Standards](#-ingested-indian-standards) • [Getting Started](#-getting-started) • [Running the Application](#-running-the-application) • [API Reference](#-api-reference) • [Prompt Injection Defense](#-prompt-injection--security-guardrails) • [Example Queries](#-example-queries-to-try) • [Project Structure](#-project-structure)
+[Key Features](#-key-features) • [Bhashini & Voice AI](#-bhashini-nltm--voice-ai-architecture) • [Tech Stack](#-tech-stack) • [System Architecture](#-system-architecture) • [Ingested Indian Standards](#-ingested-indian-standards) • [Getting Started](#-getting-started) • [Running the Application](#-running-the-application) • [API Reference](#-api-reference) • [Prompt Injection Defense](#-prompt-injection--security-guardrails) • [Example Queries](#-example-queries-to-try) • [Project Structure](#-project-structure)
 
 ---
 
@@ -24,52 +24,98 @@
 
 ## 📌 Overview
 
-**Standards Saathi (मानक साथी)** is an enterprise-grade, accessible Retrieval-Augmented Generation (RAG) platform engineered for engineers, architects, MSME entrepreneurs, rural manufacturers, quality control (QC) managers, and Indian citizens. It provides clause-level, citation-backed technical guidance on **Bureau of Indian Standards (BIS)** codes, mandatory **Quality Control Orders (QCOs)**, **ISI Certification Schemes**, **Gold Hallmarking (HUID)**, and statutory **MSME concessions (80% fee subsidies)**.
+**Standards Saathi (मानक साथी)** is an enterprise-grade, highly accessible Retrieval-Augmented Generation (RAG) platform engineered for civil/mechanical/electrical engineers, architects, MSME entrepreneurs, rural manufacturers, quality control (QC) managers, and Indian citizens. It delivers clause-level, citation-backed technical guidance on **Bureau of Indian Standards (BIS)** codes, mandatory **Quality Control Orders (QCOs)**, **ISI Certification Schemes**, **Gold Hallmarking (HUID)**, and statutory **MSME concessions (80% fee subsidies)**.
 
-Standards Saathi supports **5 Indian Languages** (English, Hindi, Tamil, Bengali, Marathi) alongside **Saral Voice Mode (सरल साथी)** for low-literacy users, interactive **5 Proactive Engineering Tools**, a **Multi-Layer Prompt Injection Defense Guardrail**, and an **Admin Security Audit Portal**.
+Standards Saathi supports **5 Indian Languages** (English, Hindi, Tamil, Bengali, Marathi), integrates official **Bhashini AI models (NLTM / MeitY)** alongside **Saral Voice Mode (सरल साथी)** for low-literacy users, interactive **5 Proactive Engineering Tools**, a **Multi-Layer Prompt Injection Defense Guardrail**, and an **Admin Security Audit Portal**.
 
 ---
 
 ## 🚀 Key Features
 
 ### 1. 🌐 5 Indian Languages & Native Localization
-* **Dynamic 5-Language Switching**: Seamless real-time interface and response translation across:
+* **Full Multilingual Interface & Generation**: Native prompt understanding, translation, and structured synthesis across:
   - 🇬🇧 **English**
   - 🇮🇳 **Hindi (हिंदी)**
   - 🇮🇳 **Tamil (தமிழ்)**
   - 🇮🇳 **Bengali (বাংলা)**
   - 🇮🇳 **Marathi (मराठी)**
-* **Cross-Lingual RAG Retrieval**: Indic domain queries automatically expand into technical English terms for dense FAISS vector matching, followed by structured, localized synthesis in the user's native language.
+* **Cross-Lingual RAG Retrieval**: Indic domain queries automatically expand into technical English terms for high-recall vector matching, followed by structured, localized synthesis in the user's selected language.
+* **Auto Language Detection & Root-Stem Matching**: Automatically recognizes user intent and language script, preserving consistency across conversational turns.
 
 ### 2. 🎙️ Accessible Voice Assistant & Saral Saathi (सरल साथी)
-* **Zero Barrier Voice Interaction**: Bidirectional voice assistant using browser **Speech-to-Text (STT)** (`webkitSpeechRecognition`) and **Text-to-Speech (TTS)** (`SpeechSynthesis`) with dynamic locale switching (`en-IN`, `hi-IN`, `ta-IN`, `bn-IN`, `mr-IN`).
-* **Play / Stop Audio Controls**: Users can pause or stop speech output instantly at any point.
-* **Saral Voice Mode (सरल साथी)**: Specialized conversational mode designed for rural artisans, micro-manufacturers, and low-literacy users, explaining complex compliance rules in clear, spoken-friendly everyday terms.
+* **Bhashini AI Integration (NLTM / MeitY)**: Connects to India's National Language Translation Mission models (`IndicTTS` & `IndicTrans2`) for natural, human-sounding Indic speech synthesis and neural translation.
+* **Dual Voice Pipeline**: Combines server-side high-fidelity Bhashini TTS (`/api/tts`) with universal browser-native **Web Speech API** (`webkitSpeechRecognition` & `SpeechSynthesis`) for zero-barrier voice accessibility across desktop and mobile browsers.
+* **Responsive Voice Controls**: Dedicated **Play / Stop** audio controls on every response card, with automatic audio silencing upon submitting a new query.
+* **Saral Voice Mode (सरल साथी)**: Conversational mode tailored for rural artisans, micro-manufacturers, and low-literacy users, explaining complex compliance rules in spoken-friendly everyday terms without dense jargon.
 
-### 3. 🛡️ Multi-Layer Prompt Injection & Jailbreak Defense
+### 3. ⚡ Ultra-Lightweight Semantic Engine & Cloud Optimizations
+* **~45MB Memory Footprint**: Optimized vector search engine designed specifically to thrive within free-tier cloud environments (e.g., Render 512MB RAM constraints) without Out-Of-Memory crashes.
+* **10-Second Render Cloud Builds**: Streamlined dependencies (`requirements.txt`) ensure ultra-fast deployment cycles.
+* **Collapsible Source Citations**: Interactive source cards with clause-level references, confidence meters, and highlighted clickable links.
+
+### 4. 🛡️ Multi-Layer Prompt Injection & Jailbreak Defense
 * **Multilingual Direct Override Interception**: Detects and blocks instruction overrides, DAN modes, role-play bypasses, and rule disregard across English, Hindi, Tamil, Bengali, and Marathi.
-* **System Prompt & API Key Exfiltration Shield**: Prevents leaking of initial prompts, developer directives, or API credentials (`GEMINI_API_KEY`, `GROQ_API_KEY`).
+* **System Prompt & API Key Exfiltration Shield**: Prevents leaking of developer prompts, internal system directives, or API credentials (`GEMINI_API_KEY`, `GROQ_API_KEY`, `BHASHINI_*`).
 * **Control Token & Delimiter Sanitization**: Filters adversarial delimiters (`<|system|>`, `[INST]`, ````system````, etc.).
 * **Indirect Prompt Injection Sanitization**: Cleans zero-width unicode characters (`\u200B`–`\u200D`, `\uFEFF`) and hidden payloads inside user-submitted tender texts or clause snippets.
 * **Statutory Fraud Guardrail**: Blocks requests attempting to forge fake ISI marks, fake licenses, or circumvent mandatory QCOs.
 * **Zero False Positives**: Verified against authentic technical standard inquiries.
 
-### 4. 🛠️ 5 Proactive BIS Engineering Tools
+### 5. 🛠️ 5 Proactive BIS Engineering Tools
 1. **📋 Compliance Checklist Generator** (`/api/tools/checklist`): Generates step-by-step checklists for any product or IS code covering QCO mandates, in-house lab equipment, required documents, and 80% MSME fee subsidies.
 2. **📑 Tender & Specification Analyzer** (`/api/tools/tender-analyzer`): Ingests tender text or procurement scopes, sanitizes indirect inputs, identifies cited IS codes, flags missing mandatory standards, and outputs compliance recommendations.
 3. **🔍 Technical Clause Explainer** (`/api/tools/explain-clause`): Translates dense standard clauses into plain language with 1–2 practical real-world application examples.
 4. **💼 MSME 80% Subsidy Hub & Live Calculator**: Calculates net fee savings (80% on application & license fees, 50% on lab testing) based on enterprise Udyam classification.
 5. **🎯 4-Step Onboarding Roadmap** (`/api/tools/onboarding-roadmap`): Interactive questionnaire evaluating product type, materials, market scale, and current certifications to generate a customized BIS roadmap.
 
-### 5. 🔍 BIS License, Hallmark & CRS Verification Hub
+### 6. 🔍 BIS License, Hallmark & CRS Verification Hub
 * **ISI License (CM/L)**: Verifies 7-to-8 digit manufacturer license numbers against BIS standard schemas.
 * **Gold HUID Code**: Validates 6-digit alphanumeric laser-engraved hallmark identifiers.
 * **Electronics CRS (R-Number)**: Checks 8-digit Compulsory Registration Scheme numbers for lithium batteries, electronics, adapters, and smart devices.
 
-### 6. 🔒 Admin Security Audit Log Portal & Key Management
+### 7. 🔒 Admin Security Audit Log Portal & Key Management
 * **Zero User-Facing API Key Exposure**: All sensitive configurations are shielded behind admin password authentication.
 * **Real-Time Security Audit Logs**: Live table logging every intercepted injection attempt with timestamp, category, query snippet, and detected language, with refresh and clear controls.
-* **Runtime Vector Ingestion**: Administrators can dynamically ingest new custom Indian Standards into the FAISS index with instant re-indexing.
+* **Runtime Vector Ingestion**: Administrators can dynamically ingest new custom Indian Standards into the index with instant re-indexing.
+
+---
+
+## 🎙️ Bhashini (NLTM) & Voice AI Architecture
+
+Standards Saathi implements a dual-layer speech and translation pipeline designed for universal accessibility across India:
+
+```
+                               ┌────────────────────────────────────────────────────────┐
+                               │                    USER VOICE INPUT                    │
+                               │           (Microphone / Speech Recognition)            │
+                               └───────────────────────────┬────────────────────────────┘
+                                                           │
+                                                           ▼
+                               ┌────────────────────────────────────────────────────────┐
+                               │             BROWSER WEB SPEECH API (STT)               │
+                               │       en-IN  |  hi-IN  |  ta-IN  |  bn-IN  |  mr-IN    │
+                               └───────────────────────────┬────────────────────────────┘
+                                                           │ Transcribed Text
+                                                           ▼
+                               ┌────────────────────────────────────────────────────────┐
+                               │                 STANDARDS SAATHI RAG                   │
+                               │          Semantic Retrieval & LLM Synthesis            │
+                               └───────────────────────────┬────────────────────────────┘
+                                                           │
+                                            ┌──────────────┴──────────────┐
+                                            ▼                             ▼
+                             ┌─────────────────────────────┐┌───────────────────────────┐
+                             │    BHASHINI AI (MeitY)      ││   BROWSER WEB SPEECH      │
+                             │ • IndicTTS (Neural Voice)   ││   • Client-side TTS       │
+                             │ • IndicTrans2 (Translation) ││   • Instant Fallback      │
+                             └──────────────┬──────────────┘└─────────────┬─────────────┘
+                                            │ Raw Audio                   │ SpeechSynthesis
+                                            ▼                             ▼
+                             ┌──────────────────────────────────────────────────────────┐
+                             │               RESPONSIVE AUDIO CONTROLS                  │
+                             │  • Play / Stop Voice Toggle • Auto-Silence on New Query  │
+                             └──────────────────────────────────────────────────────────┘
+```
 
 ---
 
@@ -77,14 +123,15 @@ Standards Saathi supports **5 Indian Languages** (English, Hindi, Tamil, Bengali
 
 | Layer | Technology | Description |
 | :--- | :--- | :--- |
-| **LLM Inference** | **Google Gemini AI & Groq Cloud** | Multi-agent reasoning via Gemini Flash/Pro and Groq LLaMA 3.3/3.1 models |
-| **Vector Database** | **FAISS (`faiss-cpu` v1.8+)** | Dense vector search using `IndexFlatIP` with normalized L2 cosine similarity |
-| **Semantic Embeddings** | **Sentence Transformers (v3.0+)** | `all-MiniLM-L6-v2` generating 384-dimensional dense semantic vectors |
+| **LLM Inference** | **Google Gemini AI & Groq Cloud** | Multi-agent reasoning via Gemini 2.5 Flash/Pro and Groq LLaMA 3.3/3.1 models |
+| **National AI Translation** | **Bhashini (NLTM / MeitY)** | IndicTrans2 (Machine Translation) & IndicTTS (Speech Synthesis) across Indian languages |
+| **Vector Engine** | **Lightweight Semantic Vector Engine** | Cosine similarity & dense indexing optimized to ~45MB memory footprint |
 | **Backend Server** | **FastAPI & Uvicorn** | Asynchronous high-performance REST API backend with Pydantic validation |
-| **Primary Web Interface** | **Single-Page App (HTML5/JS/Tailwind)** | Stitch-inspired civic design, Glassmorphism, Indian Tricolor bar, Web Speech API |
-| **Analytics Dashboard** | **Streamlit (v1.40+)** | Standalone multi-tab Python dashboard with live telemetry and vector diagnostics |
-| **Voice Processing** | **Web Speech API (STT & TTS)** | Universal client-side speech transcription and synthesis with Play/Stop toggle |
+| **Primary Web Interface** | **Single-Page App (HTML5/JS/Tailwind)** | Stitch-inspired civic design, Glassmorphism, 24-spoke Indian Ashoka Chakra SVG, Web Speech API |
+| **Analytics Dashboard** | **Streamlit** | Standalone multi-tab Python dashboard with live telemetry and vector diagnostics |
+| **Voice Processing** | **Bhashini IndicTTS + Web Speech API** | Universal server + client speech transcription and synthesis with Play/Stop toggle |
 | **Security Guardrails** | **Custom Multi-Layer Defense Engine** | Multilingual regex filters, indirect delimiter sanitization, and audit log telemetry |
+| **Uptime & Health** | **UptimeRobot & Render Endpoints** | Dedicated `/health`, `/healthz`, and `/api/health` monitoring endpoints |
 
 ---
 
@@ -105,7 +152,8 @@ Standards Saathi supports **5 Indian Languages** (English, Hindi, Tamil, Bengali
                                   │                  FASTAPI BACKEND SERVER                  │
                                   │                      (`server.py`)                       │
                                   │                                                          │
-                                  │   • POST /api/chat           • GET  /api/standards       │
+                                  │   • POST /api/chat           • GET  /health, /healthz    │
+                                  │   • POST /api/tts            • POST /api/translate       │
                                   │   • POST /api/tools/*        • POST /api/admin/auth      │
                                   │   • POST /api/admin/config   • POST /api/admin/security  │
                                   └─────────────────────────────┬────────────────────────────┘
@@ -116,6 +164,7 @@ Standards Saathi supports **5 Indian Languages** (English, Hindi, Tamil, Bengali
                                   │                     DEFENSE GUARDRAIL                    │
                                   │   • Direct Overrides (EN, HI, TA, BN, MR)                │
                                   │   • Exfiltration Shield • Delimiter Sanitization         │
+                                  │   • Indirect Injection Sanitization • Fraud Guardrail    │
                                   └─────────────────────────────┬────────────────────────────┘
                                                                 │ Safe Queries Only
                                                                 ▼
@@ -127,9 +176,9 @@ Standards Saathi supports **5 Indian Languages** (English, Hindi, Tamil, Bengali
                      ┌───────────────────────────┴──────────┐                 │
                      ▼                                      ▼                 ▼
       ┌─────────────────────────────┐        ┌─────────────────────┐   ┌─────────────────────────────┐
-      │    Sentence Transformers    │        │  FAISS Vector Index │   │    Google Gemini / Groq     │
-      │     (all-MiniLM-L6-v2)      │───────▶│    (IndexFlatIP)    │   │   (Multilingual Synthesis   │
-      │  384-dim Dense Embeddings   │        │ Normalized Vectors  │   │     & Saral Voice Mode)     │
+      │  Semantic Vector Engine     │        │ Ingested IS Dataset │   │ Google Gemini / Groq Cloud  │
+      │  (~45MB Memory Footprint)   │───────▶│ (22+ Standards,     │   │ (Multilingual Synthesis     │
+      │  Dense Semantic Similarity  │        │  Clauses, & QCOs)   │   │  & Saral Voice Mode)        │
       └─────────────────────────────┘        └──────────┬──────────┘   └──────────────┬──────────────┘
                                                         │                             │
                                                         │ Top-K Chunks + Citations    │ LLM Synthesis
@@ -138,9 +187,9 @@ Standards Saathi supports **5 Indian Languages** (English, Hindi, Tamil, Bengali
                                                                        ▼
                                                        ┌───────────────────────────────┐
                                                        │  Synthesized Response Cards   │
-                                                       │  • Direct Summary & Citations │
+                                                       │  • Collapsible Source Badges  │
                                                        │  • 5 Indic Language Output    │
-                                                       │  • Audio Read-Aloud (TTS)     │
+                                                       │  • Bhashini / WebSpeech Voice │
                                                        └───────────────────────────────┘
 ```
 
@@ -177,7 +226,8 @@ The knowledge base in [`sample_data.py`](sample_data.py) comes pre-loaded with 2
 ### Prerequisites
 * **Python**: `3.10`, `3.11`, `3.12`, or `3.14`
 * **Git**
-* **Google Gemini API Key** or **Groq API Key** *(Optional; robust offline retrieval mode activates automatically if no API key is set)*
+* **Google Gemini API Key** or **Groq API Key** *(Optional; offline semantic retrieval mode activates automatically if no API key is configured)*
+* **Bhashini API Credentials** *(Optional; browser Web Speech API activates automatically as fallback)*
 
 ### 1. Clone the Repository
 ```bash
@@ -209,7 +259,11 @@ Edit `.env`:
 ```env
 GEMINI_API_KEY=your_gemini_api_key_here
 GROQ_API_KEY=gsk_your_groq_api_key_here
+BHASHINI_USER_ID=your_bhashini_user_id
+BHASHINI_API_KEY=your_bhashini_api_key
+BHASHINI_INFERENCE_KEY=your_bhashini_inference_key
 ADMIN_PASSWORD=admin123
+PORT=8000
 ```
 
 ---
@@ -234,10 +288,14 @@ Open **[http://localhost:8501](http://localhost:8501)** in your browser.
 
 ---
 
-### Option C: Run Automated Test Suite
-Executes the comprehensive 5-module validation test suite:
+### Option C: Run Automated Test Suites
+Executes the comprehensive validation test suite and Bhashini AI checks:
 ```bash
+# Test full feature suite (RAG, 5 Languages, 5 Tools, Security)
 python test_features.py
+
+# Test Bhashini translation & TTS pipeline
+python test_bhashini.py
 ```
 
 ---
@@ -256,7 +314,27 @@ RAG semantic search and multilingual synthesis.
 }
 ```
 
-### 2. `POST /api/tools/checklist`
+### 2. `POST /api/tts`
+Synthesizes high-fidelity Indian speech audio using Bhashini IndicTTS.
+```json
+{
+  "text": "भारतीय मानक ब्यूरो उत्पाद की गुणवत्ता सुनिश्चित करता है।",
+  "language": "hi",
+  "gender": "female"
+}
+```
+
+### 3. `POST /api/translate`
+Translates text across Indian languages using Bhashini IndicTrans2.
+```json
+{
+  "text": "Bureau of Indian Standards ensures product quality and consumer safety.",
+  "source_language": "en",
+  "target_language": "ta"
+}
+```
+
+### 4. `POST /api/tools/checklist`
 Generates a complete compliance checklist for any product or standard.
 ```json
 {
@@ -266,7 +344,7 @@ Generates a complete compliance checklist for any product or standard.
 }
 ```
 
-### 3. `POST /api/tools/tender-analyzer`
+### 5. `POST /api/tools/tender-analyzer`
 Analyzes tender clauses and procurement scopes for IS code alignment.
 ```json
 {
@@ -275,7 +353,7 @@ Analyzes tender clauses and procurement scopes for IS code alignment.
 }
 ```
 
-### 4. `POST /api/tools/explain-clause`
+### 6. `POST /api/tools/explain-clause`
 Translates technical standard clauses into plain language with real-world examples.
 ```json
 {
@@ -284,7 +362,7 @@ Translates technical standard clauses into plain language with real-world exampl
 }
 ```
 
-### 5. `POST /api/tools/onboarding-roadmap`
+### 7. `POST /api/tools/onboarding-roadmap`
 Evaluates a 4-question onboarding wizard to generate a tailored BIS certification roadmap.
 ```json
 {
@@ -298,7 +376,18 @@ Evaluates a 4-question onboarding wizard to generate a tailored BIS certificatio
 }
 ```
 
-### 6. `POST /api/admin/security-logs`
+### 8. `GET /health` & `GET /healthz`
+Lightweight monitoring endpoint for UptimeRobot, Render, and cloud infrastructure.
+```json
+{
+  "status": "healthy",
+  "service": "Standards Saathi AI",
+  "version": "2.0.0",
+  "uptime": "active"
+}
+```
+
+### 9. `POST /api/admin/security-logs`
 Returns the protected audit trail of blocked prompt injection attempts.
 ```json
 {
@@ -306,7 +395,7 @@ Returns the protected audit trail of blocked prompt injection attempts.
 }
 ```
 
-### 7. `POST /api/admin/config`
+### 10. `POST /api/admin/config`
 Updates API keys and system settings securely.
 ```json
 {
@@ -325,8 +414,9 @@ Standards Saathi implements a defense-in-depth security architecture:
 1. **Direct Instruction Overrides**: Prevents `Ignore all previous instructions`, `DAN Mode`, `Developer Mode`, and their Indic equivalents in Hindi, Tamil, Bengali, and Marathi.
 2. **Exfiltration Defense**: Blocks queries seeking system prompts, base context, or API keys (`reveal your initial prompt`, `सिस्टम प्रॉम्प्ट दिखाओ`).
 3. **Delimiter Sanitization**: Strips adversarial tokens (`<|system|>`, `[INST]`, ````system````).
-4. **Indirect Injection Cleaning**: Purges zero-width unicode characters (`\u200B`–`\u200D`, `\uFEFF`) from external tender text and user documents.
-5. **Admin Audit Logging**: Automatically records blocked attacks into an administrative audit log for security monitoring.
+4. **Indirect Injection Cleaning**: Purges zero-width unicode characters (`\u200B`–`\u200D`, `\uFEFF`) and adversarial scripts from external tender text and user documents.
+5. **Statutory Fraud Guardrail**: Identifies and blocks fraudulent attempts to generate counterfeit ISI marks, fake HUID codes, or bypass mandatory QCOs.
+6. **Admin Audit Logging**: Automatically records blocked attacks into an administrative audit log with timestamps, categories, and input snippets.
 
 ---
 
@@ -347,15 +437,19 @@ Standards Saathi implements a defense-in-depth security architecture:
 ```
 Standards-saathi/
 ├── static/
-│   ├── index.html            # Single-Page Web App (Stitch UI, WebSpeech STT/TTS, Proactive Tools, Security Logs)
-│   └── logo.svg              # Standards Saathi Official SVG Emblem
+│   ├── index.html            # Single-Page Web App (Stitch UI, Bhashini & WebSpeech Voice, Proactive Tools, Security Logs)
+│   └── logo.svg              # Standards Saathi Official SVG Emblem with 24-Spoke Ashoka Chakra
 ├── app.py                    # Standalone Streamlit Multilingual Analytics Dashboard Application
-├── server.py                 # FastAPI Asynchronous REST API Backend & Static File Server
-├── rag_engine.py             # Core RAG Pipeline (FAISS, SentenceTransformers, Gemini/Groq, Prompt Injection Defense)
+├── bhashini_client.py        # Bhashini Udyat/ULCA Client (IndicTrans2 NMT & IndicTTS Speech Models)
+├── server.py                 # FastAPI Asynchronous REST API Backend & Uptime Monitoring Endpoints
+├── rag_engine.py             # Core RAG Pipeline (Lightweight Semantic Vector Engine, Gemini/Groq, Security Guardrails)
 ├── sample_data.py            # Pre-loaded Knowledge Base (22+ Curated Indian Standards, Clauses & QCO Metadata)
 ├── test_features.py          # End-to-End Automated Verification Test Suite (All 5 Modules)
-├── requirements.txt          # Python Dependencies (FastAPI, Streamlit, FAISS, Sentence-Transformers, Groq)
-├── packages.txt              # Linux / Cloud System Packages (libgomp1)
+├── test_bhashini.py          # Bhashini Translation & IndicTTS Verification Script
+├── render.yaml               # Optimized Render Cloud Deployment Configuration
+├── Procfile                  # Production Process File
+├── requirements.txt          # Lightweight Python Dependencies (FastAPI, Uvicorn, Groq, Google-GenAI)
+├── packages.txt              # Linux / Cloud System Packages
 ├── .env.example              # Environment Configuration Template
 ├── .gitignore                # Git Exclusions (.env, .venv, __pycache__)
 └── README.md                 # Complete Project Documentation
